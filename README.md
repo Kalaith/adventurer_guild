@@ -1,6 +1,6 @@
 # Adventurer Guild Management Game
 
-A React/TypeScript game where you manage an adventurer guild, hire heroes, and send them on quests to earn gold and reputation.
+A game where you manage an adventurer guild, hire heroes, and send them on quests to earn gold and reputation.
 
 ## Features
 
