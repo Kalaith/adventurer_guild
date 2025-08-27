@@ -1,36 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { fetchQuests } from '../api/mockApi';
+import React from 'react';
 import { Quest } from '../types/game';
+import { QUEST_DATA } from '../data/quests';
 
 interface QuestBoardProps {
   onQuestSelect: (quest: Quest) => void;
 }
 
 const QuestBoard: React.FC<QuestBoardProps> = ({ onQuestSelect }) => {
-  const [quests, setQuests] = useState<Quest[]>([]);
-
-  useEffect(() => {
-    const loadQuests = async () => {
-      const fetchedQuests = await fetchQuests();
-      setQuests(fetchedQuests);
-    };
-    loadQuests();
-  }, []);
-
   return (
     <div>
       <div className="quest-board-header">
         <h2>📋 Quest Board</h2>
-        <div className="quest-board-image">
-          <img
-            src="https://pplx-res.cloudinary.com/image/upload/v1751337951/pplx_project_search_images/9083c87217ad8ba02d828b0af816227201827b4b.jpg"
-            alt="Quest Board"
-            className="quest-board-img"
-          />
-        </div>
+        <p>Choose from available quests to send your adventurers on exciting adventures!</p>
       </div>
-      <div className="quest-grid" id="quest-grid">
-        {quests.map((quest) => (
+      <div className="quest-grid">
+        {QUEST_DATA.map((quest) => (
           <div
             key={quest.id}
             className="quest-item"
@@ -38,8 +22,15 @@ const QuestBoard: React.FC<QuestBoardProps> = ({ onQuestSelect }) => {
           >
             <h3>{quest.name}</h3>
             <p>{quest.description}</p>
-            <p>Reward: {quest.reward}</p>
-            <p>Difficulty: {quest.difficulty}</p> {/* Display difficulty */}
+            <div className="quest-details">
+              <p>Reward: {quest.reward} gold</p>
+              <p>Difficulty: <span className={`difficulty-${quest.difficulty.toLowerCase()}`}>{quest.difficulty}</span></p>
+              <p>Duration: {Math.floor(quest.duration / 60000)} minutes</p>
+              <p>Min Level: {quest.requirements.minLevel}</p>
+            </div>
+            <button className="btn btn--primary">
+              View Quest
+            </button>
           </div>
         ))}
       </div>

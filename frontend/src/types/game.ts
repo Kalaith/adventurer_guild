@@ -1,20 +1,16 @@
-import { Treasure } from './treasures';
-
-export interface GameState {
-  gold: number;
-  totalTreasures: number;
-  uniqueTreasures: Set<string>;
-  minions: number;
-  goldPerClick: number;
-  goldPerSecond: number;
-  upgrades: Record<string, number>;
-  discoveredTreasures: Treasure[];
-  achievements: Set<string>;
-  prestigeLevel: number;
-  lastSave: number;
-  cooldowns: {
-    minions: number;
-    explore: number;
+export interface Adventurer {
+  id: string;
+  name: string;
+  class: 'Warrior' | 'Mage' | 'Rogue' | 'Archer';
+  rank: string;
+  level: number;
+  experience: number;
+  status: 'available' | 'on quest';
+  stats: {
+    strength: number;
+    intelligence: number;
+    dexterity: number;
+    vitality: number;
   };
 }
 
@@ -28,21 +24,26 @@ export interface Quest {
     minLevel: number;
     preferredClasses: string[];
   };
-  difficulty: string; // Added missing property
+  difficulty: 'Easy' | 'Medium' | 'Hard';
   assignedAdventurers?: string[];
+  status: 'available' | 'active' | 'completed';
 }
 
 export interface Recruit {
   id: string;
   name: string;
   level: number;
+  class: 'Warrior' | 'Mage' | 'Rogue' | 'Archer';
+  cost: number;
 }
 
-export interface Adventurer {
-  id: string;
-  name: string;
-  class: string;
-  rank: string;
+export interface GuildState {
+  gold: number;
+  reputation: number;
   level: number;
-  status: 'available' | 'on quest';
+  adventurers: Adventurer[];
+  activeQuests: Quest[];
+  completedQuests: string[];
+  recruits: Recruit[];
+  lastSave: number;
 }

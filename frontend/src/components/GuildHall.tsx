@@ -8,7 +8,7 @@ const GuildHall: React.FC = () => {
             </div>
             <div className="guild-info">
                 <h2>Welcome, Guild Master!</h2>
-                <p>Manage your adventurers, assign quests, and grow your guild's reputation.</p>
+                <p>Manage your adventurers, assign quests, and grow your guild&apos;s reputation.</p>
                 <div className="quick-stats">
                     <div className="stat-card">
                         <h3>Active Adventurers</h3>

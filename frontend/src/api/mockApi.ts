@@ -44,6 +44,7 @@ export const fetchQuests = async (): Promise<Quest[]> => {
                 preferredClasses: ["Warrior", "Mage"],
             },
             difficulty: "Hard",
+            status: "available",
         },
         {
             id: "quest2",
@@ -56,6 +57,7 @@ export const fetchQuests = async (): Promise<Quest[]> => {
                 preferredClasses: ["Rogue", "Archer"],
             },
             difficulty: "Medium",
+            status: "available",
         },
     ];
 };
