@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventurer Guild Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <h1>⚔️ Adventurer Guild Manager</h1>
+            <div class="guild-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Gold:</span>
+                    <span class="stat-value" id="gold-display">1000</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Reputation:</span>
+                    <span class="stat-value" id="reputation-display">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Guild Level:</span>
+                    <span class="stat-value" id="guild-level-display">1</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="guild-hall">🏰 Guild Hall</button>
+            <button class="tab-btn" data-tab="adventurers">⚔️ Adventurers</button>
+            <button class="tab-btn" data-tab="quest-board">📋 Quest Board</button>
+            <button class="tab-btn" data-tab="hiring-hall">👥 Hiring Hall</button>
+            <button class="tab-btn" data-tab="treasury">💰 Treasury</button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Guild Hall Tab -->
+            <section class="tab-content active" id="guild-hall">
+                <div class="guild-overview">
+                    <div class="guild-image">
+                        <img src="https://pplx-res.cloudinary.com/image/upload/v1751337951/pplx_project_search_images/c116f2633238f064f7b5f29e80faad842e2bf063.jpg" alt="Guild Hall Interior" class="guild-hall-image">
+                    </div>
+                    <div class="guild-info">
+                        <h2>Welcome, Guild Master!</h2>
+                        <p>Manage your adventurers, assign quests, and grow your guild's reputation.</p>
+                        
+                        <div class="quick-stats">
+                            <div class="stat-card">
+                                <h3>Active Adventurers</h3>
+                                <div class="stat-number" id="active-adventurers">1</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Active Quests</h3>
+                                <div class="stat-number" id="active-quests">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Completed Quests</h3>
+                                <div class="stat-number" id="completed-quests">0</div>
+                            </div>
+                        </div>
+
+                        <div class="active-quest-panel">
+                            <h3>🕐 Active Quests</h3>
+                            <div id="active-quests-list" class="active-quests-container">
+                                <p class="no-quests">No active quests</p>
+                            </div>
+                        </div>
+
+                        <div class="activity-log">
+                            <h3>📜 Recent Activity</h3>
+                            <div id="activity-log" class="log-container">
+                                <p>Welcome to your new guild! Start by hiring adventurers and taking on quests.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Adventurers Tab -->
+            <section class="tab-content" id="adventurers">
+                <h2>⚔️ Your Adventurers</h2>
+                <div class="adventurer-grid" id="adventurer-grid">
+                    <!-- Adventurers will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Quest Board Tab -->
+            <section class="tab-content" id="quest-board">
+                <div class="quest-board-header">
+                    <h2>📋 Quest Board</h2>
+                    <div class="quest-board-image">
+                        <img src="https://pplx-res.cloudinary.com/image/upload/v1751337951/pplx_project_search_images/9083c87217ad8ba02d828b0af816227201827b4b.jpg" alt="Quest Board" class="quest-board-img">
+                    </div>
+                </div>
+                <div class="quest-grid" id="quest-grid">
+                    <!-- Quests will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Hiring Hall Tab -->
+            <section class="tab-content" id="hiring-hall">
+                <h2>👥 Hiring Hall</h2>
+                <div class="hiring-info">
+                    <p>Adventurers Available: <span id="available-slots">4</span> / <span id="max-adventurers">5</span></p>
+                    <button class="btn btn--secondary" id="refresh-recruits">🔄 Refresh Recruits (50 gold)</button>
+                </div>
+                <div class="recruit-grid" id="recruit-grid">
+                    <!-- Recruits will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Treasury Tab -->
+            <section class="tab-content" id="treasury">
+                <h2>💰 Treasury & Statistics</h2>
+                <div class="treasury-grid">
+                    <div class="card treasury-overview">
+                        <div class="card__body">
+                            <h3>Financial Overview</h3>
+                            <div class="financial-stats">
+                                <div class="financial-item">
+                                    <span>Current Gold:</span>
+                                    <span id="treasury-gold">1000</span>
+                                </div>
+                                <div class="financial-item">
+                                    <span>Total Earned:</span>
+                                    <span id="total-earned">0</span>
+                                </div>
+                                <div class="financial-item">
+                                    <span>Total Spent:</span>
+                                    <span id="total-spent">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card guild-progress">
+                        <div class="card__body">
+                            <h3>Guild Progress</h3>
+                            <div class="progress-stats">
+                                <div class="progress-item">
+                                    <span>Guild Level:</span>
+                                    <span id="treasury-guild-level">1</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span>Reputation:</span>
+                                    <span id="treasury-reputation">0</span>
+                                </div>
+                                <div class="progress-item">
+                                    <span>Quest Success Rate:</span>
+                                    <span id="success-rate">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card achievements">
+                        <div class="card__body">
+                            <h3>Achievements</h3>
+                            <div id="achievements-list" class="achievements-container">
+                                <div class="achievement locked">
+                                    <span>🏆 First Quest - Complete your first quest</span>
+                                </div>
+                                <div class="achievement locked">
+                                    <span>💼 Growing Business - Hire 5 adventurers</span>
+                                </div>
+                                <div class="achievement locked">
+                                    <span>🌟 Legendary Guild - Reach guild level 5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Quest Assignment Modal -->
+        <div class="modal" id="quest-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="quest-modal-title">Assign Adventurers</h3>
+                    <button class="close-btn" id="close-quest-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="quest-details" id="quest-modal-details">
+                        <!-- Quest details will be populated -->
+                    </div>
+                    <div class="adventurer-selection">
+                        <h4>Select Adventurers:</h4>
+                        <div id="available-adventurers" class="adventurer-selection-grid">
+                            <!-- Available adventurers will be populated -->
+                        </div>
+                    </div>
+                    <div class="quest-success-info">
+                        <p>Success Probability: <span id="success-probability">0%</span></p>
+                        <button class="btn btn--primary" id="start-quest-btn" disabled>Start Quest</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="notification-container" id="notifications">
+            <!-- Notifications will be added here -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
