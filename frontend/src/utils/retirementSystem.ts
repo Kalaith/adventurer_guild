@@ -259,7 +259,7 @@ export class RetirementSystem {
     const skillCategory = skills[category as keyof SkillTree];
     if (!skillCategory || typeof skillCategory !== 'object') return 0;
 
-    return (skillCategory as any)[skill] || 0;
+    return (skillCategory as Record<string, number>)[skill] || 0;
   }
 
   public processRetirement(adventurer: Adventurer): RetiredAdventurer {
@@ -306,7 +306,7 @@ export class RetirementSystem {
       const skillCategory = parent.skills[category as keyof SkillTree];
       if (typeof skillCategory === 'object') {
         Object.keys(skillCategory).forEach(skill => {
-          const parentValue = (skillCategory as any)[skill];
+          const parentValue = (skillCategory as Record<string, number>)[skill];
           const inheritedValue = Math.floor(parentValue * 0.2 + Math.random() * 5);
           if (inheritedValue > 0) {
             potentialSkills[`${category}.${skill}`] = inheritedValue;

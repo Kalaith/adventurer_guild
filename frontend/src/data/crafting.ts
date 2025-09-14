@@ -1,4 +1,4 @@
-import { CraftingMaterial, CraftingRecipe, EquipmentItem } from '../types/game';
+import { CraftingMaterial, CraftingRecipe } from '../types/game';
 
 export const CRAFTING_MATERIALS: CraftingMaterial[] = [
   // Common Materials

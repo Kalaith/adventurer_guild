@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { generateProceduralQuest, generateMultipleQuests } from '../../utils/questGenerator';
 
 // Mock Math.random for predictable tests
-const mockMath = Object.create(global.Math);
+// const mockMath = Object.create(global.Math);
 
 describe('Quest Generator', () => {
   beforeEach(() => {

@@ -12,7 +12,9 @@ export const QUEST_DATA: Quest[] = [
       preferredClasses: ['Warrior', 'Rogue']
     },
     difficulty: 'Easy',
-    status: 'available'
+    status: 'available',
+    questType: 'standard',
+    experienceReward: 50
   },
   {
     id: 'dragon_hunt',
@@ -25,7 +27,9 @@ export const QUEST_DATA: Quest[] = [
       preferredClasses: ['Warrior', 'Mage']
     },
     difficulty: 'Hard',
-    status: 'available'
+    status: 'available',
+    questType: 'standard',
+    experienceReward: 200
   },
   {
     id: 'bandit_ambush',
@@ -38,7 +42,9 @@ export const QUEST_DATA: Quest[] = [
       preferredClasses: ['Rogue', 'Archer']
     },
     difficulty: 'Medium',
-    status: 'available'
+    status: 'available',
+    questType: 'standard',
+    experienceReward: 120
   },
   {
     id: 'treasure_hunt',
@@ -51,7 +57,9 @@ export const QUEST_DATA: Quest[] = [
       preferredClasses: ['Mage', 'Rogue']
     },
     difficulty: 'Medium',
-    status: 'available'
+    status: 'available',
+    questType: 'standard',
+    experienceReward: 160
   }
 ];
 

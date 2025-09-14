@@ -1,4 +1,4 @@
-import { Territory, Quest, Adventurer, Faction } from '../types/game';
+import { Territory, Quest, Adventurer } from '../types/game';
 
 export interface TerritoryExpansion {
   id: string;
@@ -388,7 +388,7 @@ export class TerritoryControlSystem {
     const skillCategory = adventurer.skills[category as keyof typeof adventurer.skills];
     if (!skillCategory || typeof skillCategory !== 'object') return 0;
 
-    return (skillCategory as any)[skill] || 0;
+    return (skillCategory as Record<string, number>)[skill] || 0;
   }
 
   public applyTerritoryControl(territoryId: string, influenceLevel: number): void {
@@ -505,7 +505,7 @@ export class TerritoryControlSystem {
     conflict: TerritoryConflict,
     resolutionType: 'military' | 'diplomatic' | 'economic',
     assignedAdventurers: Adventurer[]
-  ): { success: boolean; description: string; consequences: any } {
+  ): { success: boolean; description: string; consequences: Record<string, unknown> } {
     const option = conflict.resolutionOptions.find(opt => opt.type === resolutionType);
     if (!option) {
       return {
@@ -537,7 +537,7 @@ export class TerritoryControlSystem {
     const success = Math.random() * 100 < actualSuccessChance;
 
     let description = '';
-    const consequences: any = { goldCost: option.cost };
+    const consequences: Record<string, unknown> = { goldCost: option.cost };
 
     if (success) {
       description = `The ${resolutionType} approach successfully resolved the ${conflict.conflictType} in ${conflict.territoryId}.`;
