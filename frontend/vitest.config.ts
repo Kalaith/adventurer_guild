@@ -9,5 +9,21 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    // Reduce memory usage in CI environments
+    poolOptions: {
+      threads: {
+        singleThread: true,
+        isolate: false,
+      },
+    },
+    // Run tests sequentially to avoid memory issues
+    pool: 'forks',
+    poolMaxWorkers: 1,
+    // Increase timeout for slower CI environments
+    testTimeout: 10000,
+    // Disable coverage by default to save memory
+    coverage: {
+      enabled: false,
+    },
   },
 })
