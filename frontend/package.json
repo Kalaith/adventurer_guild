@@ -15,6 +15,7 @@
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
+    "test:run:ci": "vitest run src/test/data/ src/test/utils/formatters.test.ts src/test/utils/questGenerator.test.ts",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "ci": "npm run lint && npm run type-check && npm run format:check && npm run test:run && npm run build",
