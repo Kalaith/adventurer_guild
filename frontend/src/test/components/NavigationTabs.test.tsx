@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { NavigationTabs } from '../../components/NavigationTabs';
+import NavigationTabs from '../../components/NavigationTabs';
 import { useUIStore } from '../../stores/uiStore';
 
 // Mock the UI store
