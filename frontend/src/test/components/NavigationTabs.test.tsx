@@ -8,6 +8,11 @@ vi.mock('../../stores/uiStore');
 
 const mockUseUIStore = vi.mocked(useUIStore);
 
+interface MockUIState {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
 describe('NavigationTabs Component', () => {
   const mockSetActiveTab = vi.fn();
 
@@ -16,7 +21,7 @@ describe('NavigationTabs Component', () => {
     mockUseUIStore.mockReturnValue({
       activeTab: 'adventurers',
       setActiveTab: mockSetActiveTab
-    } as any);
+    } as MockUIState);
   });
 
   it('should render all navigation tabs', () => {
@@ -52,7 +57,7 @@ describe('NavigationTabs Component', () => {
     mockUseUIStore.mockReturnValue({
       activeTab: 'quests',
       setActiveTab: mockSetActiveTab
-    } as any);
+    } as MockUIState);
 
     // Re-render with updated state
     const { rerender } = render(<NavigationTabs />);
@@ -107,7 +112,7 @@ describe('NavigationTabs Component', () => {
       mockUseUIStore.mockReturnValue({
         activeTab: tabName,
         setActiveTab: mockSetActiveTab
-      } as any);
+      } as MockUIState);
 
       render(<NavigationTabs />);
 

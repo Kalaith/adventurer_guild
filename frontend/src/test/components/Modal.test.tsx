@@ -90,8 +90,8 @@ describe('Modal Component', () => {
       </Modal>
     );
 
-    const firstButton = screen.getByText('First button');
-    const secondButton = screen.getByText('Second button');
+    // const firstButton = screen.getByText('First button');
+    // const secondButton = screen.getByText('Second button');
     const closeButton = screen.getByLabelText(/close modal/i);
 
     // Focus should start on the first focusable element or close button

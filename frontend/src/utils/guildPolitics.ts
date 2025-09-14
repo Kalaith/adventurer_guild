@@ -428,7 +428,7 @@ export class GuildPoliticsSystem {
   }
 
   public generateFaction(leader: Adventurer, members: Adventurer[]): GuildFaction {
-    const ideologies: GuildFaction['ideology'][] = ['progressive', 'conservative', 'militaristic', 'diplomatic', 'mercenary'];
+    // const ideologies: GuildFaction['ideology'][] = ['progressive', 'conservative', 'militaristic', 'diplomatic', 'mercenary'];
 
     // Determine ideology based on leader's personality
     let ideology: GuildFaction['ideology'] = 'progressive';
@@ -470,8 +470,8 @@ export class GuildPoliticsSystem {
 
   public processPoliticalConsequences(
     eventType: PoliticalEvent['type'],
-    outcome: any,
-    adventurers: Adventurer[]
+    outcome: string | Record<string, unknown>,
+    _adventurers: Adventurer[]
   ): {
     goldCost: number;
     reputationChange: number;

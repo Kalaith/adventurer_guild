@@ -194,28 +194,28 @@ export class LegacySystem {
     return true;
   }
 
-  public recordLegendaryAdventurer(adventurer: Adventurer, generation: number, achievements: string[]): void {
+  public recordLegendaryAdventurer(adventurer: Adventurer, _generation: number, _achievements: string[]): void {
     // Only record truly exceptional adventurers
     if (adventurer.level < 8 || adventurer.questsCompleted < 30) return;
 
-    const legacyRecord = {
-      name: adventurer.name,
-      class: adventurer.class,
-      achievements,
-      generation
-    };
+    // const legacyRecord = {
+    //   name: adventurer.name,
+    //   class: adventurer.class,
+    //   achievements,
+    //   generation
+    // };
 
     // This would be called from the game state management
     // legacy.legendaryAdventurers.push(legacyRecord);
   }
 
-  public recordFamousQuest(quest: Quest, completedBy: string[], generation: number, legendary: boolean = false): void {
-    const questRecord = {
-      questName: quest.name,
-      completedBy,
-      generation,
-      legendary
-    };
+  public recordFamousQuest(quest: Quest, completedBy: string[], generation: number, _legendary: boolean = false): void {
+    // const questRecord = {
+    //   questName: quest.name,
+    //   completedBy,
+    //   generation,
+    //   legendary
+    // };
 
     // This would be called from the game state management
     // legacy.famousQuests.push(questRecord);
@@ -530,7 +530,7 @@ export class LegacySystem {
     return { newState, updatedLegacy };
   }
 
-  private generateMajorEvents(currentState: GuildState, legacy: GuildLegacy): string[] {
+  private generateMajorEvents(currentState: GuildState, _legacy: GuildLegacy): string[] {
     const events: string[] = [];
 
     // Completed campaigns are major events

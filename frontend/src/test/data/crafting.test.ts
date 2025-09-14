@@ -143,7 +143,7 @@ describe('Crafting System', () => {
     });
 
     it('should return empty array for non-existent rarity', () => {
-      const recipes = getRecipesByRarity('nonexistent' as any);
+      const recipes = getRecipesByRarity('nonexistent' as 'common');
 
       expect(recipes).toHaveLength(0);
     });
@@ -213,7 +213,13 @@ describe('Crafting System', () => {
       materials: { 'iron_ore': 3, 'wood_planks': 1 },
       goldCost: 100,
       requiredFacilityLevel: 1,
-      result: {} as any
+      result: {
+        id: 'iron_sword',
+        name: 'Iron Sword',
+        type: 'weapon' as const,
+        rarity: 'common' as const,
+        stats: { strength: 5 }
+      }
     };
 
     it('should return true when all requirements are met', () => {

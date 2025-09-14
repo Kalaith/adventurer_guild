@@ -1,4 +1,4 @@
-import { Campaign, Quest, EquipmentItem } from '../types/game';
+import { Campaign, Quest } from '../types/game';
 
 export const CAMPAIGN_QUESTS: { [campaignId: string]: Quest[] } = {
   'dragon_threat': [
