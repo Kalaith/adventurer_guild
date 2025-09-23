@@ -1,12 +1,19 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Treasury } from '../../components/Treasury';
+import Treasury from '../../components/Treasury';
 import { useGuildStore } from '../../stores/gameStore';
 
 // Mock the store
 vi.mock('../../stores/gameStore');
 
 const mockUseGuildStore = vi.mocked(useGuildStore);
+
+interface MockGuildState {
+  gold: number;
+  reputation: number;
+  level: number;
+  formatNumber: (num: number) => string;
+}
 
 describe('Treasury Component', () => {
   beforeEach(() => {
@@ -19,7 +26,7 @@ describe('Treasury Component', () => {
         if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
         return num.toString();
       }
-    } as any);
+    } as MockGuildState);
   });
 
   it('should render treasury information correctly', () => {
@@ -53,7 +60,7 @@ describe('Treasury Component', () => {
         if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
         return num.toString();
       }
-    } as any);
+    } as MockGuildState);
 
     render(<Treasury />);
 
@@ -68,7 +75,7 @@ describe('Treasury Component', () => {
       reputation: 0,
       level: 1,
       formatNumber: (num: number) => num.toString()
-    } as any);
+    } as MockGuildState);
 
     render(<Treasury />);
 

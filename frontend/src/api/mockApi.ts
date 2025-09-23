@@ -45,6 +45,8 @@ export const fetchQuests = async (): Promise<Quest[]> => {
             },
             difficulty: "Hard",
             status: "available",
+            questType: "standard",
+            experienceReward: 200
         },
         {
             id: "quest2",
@@ -58,6 +60,8 @@ export const fetchQuests = async (): Promise<Quest[]> => {
             },
             difficulty: "Medium",
             status: "available",
+            questType: "standard",
+            experienceReward: 120
         },
     ];
 };

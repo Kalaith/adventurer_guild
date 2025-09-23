@@ -37,5 +37,12 @@ export default tseslint.config(
         version: 'detect'
       }
     }
+  },
+  // Override for test files - disable react-refresh rules since they don't need fast refresh
+  {
+    files: ['**/*.test.{ts,tsx}', '**/test/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
   }
 );

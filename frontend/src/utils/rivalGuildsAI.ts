@@ -1,4 +1,4 @@
-import { RivalGuild, Quest, Adventurer } from '../types/game';
+import { RivalGuild, Quest } from '../types/game';
 
 export const RIVAL_GUILDS: RivalGuild[] = [
   {
@@ -62,8 +62,8 @@ interface RivalGuildAction {
   };
 }
 
-let activeCompetitions: QuestCompetition[] = [];
-let rivalActions: RivalGuildAction[] = [];
+const activeCompetitions: QuestCompetition[] = [];
+// const rivalActions: RivalGuildAction[] = [];
 
 export class RivalGuildsAI {
   private static instance: RivalGuildsAI;
@@ -182,7 +182,7 @@ export class RivalGuildsAI {
     return items[items.length - 1];
   }
 
-  private generateQuestStealAction(guild: RivalGuild, playerGuild: { level: number; reputation: number }): RivalGuildAction {
+  private generateQuestStealAction(guild: RivalGuild, _playerGuild: { level: number; reputation: number }): RivalGuildAction {
     const goldLoss = Math.floor(Math.random() * 200) + 50;
     const reputationLoss = Math.floor(Math.random() * 10) + 5;
 

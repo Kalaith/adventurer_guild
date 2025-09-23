@@ -131,7 +131,7 @@ function getRandomElement<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function replacePlaceholders(template: string, guildLevel: number): string {
+function replacePlaceholders(template: string, _guildLevel: number): string {
   return template
     .replace('{location}', getRandomElement(LOCATIONS))
     .replace('{enemy}', getRandomElement(ENEMIES))

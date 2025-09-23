@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { useGuildStore } from '../../stores/gameStore';
 import { useUIStore } from '../../stores/uiStore';
 import { GamePage } from '../../pages/GamePage';
@@ -59,40 +59,40 @@ const mockInitialAdventurers = [
   }
 ];
 
-const mockAvailableQuests = [
-  {
-    id: 'quest1',
-    name: 'Goblin Raid',
-    description: 'Clear out a goblin camp threatening local merchants',
-    reward: 200,
-    duration: 3,
-    requirements: {
-      minLevel: 2,
-      preferredClasses: ['Warrior', 'Archer']
-    },
-    difficulty: 'Medium',
-    status: 'available',
-    questType: 'standard',
-    experienceReward: 60,
-    skillRewards: { 'combat.weaponMastery': 5 }
-  },
-  {
-    id: 'quest2',
-    name: 'Ancient Relic Recovery',
-    description: 'Retrieve a magical artifact from ancient ruins',
-    reward: 350,
-    duration: 5,
-    requirements: {
-      minLevel: 3,
-      preferredClasses: ['Mage', 'Rogue']
-    },
-    difficulty: 'Hard',
-    status: 'available',
-    questType: 'standard',
-    experienceReward: 100,
-    skillRewards: { 'magic.spellPower': 8 }
-  }
-];
+// const mockAvailableQuests = [
+//   {
+//     id: 'quest1',
+//     name: 'Goblin Raid',
+//     description: 'Clear out a goblin camp threatening local merchants',
+//     reward: 200,
+//     duration: 3,
+//     requirements: {
+//       minLevel: 2,
+//       preferredClasses: ['Warrior', 'Archer']
+//     },
+//     difficulty: 'Medium',
+//     status: 'available',
+//     questType: 'standard',
+//     experienceReward: 60,
+//     skillRewards: { 'combat.weaponMastery': 5 }
+//   },
+//   {
+//     id: 'quest2',
+//     name: 'Ancient Relic Recovery',
+//     description: 'Retrieve a magical artifact from ancient ruins',
+//     reward: 350,
+//     duration: 5,
+//     requirements: {
+//       minLevel: 3,
+//       preferredClasses: ['Mage', 'Rogue']
+//     },
+//     difficulty: 'Hard',
+//     status: 'available',
+//     questType: 'standard',
+//     experienceReward: 100,
+//     skillRewards: { 'magic.spellPower': 8 }
+//   }
+// ];
 
 const mockRecruits = [
   {
@@ -105,6 +105,18 @@ const mockRecruits = [
     potentialSkills: { 'combat.weaponMastery': 8, 'combat.tacticalKnowledge': 5 }
   }
 ];
+
+interface MockGameState {
+  gold: number;
+  adventurers: typeof mockInitialAdventurers;
+  activeQuests: unknown[];
+  recruits: typeof mockRecruits;
+  hireAdventurer: () => void;
+  startQuest: () => void;
+  completeQuest: () => void;
+  refreshRecruits: () => void;
+  spendGold: () => void;
+}
 
 describe('Game Flow Integration Tests', () => {
   const mockActions = {
@@ -128,10 +140,10 @@ describe('Game Flow Integration Tests', () => {
 
       // Actions
       ...mockActions
-    } as any);
+    } as MockGameState);
 
     // Mock UI store as empty since GamePage doesn't seem to use it directly
-    mockUseUIStore.mockReturnValue({} as any);
+    mockUseUIStore.mockReturnValue({} as Record<string, unknown>);
   });
 
   describe('Game Page Rendering', () => {
@@ -156,7 +168,7 @@ describe('Game Flow Integration Tests', () => {
         activeQuests: [],
         recruits: [],
         ...mockActions
-      } as any);
+      } as MockGameState);
 
       expect(() => render(<GamePage />)).not.toThrow();
     });
