@@ -253,10 +253,8 @@ See `future_ui_improvements.md` for comprehensive UI/UX enhancement roadmap base
 4. **Testing**: Create unit and integration tests
 5. **Documentation**: Update README and code documentation
 
-## 📄 License
+## License
 
-This project is developed for educational and portfolio purposes, showcasing advanced React/TypeScript application architecture and complex state management systems.
+This project is licensed under the MIT License - see the individual component README files for details.
 
----
-
-**Total Implementation**: 15 major feature systems, 200+ quests, 50+ items, 8 territories, 5 AI guilds, and comprehensive multi-generational gameplay mechanics.
+Part of the WebHatchery game collection.
