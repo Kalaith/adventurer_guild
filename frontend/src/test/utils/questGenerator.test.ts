@@ -82,11 +82,14 @@ describe('Quest Generator', () => {
       const easyQuest = generateProceduralQuest(3, 'Easy');
       const epicQuest = generateProceduralQuest(3, 'Epic');
 
-      expect(easyQuest.lootTable).toHaveLength(1);
-      expect(epicQuest.lootTable).toHaveLength(1);
+      expect(easyQuest.lootTable).toBeDefined();
+      expect(epicQuest.lootTable).toBeDefined();
+      expect(easyQuest.lootTable ?? []).toHaveLength(1);
+      expect(epicQuest.lootTable ?? []).toHaveLength(1);
 
-      const easyLoot = easyQuest.lootTable[0];
-      const epicLoot = epicQuest.lootTable[0];
+      const easyLoot = easyQuest.lootTable?.[0];
+      const epicLoot = epicQuest.lootTable?.[0];
+      if (!easyLoot || !epicLoot) throw new Error('Expected quests to include a loot table item');
 
       expect(['common', 'uncommon']).toContain(easyLoot.rarity);
       expect(['epic', 'legendary']).toContain(epicLoot.rarity);
@@ -226,7 +229,8 @@ describe('Quest Generator', () => {
   describe('equipment generation', () => {
     it('should generate equipment with appropriate stats for quest type', () => {
       const quest = generateProceduralQuest(5);
-      const lootItem = quest.lootTable[0];
+      const lootItem = quest.lootTable?.[0];
+      if (!lootItem) throw new Error('Expected quest to include a loot table item');
 
       expect(lootItem.stats).toBeDefined();
 
@@ -236,7 +240,8 @@ describe('Quest Generator', () => {
 
     it('should generate equipment names that make sense', () => {
       const quest = generateProceduralQuest(5);
-      const lootItem = quest.lootTable[0];
+      const lootItem = quest.lootTable?.[0];
+      if (!lootItem) throw new Error('Expected quest to include a loot table item');
 
       expect(lootItem.name).toMatch(/^(Simple|Basic|Plain|Fine|Quality|Improved|Masterwork|Superior|Excellent|Enchanted|Mystical|Legendary|Godforged|Artifact|Divine)/);
       expect(lootItem.name).toMatch(/(Sword|Axe|Bow|Staff|Dagger|Chainmail|Plate|Robes|Leather Armor|Scale Mail|Ring|Amulet|Cloak|Belt|Boots)$/);
@@ -244,7 +249,7 @@ describe('Quest Generator', () => {
 
     it('should generate equipment with correct rarity distribution', () => {
       const quests = generateMultipleQuests(5, 100);
-      const lootItems = quests.flatMap(q => q.lootTable);
+      const lootItems = quests.flatMap(q => q.lootTable ?? []);
 
       const rarities = lootItems.map(item => item.rarity);
       const rarityCounts = rarities.reduce((counts, rarity) => {

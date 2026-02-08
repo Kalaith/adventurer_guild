@@ -494,11 +494,17 @@ export class GuildPoliticsSystem {
 
       case 'leadership_challenge':
         // Successful challenges improve morale, failed ones hurt it
-        if (outcome.successful) {
+        {
+          const recordOutcome =
+            typeof outcome === 'object' && outcome !== null ? (outcome as Record<string, unknown>) : null;
+          const successful = recordOutcome?.successful;
+
+          if (successful === true) {
           consequences.moraleChange = 10;
           consequences.reputationChange = 5;
-        } else {
+          } else {
           consequences.moraleChange = -15;
+          }
         }
         break;
 

@@ -11,10 +11,11 @@ import ActiveQuests from '../components/ActiveQuests';
 import ActivityLog from '../components/ActivityLog';
 import { Quest } from '../types/game';
 import { useGuildStore } from '../stores/gameStore';
+import { useUIStore } from '../stores/uiStore';
 
 export function GamePage() {
-  const [activeTab, setActiveTab] = useState('guild-hall');
   const [modalQuest, setModalQuest] = useState<Quest | null>(null);
+  const activeTab = useUIStore((s) => s.activeTab);
 
   const {
     gold,
@@ -77,7 +78,7 @@ export function GamePage() {
   return (
     <div className="min-h-screen bg-amber-50 text-slate-800">
       <Header />
-      <NavigationTabs setActiveTab={setActiveTab} activeTab={activeTab} />
+      <NavigationTabs />
       <main className="main-content">
         {renderActiveTab()}
         <ActiveQuests activeQuests={activeQuests} onCompleteQuest={completeQuest} />

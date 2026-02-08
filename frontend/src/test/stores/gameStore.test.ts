@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useGuildStore } from '../../stores/gameStore';
 import { INITIAL_ADVENTURERS } from '../../data/adventurers';
 import { GUILD_CONSTANTS } from '../../constants/gameConstants';
+import { QUEST_DATA } from '../../data/quests';
 
 // Mock data
 const mockAdventurer = {
@@ -58,24 +59,7 @@ const mockRecruit = {
   }
 };
 
-const mockQuest = {
-  id: 'test-quest-1',
-  name: 'Test Quest',
-  description: 'A simple test quest',
-  reward: 100,
-  duration: 2,
-  requirements: {
-    minLevel: 1,
-    preferredClasses: ['Warrior', 'Archer']
-  },
-  difficulty: 'Easy' as const,
-  status: 'available' as const,
-  questType: 'standard' as const,
-  experienceReward: 50,
-  skillRewards: {
-    'combat.weaponMastery': 5
-  }
-};
+const mockQuest = QUEST_DATA[0];
 
 describe('gameStore', () => {
   beforeEach(() => {
@@ -88,7 +72,26 @@ describe('gameStore', () => {
       activeQuests: [],
       completedQuests: [],
       recruits: [],
-      lastSave: Date.now()
+      lastSave: Date.now(),
+
+      factions: [],
+      facilities: [],
+      campaigns: [],
+      worldEvents: [],
+      rivalGuilds: [],
+      territories: [],
+      activeVotes: [],
+      retiredAdventurers: [],
+      materials: {},
+      availableRecipes: [],
+      currentSeason: 'spring',
+      seasonalQuests: [],
+      generation: 1,
+      legacyBonuses: {
+        experienceMultiplier: 1,
+        goldMultiplier: 1,
+        reputationMultiplier: 1,
+      },
     });
   });
 
@@ -108,9 +111,9 @@ describe('gameStore', () => {
     it('should have initial adventurers from data', () => {
       const state = useGuildStore.getState();
 
-      expect(state.adventurers[0].name).toBe('Sir Gareth');
+      expect(state.adventurers[0].name).toBe('Thrain Ironfist');
       expect(state.adventurers[0].class).toBe('Warrior');
-      expect(state.adventurers[1].name).toBe('Aria Moonwhisper');
+      expect(state.adventurers[1].name).toBe('Elara Stormweaver');
       expect(state.adventurers[1].class).toBe('Mage');
     });
   });

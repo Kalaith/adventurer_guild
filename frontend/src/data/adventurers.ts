@@ -1,4 +1,14 @@
-import { Adventurer } from '../types/game';
+import { Adventurer, type PersonalityTraits, type SkillTree } from '../types/game';
+import { PERSONALITY_DEFAULTS, SKILL_DEFAULTS } from '../constants/gameConstants';
+
+const createDefaultPersonality = (): PersonalityTraits => ({ ...PERSONALITY_DEFAULTS });
+
+const createDefaultSkills = (): SkillTree => ({
+  combat: { ...SKILL_DEFAULTS.combat },
+  magic: { ...SKILL_DEFAULTS.magic },
+  stealth: { ...SKILL_DEFAULTS.stealth },
+  survival: { ...SKILL_DEFAULTS.survival },
+});
 
 export const INITIAL_ADVENTURERS: Adventurer[] = [
   {
@@ -14,7 +24,14 @@ export const INITIAL_ADVENTURERS: Adventurer[] = [
       intelligence: 15,
       dexterity: 20,
       vitality: 30
-    }
+    },
+    personality: createDefaultPersonality(),
+    skills: createDefaultSkills(),
+    equipment: {},
+    relationships: [],
+    questsCompleted: 0,
+    yearsInGuild: 0,
+    retirementEligible: false,
   },
   {
     id: 'adv_002',
@@ -29,7 +46,14 @@ export const INITIAL_ADVENTURERS: Adventurer[] = [
       intelligence: 30,
       dexterity: 15,
       vitality: 20
-    }
+    },
+    personality: createDefaultPersonality(),
+    skills: createDefaultSkills(),
+    equipment: {},
+    relationships: [],
+    questsCompleted: 0,
+    yearsInGuild: 0,
+    retirementEligible: false,
   }
 ];
 
@@ -59,6 +83,13 @@ export const generateRandomAdventurer = (level: number = 1): Adventurer => {
       intelligence: level * 10 + Math.floor(Math.random() * 10),
       dexterity: level * 10 + Math.floor(Math.random() * 10),
       vitality: level * 10 + Math.floor(Math.random() * 10)
-    }
+    },
+    personality: createDefaultPersonality(),
+    skills: createDefaultSkills(),
+    equipment: {},
+    relationships: [],
+    questsCompleted: 0,
+    yearsInGuild: 0,
+    retirementEligible: false,
   };
 };

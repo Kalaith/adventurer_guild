@@ -66,6 +66,14 @@ export interface GenerationTransition {
   };
 }
 
+const toLegacyBonuses = (startingBonuses: { [key: string]: number }): GuildState['legacyBonuses'] => {
+  return {
+    experienceMultiplier: startingBonuses.experience ?? 1,
+    goldMultiplier: startingBonuses.gold ?? 1,
+    reputationMultiplier: startingBonuses.reputation ?? 1,
+  };
+};
+
 export const LEGACY_BONUSES: LegacyBonus[] = [
   {
     id: 'founding_wisdom',
@@ -514,7 +522,7 @@ export class LegacySystem {
       completedQuests: [],
       recruits: [],
       generation: legacy.totalGenerations + 1,
-      legacyBonuses: transition.newGeneration.startingBonuses,
+      legacyBonuses: toLegacyBonuses(transition.newGeneration.startingBonuses),
       materials: {}, // Reset materials
       facilities: [], // Reset facilities but keep some benefits through bonuses
       campaigns: [], // Reset campaigns

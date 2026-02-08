@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Treasury from '../../components/Treasury';
 import { useGuildStore } from '../../stores/gameStore';
@@ -79,7 +79,7 @@ describe('Treasury Component', () => {
 
     render(<Treasury />);
 
-    expect(screen.getByText('0')).toBeInTheDocument(); // Should appear twice for gold and reputation
+    expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(2); // Gold + reputation
     expect(screen.getByText('Level 1')).toBeInTheDocument();
   });
 

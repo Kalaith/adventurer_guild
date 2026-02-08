@@ -1,123 +1,101 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import NavigationTabs from '../../components/NavigationTabs';
-import { useUIStore } from '../../stores/uiStore';
-
-// Mock the UI store
-vi.mock('../../stores/uiStore');
-
-const mockUseUIStore = vi.mocked(useUIStore);
-
-interface MockUIState {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
+import { useUIStore, type TabId } from '../../stores/uiStore';
 
 describe('NavigationTabs Component', () => {
-  const mockSetActiveTab = vi.fn();
+  const mockSetActiveTab = vi.fn<(tab: TabId) => void>();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseUIStore.mockReturnValue({
+    useUIStore.setState({
       activeTab: 'adventurers',
-      setActiveTab: mockSetActiveTab
-    } as MockUIState);
+      setActiveTab: mockSetActiveTab,
+    });
   });
 
   it('should render all navigation tabs', () => {
     render(<NavigationTabs />);
 
-    expect(screen.getByText('Adventurers')).toBeInTheDocument();
-    expect(screen.getByText('Quests')).toBeInTheDocument();
-    expect(screen.getByText('Hiring Hall')).toBeInTheDocument();
-    expect(screen.getByText('Guild Hall')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Guild Hall/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Adventurers/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Quest Board/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Hiring Hall/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Treasury/i })).toBeInTheDocument();
   });
 
   it('should highlight the active tab', () => {
     render(<NavigationTabs />);
 
-    const adventurersTab = screen.getByText('Adventurers').closest('button');
-    expect(adventurersTab).toHaveClass('bg-blue-500'); // Active tab styling
+    const adventurersTab = screen.getByRole('tab', { name: /Adventurers/i });
+    expect(adventurersTab).toHaveAttribute('aria-selected', 'true');
+    expect(adventurersTab).toHaveClass('active');
   });
 
   it('should call setActiveTab when tab is clicked', () => {
     render(<NavigationTabs />);
 
-    const questsTab = screen.getByText('Quests');
-    fireEvent.click(questsTab);
-
-    expect(mockSetActiveTab).toHaveBeenCalledWith('quests');
+    fireEvent.click(screen.getByRole('tab', { name: /Quest Board/i }));
+    expect(mockSetActiveTab).toHaveBeenCalledWith('quest-board');
   });
 
   it('should switch active state when different tab is selected', () => {
-    // First render with 'adventurers' active
     render(<NavigationTabs />);
 
-    // Mock store returning 'quests' as active
-    mockUseUIStore.mockReturnValue({
-      activeTab: 'quests',
-      setActiveTab: mockSetActiveTab
-    } as MockUIState);
+    act(() => {
+      useUIStore.setState({ activeTab: 'quest-board' });
+    });
 
-    // Re-render with updated state
-    const { rerender } = render(<NavigationTabs />);
-    rerender(<NavigationTabs />);
+    const questBoardTab = screen.getByRole('tab', { name: /Quest Board/i });
+    const adventurersTab = screen.getByRole('tab', { name: /Adventurers/i });
 
-    const questsTab = screen.getByText('Quests').closest('button');
-    const adventurersTab = screen.getByText('Adventurers').closest('button');
-
-    expect(questsTab).toHaveClass('bg-blue-500'); // Active
-    expect(adventurersTab).not.toHaveClass('bg-blue-500'); // Inactive
+    expect(questBoardTab).toHaveAttribute('aria-selected', 'true');
+    expect(adventurersTab).toHaveAttribute('aria-selected', 'false');
   });
 
   it('should have proper accessibility attributes', () => {
     render(<NavigationTabs />);
 
-    const tabList = screen.getByRole('tablist');
+    const tabList = screen.getByRole('tablist', { name: /Primary navigation/i });
     expect(tabList).toBeInTheDocument();
 
     const tabs = screen.getAllByRole('tab');
-    expect(tabs).toHaveLength(4);
+    expect(tabs).toHaveLength(5);
 
-    tabs.forEach(tab => {
+    tabs.forEach((tab) => {
       expect(tab).toHaveAttribute('aria-selected');
     });
 
     const activeTab = screen.getByRole('tab', { selected: true });
-    expect(activeTab).toHaveTextContent('Adventurers');
+    expect(activeTab).toHaveTextContent(/Adventurers/i);
   });
 
   it('should support keyboard navigation', () => {
     render(<NavigationTabs />);
 
-    const questsTab = screen.getByText('Quests');
+    const questBoardTab = screen.getByRole('tab', { name: /Quest Board/i });
+    questBoardTab.focus();
+    expect(document.activeElement).toBe(questBoardTab);
 
-    // Tab should be focusable
-    questsTab.focus();
-    expect(document.activeElement).toBe(questsTab);
+    fireEvent.keyDown(questBoardTab, { key: 'Enter' });
+    expect(mockSetActiveTab).toHaveBeenCalledWith('quest-board');
 
-    // Enter key should activate tab
-    fireEvent.keyDown(questsTab, { key: 'Enter' });
-    expect(mockSetActiveTab).toHaveBeenCalledWith('quests');
-
-    // Space key should also activate tab
-    fireEvent.keyDown(questsTab, { key: ' ' });
-    expect(mockSetActiveTab).toHaveBeenCalledWith('quests');
+    fireEvent.keyDown(questBoardTab, { key: ' ' });
+    expect(mockSetActiveTab).toHaveBeenCalledWith('quest-board');
   });
 
   it('should handle all tab types correctly', () => {
-    const tabs = ['adventurers', 'quests', 'hiring', 'guild_hall'];
+    const tabIds: TabId[] = ['guild-hall', 'adventurers', 'quest-board', 'hiring-hall', 'treasury'];
 
-    tabs.forEach(tabName => {
-      mockUseUIStore.mockReturnValue({
-        activeTab: tabName,
-        setActiveTab: mockSetActiveTab
-      } as MockUIState);
+    tabIds.forEach((tabId) => {
+      act(() => {
+        useUIStore.setState({ activeTab: tabId });
+      });
 
-      render(<NavigationTabs />);
-
-      const activeTab = screen.getByRole('tab', { selected: true });
-      expect(activeTab).toBeInTheDocument();
+      const { unmount } = render(<NavigationTabs />);
+      const selected = screen.getByRole('tab', { selected: true });
+      expect(selected).toBeInTheDocument();
+      unmount();
     });
   });
 });
