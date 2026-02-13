@@ -22,7 +22,7 @@ export interface SeasonalEvent {
   };
 }
 
-export const SEASONAL_EVENTS: SeasonalEvent[] = [
+export const seasonalEvents: SeasonalEvent[] = [
   {
     id: 'spring_awakening',
     name: 'Spring Awakening Festival',
@@ -473,7 +473,7 @@ export function getAvailableSeasonalEvents(
 ): SeasonalEvent[] {
   const currentSeason = getCurrentSeason();
 
-  return SEASONAL_EVENTS.filter(event => {
+  return seasonalEvents.filter(event => {
     // Check if it's the right season or a special festival
     const seasonMatch = event.season === currentSeason || event.season === 'festival';
     if (!seasonMatch) return false;
@@ -499,7 +499,7 @@ export function getAvailableSeasonalEvents(
 }
 
 export function getSeasonalEventById(eventId: string): SeasonalEvent | undefined {
-  return SEASONAL_EVENTS.find(event => event.id === eventId);
+  return seasonalEvents.find(event => event.id === eventId);
 }
 
 export function getSeasonalQuests(eventId: string): Quest[] {

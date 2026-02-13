@@ -1,6 +1,6 @@
 import { Campaign, Quest } from '../types/game';
 
-export const CAMPAIGN_QUESTS: { [campaignId: string]: Quest[] } = {
+export const campaignQuests: { [campaignId: string]: Quest[] } = {
   'dragon_threat': [
     {
       id: 'dragon_01_scouts',
@@ -422,8 +422,8 @@ export function getCampaignById(campaignId: string): Campaign | undefined {
 }
 
 export function getCampaignQuestById(questId: string): Quest | undefined {
-  for (const campaignId in CAMPAIGN_QUESTS) {
-    const quest = CAMPAIGN_QUESTS[campaignId].find(q => q.id === questId);
+  for (const campaignId in campaignQuests) {
+    const quest = campaignQuests[campaignId].find(q => q.id === questId);
     if (quest) return quest;
   }
   return undefined;

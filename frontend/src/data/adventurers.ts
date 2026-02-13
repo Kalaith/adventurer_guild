@@ -1,16 +1,16 @@
 import { Adventurer, type PersonalityTraits, type SkillTree } from '../types/game';
-import { PERSONALITY_DEFAULTS, SKILL_DEFAULTS } from '../constants/gameConstants';
+import { personalityDefaults, skillDefaults } from '../constants/gameConstants';
 
-const createDefaultPersonality = (): PersonalityTraits => ({ ...PERSONALITY_DEFAULTS });
+const createDefaultPersonality = (): PersonalityTraits => ({ ...personalityDefaults });
 
 const createDefaultSkills = (): SkillTree => ({
-  combat: { ...SKILL_DEFAULTS.combat },
-  magic: { ...SKILL_DEFAULTS.magic },
-  stealth: { ...SKILL_DEFAULTS.stealth },
-  survival: { ...SKILL_DEFAULTS.survival },
+  combat: { ...skillDefaults.combat },
+  magic: { ...skillDefaults.magic },
+  stealth: { ...skillDefaults.stealth },
+  survival: { ...skillDefaults.survival },
 });
 
-export const INITIAL_ADVENTURERS: Adventurer[] = [
+export const initialAdventurers: Adventurer[] = [
   {
     id: 'adv_001',
     name: 'Thrain Ironfist',
@@ -57,7 +57,7 @@ export const INITIAL_ADVENTURERS: Adventurer[] = [
   }
 ];
 
-export const ADVENTURER_NAMES = {
+export const adventurerNames = {
   Warrior: ['Thrain Ironfist', 'Grom Bloodaxe', 'Valeria Stormblade', 'Bjorn Bearkiller'],
   Mage: ['Elara Stormweaver', 'Mordecai Shadowcaster', 'Sylvana Moonwhisper', 'Zephyr Windcaller'],
   Rogue: ['Shadow Nightstalker', 'Raven Quickblade', 'Silk Shadowstep', 'Ghost Whisperwind'],
@@ -67,7 +67,7 @@ export const ADVENTURER_NAMES = {
 export const generateRandomAdventurer = (level: number = 1): Adventurer => {
   const classes: Array<'Warrior' | 'Mage' | 'Rogue' | 'Archer'> = ['Warrior', 'Mage', 'Rogue', 'Archer'];
   const randomClass = classes[Math.floor(Math.random() * classes.length)];
-  const names = ADVENTURER_NAMES[randomClass];
+  const names = adventurerNames[randomClass];
   const randomName = names[Math.floor(Math.random() * names.length)];
 
   return {

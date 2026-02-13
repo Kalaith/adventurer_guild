@@ -1,6 +1,6 @@
 import React from 'react';
 import { Recruit } from '../types/game';
-import { GUILD_CONSTANTS } from '../constants/gameConstants';
+import { guildConstants } from '../constants/gameConstants';
 
 interface HiringHallProps {
   gold: number;
@@ -21,7 +21,7 @@ const HiringHall: React.FC<HiringHallProps> = ({
   };
 
   const handleRefreshRecruits = () => {
-    if (gold >= GUILD_CONSTANTS.RECRUIT_REFRESH_COST) {
+    if (gold >= guildConstants.RECRUIT_REFRESH_COST) {
       onRefreshRecruits();
     } else {
       alert('Not enough gold to refresh recruits!');
@@ -36,9 +36,9 @@ const HiringHall: React.FC<HiringHallProps> = ({
         <button
           className="btn btn--secondary"
           onClick={handleRefreshRecruits}
-          disabled={gold < GUILD_CONSTANTS.RECRUIT_REFRESH_COST}
+          disabled={gold < guildConstants.RECRUIT_REFRESH_COST}
         >
-          🔄 Refresh Recruits ({GUILD_CONSTANTS.RECRUIT_REFRESH_COST} gold)
+          🔄 Refresh Recruits ({guildConstants.RECRUIT_REFRESH_COST} gold)
         </button>
       </div>
       <div className="recruit-grid">

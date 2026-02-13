@@ -8,11 +8,11 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-const FOCUSABLE_SELECTOR =
+const focusableSelector =
   'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
 const getFocusableElements = (root: HTMLElement): HTMLElement[] => {
-  return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+  return Array.from(root.querySelectorAll<HTMLElement>(focusableSelector)).filter(
     (el) => !el.hasAttribute('disabled') && el.tabIndex !== -1
   );
 };

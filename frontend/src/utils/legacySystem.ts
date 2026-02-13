@@ -74,7 +74,7 @@ const toLegacyBonuses = (startingBonuses: { [key: string]: number }): GuildState
   };
 };
 
-export const LEGACY_BONUSES: LegacyBonus[] = [
+export const legacyBonuses: LegacyBonus[] = [
   {
     id: 'founding_wisdom',
     name: 'Founding Wisdom',
@@ -176,7 +176,7 @@ export class LegacySystem {
   public checkForLegacyBonuses(legacy: GuildLegacy): LegacyBonus[] {
     const newBonuses: LegacyBonus[] = [];
 
-    LEGACY_BONUSES.forEach(bonus => {
+    legacyBonuses.forEach(bonus => {
       // Skip if already active
       if (legacy.activeBonuses.some(active => active.id === bonus.id)) {
         return;

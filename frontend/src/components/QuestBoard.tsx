@@ -1,6 +1,6 @@
 import React from 'react';
 import { Quest } from '../types/game';
-import { QUEST_DATA } from '../data/quests';
+import { questData } from '../data/quests';
 
 interface QuestBoardProps {
   onQuestSelect: (quest: Quest) => void;
@@ -14,7 +14,7 @@ const QuestBoard: React.FC<QuestBoardProps> = ({ onQuestSelect }) => {
         <p>Choose from available quests to send your adventurers on exciting adventures!</p>
       </div>
       <div className="quest-grid">
-        {QUEST_DATA.map((quest) => (
+        {questData.map((quest) => (
           <div
             key={quest.id}
             className="quest-item"

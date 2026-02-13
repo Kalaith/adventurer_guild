@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { GuildState, Adventurer, Quest, Recruit } from '../types/game';
-import { GUILD_CONSTANTS, PERSONALITY_DEFAULTS, SKILL_DEFAULTS } from '../constants/gameConstants';
+import { guildConstants, personalityDefaults, skillDefaults } from '../constants/gameConstants';
 import { getQuestById } from '../data/quests';
-import { INITIAL_ADVENTURERS } from '../data/adventurers';
+import { initialAdventurers } from '../data/adventurers';
 import { formatNumber } from '../utils/formatters';
 
 interface GuildStore extends GuildState {
@@ -33,13 +33,13 @@ const randomInt = (minInclusive: number, maxInclusive: number): number => {
 };
 
 const createDefaultSkills = () => ({
-  combat: { ...SKILL_DEFAULTS.combat },
-  magic: { ...SKILL_DEFAULTS.magic },
-  stealth: { ...SKILL_DEFAULTS.stealth },
-  survival: { ...SKILL_DEFAULTS.survival },
+  combat: { ...skillDefaults.combat },
+  magic: { ...skillDefaults.magic },
+  stealth: { ...skillDefaults.stealth },
+  survival: { ...skillDefaults.survival },
 });
 
-const createDefaultPersonality = () => ({ ...PERSONALITY_DEFAULTS });
+const createDefaultPersonality = () => ({ ...personalityDefaults });
 
 const hasOwn = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
   return Object.prototype.hasOwnProperty.call(obj, key);
@@ -73,7 +73,7 @@ export const useGuildStore = create<GuildStore>()(
       gold: 1000,
       reputation: 0,
       level: 1,
-      adventurers: [...INITIAL_ADVENTURERS],
+      adventurers: [...initialAdventurers],
       activeQuests: [],
       completedQuests: [],
       recruits: [],
@@ -105,7 +105,7 @@ export const useGuildStore = create<GuildStore>()(
 
         if (!recruit) return;
 
-        if (state.adventurers.length >= GUILD_CONSTANTS.MAX_ADVENTURERS) {
+        if (state.adventurers.length >= guildConstants.MAX_ADVENTURERS) {
           console.warn('Maximum adventurers reached');
           return;
         }
@@ -189,7 +189,8 @@ export const useGuildStore = create<GuildStore>()(
         if (!quest) return;
 
         const reward = state.calculateQuestReward(quest);
-        const xpReward = quest.experienceReward ?? (quest.requirements.minLevel * GUILD_CONSTANTS.EXPERIENCE_PER_QUEST_LEVEL);
+        const xpReward =
+          quest.experienceReward ?? quest.requirements.minLevel * guildConstants.EXPERIENCE_PER_QUEST_LEVEL;
 
         set((prevState) => ({
           gold: prevState.gold + reward,
@@ -213,7 +214,7 @@ export const useGuildStore = create<GuildStore>()(
       },
 
       refreshRecruits: () => {
-        if (!get().spendGold(GUILD_CONSTANTS.RECRUIT_REFRESH_COST)) {
+        if (!get().spendGold(guildConstants.RECRUIT_REFRESH_COST)) {
           console.warn('Not enough gold to refresh recruits');
           return;
         }
@@ -221,7 +222,8 @@ export const useGuildStore = create<GuildStore>()(
         const newRecruits: Recruit[] = [];
         for (let i = 0; i < 3; i++) {
           const level = Math.floor(Math.random() * 5) + 1;
-          const classType = GUILD_CONSTANTS.RECRUIT_CLASSES[Math.floor(Math.random() * GUILD_CONSTANTS.RECRUIT_CLASSES.length)];
+          const classType =
+            guildConstants.RECRUIT_CLASSES[Math.floor(Math.random() * guildConstants.RECRUIT_CLASSES.length)];
           const cost = get().calculateRecruitCost(level);
 
           const personality = createDefaultPersonality();
@@ -231,15 +233,20 @@ export const useGuildStore = create<GuildStore>()(
 
           // Sparse potential skill bumps; keys align with Recruit.potentialSkills shape.
           const potentialSkills: Recruit['potentialSkills'] = {};
-          const potentialKeys: Array<keyof typeof SKILL_DEFAULTS.combat | keyof typeof SKILL_DEFAULTS.magic | keyof typeof SKILL_DEFAULTS.stealth | keyof typeof SKILL_DEFAULTS.survival> =
+          const potentialKeys: Array<
+            | keyof typeof skillDefaults.combat
+            | keyof typeof skillDefaults.magic
+            | keyof typeof skillDefaults.stealth
+            | keyof typeof skillDefaults.survival
+          > =
             ['weaponMastery', 'tacticalKnowledge', 'spellPower', 'elementalMastery', 'sneaking', 'lockpicking', 'tracking', 'herbalism'];
 
           for (let j = 0; j < 3; j++) {
             const key = potentialKeys[randomInt(0, potentialKeys.length - 1)];
             const category =
-              key in SKILL_DEFAULTS.combat ? 'combat' :
-              key in SKILL_DEFAULTS.magic ? 'magic' :
-              key in SKILL_DEFAULTS.stealth ? 'stealth' :
+              key in skillDefaults.combat ? 'combat' :
+              key in skillDefaults.magic ? 'magic' :
+              key in skillDefaults.stealth ? 'stealth' :
               'survival';
 
             potentialSkills[`${category}.${String(key)}`] = randomInt(1, 10);
@@ -274,11 +281,13 @@ export const useGuildStore = create<GuildStore>()(
       },
 
       calculateRecruitCost: (level: number) => {
-        return Math.floor(GUILD_CONSTANTS.RECRUIT_BASE_COST * Math.pow(GUILD_CONSTANTS.RECRUIT_COST_MULTIPLIER, level - 1));
+        return Math.floor(
+          guildConstants.RECRUIT_BASE_COST * Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, level - 1)
+        );
       },
 
       calculateQuestReward: (quest: Quest) => {
-        const baseReward = quest.requirements.minLevel * GUILD_CONSTANTS.GOLD_PER_QUEST_LEVEL;
+        const baseReward = quest.requirements.minLevel * guildConstants.GOLD_PER_QUEST_LEVEL;
         const difficultyMultiplier = quest.difficulty === 'Easy' ? 1 : quest.difficulty === 'Medium' ? 1.5 : 2;
         return Math.floor(baseReward * difficultyMultiplier);
       },

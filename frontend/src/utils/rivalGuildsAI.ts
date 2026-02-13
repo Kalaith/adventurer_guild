@@ -1,6 +1,6 @@
 import { RivalGuild, Quest } from '../types/game';
 
-export const RIVAL_GUILDS: RivalGuild[] = [
+export const rivalGuilds: RivalGuild[] = [
   {
     id: 'iron_fist_company',
     name: 'Iron Fist Company',
@@ -87,7 +87,7 @@ export class RivalGuildsAI {
     const actions: RivalGuildAction[] = [];
 
     // Update rival guild stats and generate actions
-    RIVAL_GUILDS.forEach(guild => {
+    rivalGuilds.forEach(guild => {
       if (Math.random() * 100 < this.calculateActionChance(guild, playerGuild)) {
         const action = this.generateRivalAction(guild, playerGuild);
         if (action) {
@@ -233,7 +233,7 @@ export class RivalGuildsAI {
   }
 
   private applyRivalAction(action: RivalGuildAction): void {
-    const guild = RIVAL_GUILDS.find(g => g.id === action.guildId);
+    const guild = rivalGuilds.find(g => g.id === action.guildId);
     if (!guild) return;
 
     if (action.impact.rivalGainReputation) {
@@ -256,7 +256,7 @@ export class RivalGuildsAI {
       // Only high-value quests attract competition
       if (quest.reward < 200) return;
 
-      RIVAL_GUILDS.forEach(guild => {
+      rivalGuilds.forEach(guild => {
         if (Math.random() * 100 < guild.competitionLevel / 2) {
           const playerChance = this.calculatePlayerQuestChance(quest, guild, playerGuild);
 
@@ -317,11 +317,11 @@ export class RivalGuildsAI {
   }
 
   public getRivalGuilds(): RivalGuild[] {
-    return [...RIVAL_GUILDS];
+    return [...rivalGuilds];
   }
 
   public getGuildById(guildId: string): RivalGuild | undefined {
-    return RIVAL_GUILDS.find(guild => guild.id === guildId);
+    return rivalGuilds.find(guild => guild.id === guildId);
   }
 
   // Player actions against rival guilds

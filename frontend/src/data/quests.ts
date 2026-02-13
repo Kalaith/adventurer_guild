@@ -1,6 +1,6 @@
 import { Quest } from '../types/game';
 
-export const QUEST_DATA: Quest[] = [
+export const questData: Quest[] = [
   {
     id: 'goblin_camp',
     name: 'Clear Goblin Camp',
@@ -64,13 +64,13 @@ export const QUEST_DATA: Quest[] = [
 ];
 
 export const getQuestById = (id: string): Quest | undefined => {
-  return QUEST_DATA.find(quest => quest.id === id);
+  return questData.find(quest => quest.id === id);
 };
 
 export const getQuestsByDifficulty = (difficulty: 'Easy' | 'Medium' | 'Hard'): Quest[] => {
-  return QUEST_DATA.filter(quest => quest.difficulty === difficulty);
+  return questData.filter(quest => quest.difficulty === difficulty);
 };
 
 export const getAvailableQuests = (): Quest[] => {
-  return QUEST_DATA.filter(quest => quest.status === 'available');
+  return questData.filter(quest => quest.status === 'available');
 };

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useGuildStore } from '../../stores/gameStore';
-import { INITIAL_ADVENTURERS } from '../../data/adventurers';
-import { GUILD_CONSTANTS } from '../../constants/gameConstants';
-import { QUEST_DATA } from '../../data/quests';
+import { initialAdventurers } from '../../data/adventurers';
+import { guildConstants } from '../../constants/gameConstants';
+import { questData } from '../../data/quests';
 
 // Mock data
 const mockAdventurer = {
@@ -59,7 +59,7 @@ const mockRecruit = {
   }
 };
 
-const mockQuest = QUEST_DATA[0];
+const mockQuest = questData[0];
 
 describe('gameStore', () => {
   beforeEach(() => {
@@ -68,7 +68,7 @@ describe('gameStore', () => {
       gold: 1000,
       reputation: 0,
       level: 1,
-      adventurers: [...INITIAL_ADVENTURERS],
+      adventurers: [...initialAdventurers],
       activeQuests: [],
       completedQuests: [],
       recruits: [],
@@ -102,7 +102,7 @@ describe('gameStore', () => {
       expect(state.gold).toBe(1000);
       expect(state.reputation).toBe(0);
       expect(state.level).toBe(1);
-      expect(state.adventurers).toHaveLength(INITIAL_ADVENTURERS.length);
+      expect(state.adventurers).toHaveLength(initialAdventurers.length);
       expect(state.activeQuests).toHaveLength(0);
       expect(state.completedQuests).toHaveLength(0);
       expect(state.recruits).toHaveLength(0);
@@ -160,7 +160,7 @@ describe('gameStore', () => {
       hireAdventurer(mockRecruit.id);
 
       const state = useGuildStore.getState();
-      expect(state.adventurers).toHaveLength(INITIAL_ADVENTURERS.length + 1);
+      expect(state.adventurers).toHaveLength(initialAdventurers.length + 1);
       expect(state.gold).toBe(1000 - mockRecruit.cost);
       expect(state.recruits).toHaveLength(0);
 
@@ -173,14 +173,14 @@ describe('gameStore', () => {
 
     it('should not hire adventurer when at maximum capacity', () => {
       // Fill up to max capacity
-      const maxAdventurers = Array.from({ length: GUILD_CONSTANTS.MAX_ADVENTURERS - INITIAL_ADVENTURERS.length + 1 }, (_, i) => ({
+      const maxAdventurers = Array.from({ length: guildConstants.MAX_ADVENTURERS - initialAdventurers.length + 1 }, (_, i) => ({
         ...mockAdventurer,
         id: `extra-${i}`,
         name: `Extra ${i}`
       }));
 
       useGuildStore.setState({
-        adventurers: [...INITIAL_ADVENTURERS, ...maxAdventurers]
+        adventurers: [...initialAdventurers, ...maxAdventurers]
       });
 
       const { hireAdventurer } = useGuildStore.getState();
@@ -199,7 +199,7 @@ describe('gameStore', () => {
 
       hireAdventurer(mockRecruit.id);
 
-      expect(useGuildStore.getState().adventurers).toHaveLength(INITIAL_ADVENTURERS.length);
+      expect(useGuildStore.getState().adventurers).toHaveLength(initialAdventurers.length);
       expect(useGuildStore.getState().gold).toBe(100);
     });
   });
@@ -207,7 +207,7 @@ describe('gameStore', () => {
   describe('quest management', () => {
     it('should start quest with available adventurers', () => {
       const { startQuest } = useGuildStore.getState();
-      const adventurerId = INITIAL_ADVENTURERS[0].id;
+      const adventurerId = initialAdventurers[0].id;
 
       startQuest(mockQuest.id, [adventurerId]);
 
@@ -226,7 +226,7 @@ describe('gameStore', () => {
     it('should complete quest and reward adventurers', () => {
       // First start a quest
       const { startQuest, completeQuest } = useGuildStore.getState();
-      const adventurerId = INITIAL_ADVENTURERS[0].id;
+      const adventurerId = initialAdventurers[0].id;
 
       startQuest(mockQuest.id, [adventurerId]);
 
@@ -256,7 +256,7 @@ describe('gameStore', () => {
 
       const state = useGuildStore.getState();
       expect(state.recruits).toHaveLength(3);
-      expect(state.gold).toBe(initialGold - GUILD_CONSTANTS.RECRUIT_REFRESH_COST);
+      expect(state.gold).toBe(initialGold - guildConstants.RECRUIT_REFRESH_COST);
 
       state.recruits.forEach(recruit => {
         expect(recruit.id).toMatch(/^recruit_\d+_\d+$/);
@@ -284,9 +284,9 @@ describe('gameStore', () => {
     it('should calculate recruit cost correctly', () => {
       const { calculateRecruitCost } = useGuildStore.getState();
 
-      expect(calculateRecruitCost(1)).toBe(GUILD_CONSTANTS.RECRUIT_BASE_COST);
-      expect(calculateRecruitCost(2)).toBe(Math.floor(GUILD_CONSTANTS.RECRUIT_BASE_COST * GUILD_CONSTANTS.RECRUIT_COST_MULTIPLIER));
-      expect(calculateRecruitCost(3)).toBe(Math.floor(GUILD_CONSTANTS.RECRUIT_BASE_COST * Math.pow(GUILD_CONSTANTS.RECRUIT_COST_MULTIPLIER, 2)));
+      expect(calculateRecruitCost(1)).toBe(guildConstants.RECRUIT_BASE_COST);
+      expect(calculateRecruitCost(2)).toBe(Math.floor(guildConstants.RECRUIT_BASE_COST * guildConstants.RECRUIT_COST_MULTIPLIER));
+      expect(calculateRecruitCost(3)).toBe(Math.floor(guildConstants.RECRUIT_BASE_COST * Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, 2)));
     });
 
     it('should calculate quest reward correctly', () => {
@@ -304,14 +304,14 @@ describe('gameStore', () => {
       const { getAvailableAdventurers } = useGuildStore.getState();
 
       const available = getAvailableAdventurers();
-      expect(available).toHaveLength(INITIAL_ADVENTURERS.length);
+      expect(available).toHaveLength(initialAdventurers.length);
 
       // Start a quest to make one unavailable
       const { startQuest } = useGuildStore.getState();
       startQuest(mockQuest.id, [available[0].id]);
 
       const availableAfterQuest = getAvailableAdventurers();
-      expect(availableAfterQuest).toHaveLength(INITIAL_ADVENTURERS.length - 1);
+      expect(availableAfterQuest).toHaveLength(initialAdventurers.length - 1);
     });
   });
 

@@ -6,14 +6,14 @@ import {
   getRecipesByFacilityLevel,
   getMaterialsByRarity,
   canCraftRecipe,
-  CRAFTING_MATERIALS,
-  CRAFTING_RECIPES
+  craftingMaterials,
+  craftingRecipes
 } from '../../data/crafting';
 
 describe('Crafting System', () => {
   describe('data integrity', () => {
     it('should have materials with all required properties', () => {
-      CRAFTING_MATERIALS.forEach(material => {
+      craftingMaterials.forEach(material => {
         expect(material).toHaveProperty('id');
         expect(material).toHaveProperty('name');
         expect(material).toHaveProperty('rarity');
@@ -28,7 +28,7 @@ describe('Crafting System', () => {
     });
 
     it('should have recipes with all required properties', () => {
-      CRAFTING_RECIPES.forEach(recipe => {
+      craftingRecipes.forEach(recipe => {
         expect(recipe).toHaveProperty('id');
         expect(recipe).toHaveProperty('name');
         expect(recipe).toHaveProperty('result');
@@ -61,23 +61,23 @@ describe('Crafting System', () => {
     });
 
     it('should have unique material IDs', () => {
-      const materialIds = CRAFTING_MATERIALS.map(m => m.id);
+      const materialIds = craftingMaterials.map(m => m.id);
       const uniqueIds = new Set(materialIds);
 
       expect(uniqueIds.size).toBe(materialIds.length);
     });
 
     it('should have unique recipe IDs', () => {
-      const recipeIds = CRAFTING_RECIPES.map(r => r.id);
+      const recipeIds = craftingRecipes.map(r => r.id);
       const uniqueIds = new Set(recipeIds);
 
       expect(uniqueIds.size).toBe(recipeIds.length);
     });
 
     it('should reference valid materials in recipes', () => {
-      const materialIds = new Set(CRAFTING_MATERIALS.map(m => m.id));
+      const materialIds = new Set(craftingMaterials.map(m => m.id));
 
-      CRAFTING_RECIPES.forEach(recipe => {
+      craftingRecipes.forEach(recipe => {
         Object.keys(recipe.materials).forEach(materialId => {
           expect(materialIds.has(materialId)).toBe(true);
         });
@@ -300,13 +300,13 @@ describe('Crafting System', () => {
       const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
 
       rarities.forEach(rarity => {
-        const materialsOfRarity = CRAFTING_MATERIALS.filter(m => m.rarity === rarity);
+        const materialsOfRarity = craftingMaterials.filter(m => m.rarity === rarity);
         expect(materialsOfRarity.length).toBeGreaterThan(0);
       });
     });
 
     it('should have recipes across multiple rarity levels', () => {
-      const recipeRarities = new Set(CRAFTING_RECIPES.map(r => r.result.rarity));
+      const recipeRarities = new Set(craftingRecipes.map(r => r.result.rarity));
 
       expect(recipeRarities.size).toBeGreaterThan(2);
       expect(recipeRarities.has('uncommon')).toBe(true);
@@ -314,8 +314,8 @@ describe('Crafting System', () => {
     });
 
     it('should have higher cost for higher rarity recipes', () => {
-      const uncommonRecipes = CRAFTING_RECIPES.filter(r => r.result.rarity === 'uncommon');
-      const legendaryRecipes = CRAFTING_RECIPES.filter(r => r.result.rarity === 'legendary');
+      const uncommonRecipes = craftingRecipes.filter(r => r.result.rarity === 'uncommon');
+      const legendaryRecipes = craftingRecipes.filter(r => r.result.rarity === 'legendary');
 
       const avgUncommonCost = uncommonRecipes.reduce((sum, r) => sum + r.goldCost, 0) / uncommonRecipes.length;
       const avgLegendaryCost = legendaryRecipes.reduce((sum, r) => sum + r.goldCost, 0) / legendaryRecipes.length;
@@ -326,7 +326,7 @@ describe('Crafting System', () => {
 
   describe('equipment type coverage', () => {
     it('should have recipes for all equipment types', () => {
-      const equipmentTypes = new Set(CRAFTING_RECIPES.map(r => r.result.type));
+      const equipmentTypes = new Set(craftingRecipes.map(r => r.result.type));
 
       expect(equipmentTypes.has('weapon')).toBe(true);
       expect(equipmentTypes.has('armor')).toBe(true);
@@ -334,7 +334,7 @@ describe('Crafting System', () => {
     });
 
     it('should have balanced stat distribution in crafted items', () => {
-      const craftedItems = CRAFTING_RECIPES.map(r => r.result);
+      const craftedItems = craftingRecipes.map(r => r.result);
 
       craftedItems.forEach(item => {
         const totalStats = Object.values(item.stats).reduce((sum, stat) => sum + (stat || 0), 0);

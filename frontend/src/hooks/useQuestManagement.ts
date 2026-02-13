@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { useGuildStore } from '../stores/gameStore';
-import { QUEST_DATA } from '../data/quests';
+import { questData } from '../data/quests';
 import { Quest } from '../types/game';
 
 export const useQuestManagement = () => {
   const { activeQuests, startQuest, completeQuest, adventurers } = useGuildStore();
 
   const availableQuests = useMemo(() => {
-    return QUEST_DATA.filter(quest =>
+    return questData.filter(quest =>
       !activeQuests.some(activeQuest => activeQuest.id === quest.id)
     );
   }, [activeQuests]);

@@ -1,6 +1,6 @@
 import { Faction } from '../types/game';
 
-export const INITIAL_FACTIONS: Faction[] = [
+export const initialFactions: Faction[] = [
   {
     id: 'merchants_guild',
     name: 'Merchants\' Guild',
@@ -84,11 +84,11 @@ export const INITIAL_FACTIONS: Faction[] = [
 ];
 
 export function getFactionById(factionId: string): Faction | undefined {
-  return INITIAL_FACTIONS.find(faction => faction.id === factionId);
+  return initialFactions.find(faction => faction.id === factionId);
 }
 
 export function getFactionsByReputationLevel(minReputation: number): Faction[] {
-  return INITIAL_FACTIONS.filter(faction => faction.reputation >= minReputation);
+  return initialFactions.filter(faction => faction.reputation >= minReputation);
 }
 
 export function getFactionQuestTypes(factionId: string): string[] {
@@ -104,13 +104,13 @@ export function calculateFactionReward(baseReward: number, factionId: string): n
 }
 
 export function getFactionsForQuestType(questType: string): Faction[] {
-  return INITIAL_FACTIONS.filter(faction =>
+  return initialFactions.filter(faction =>
     faction.questModifiers.availableQuestTypes.includes(questType)
   );
 }
 
 // Reputation thresholds that unlock benefits
-export const FACTION_REPUTATION_THRESHOLDS = {
+export const factionReputationThresholds = {
   NEUTRAL: 0,
   FRIENDLY: 100,
   HONORED: 300,
@@ -119,11 +119,11 @@ export const FACTION_REPUTATION_THRESHOLDS = {
 };
 
 export function getFactionStanding(reputation: number): string {
-  if (reputation >= FACTION_REPUTATION_THRESHOLDS.EXALTED) return 'Exalted';
-  if (reputation >= FACTION_REPUTATION_THRESHOLDS.REVERED) return 'Revered';
-  if (reputation >= FACTION_REPUTATION_THRESHOLDS.HONORED) return 'Honored';
-  if (reputation >= FACTION_REPUTATION_THRESHOLDS.FRIENDLY) return 'Friendly';
-  if (reputation >= FACTION_REPUTATION_THRESHOLDS.NEUTRAL) return 'Neutral';
+  if (reputation >= factionReputationThresholds.EXALTED) return 'Exalted';
+  if (reputation >= factionReputationThresholds.REVERED) return 'Revered';
+  if (reputation >= factionReputationThresholds.HONORED) return 'Honored';
+  if (reputation >= factionReputationThresholds.FRIENDLY) return 'Friendly';
+  if (reputation >= factionReputationThresholds.NEUTRAL) return 'Neutral';
   return 'Hostile';
 }
 

@@ -48,7 +48,7 @@ export interface TerritoryConflict {
   }>;
 }
 
-export const AVAILABLE_TERRITORIES: Territory[] = [
+export const availableTerritories: Territory[] = [
   {
     id: 'greenwood_village',
     name: 'Greenwood Village',
@@ -143,7 +143,7 @@ export const AVAILABLE_TERRITORIES: Territory[] = [
   }
 ];
 
-export const TERRITORY_QUESTS: { [territoryId: string]: Quest[] } = {
+export const territoryQuests: { [territoryId: string]: Quest[] } = {
   'greenwood_village': [
     {
       id: 'forest_patrol',
@@ -258,11 +258,11 @@ export class TerritoryControlSystem {
   }
 
   public getAvailableTerritories(): Territory[] {
-    return AVAILABLE_TERRITORIES.filter(territory => !territory.controlled);
+    return availableTerritories.filter(territory => !territory.controlled);
   }
 
   public getControlledTerritories(): Territory[] {
-    return AVAILABLE_TERRITORIES.filter(territory => territory.controlled);
+    return availableTerritories.filter(territory => territory.controlled);
   }
 
   public calculateExpansionCost(territory: Territory, guildLevel: number): number {
@@ -327,7 +327,7 @@ export class TerritoryControlSystem {
           influenceGain: 100,
           reputationChange: 50,
           unlockBenefits: territory.benefits,
-          questsUnlocked: TERRITORY_QUESTS[territory.id] || []
+          questsUnlocked: territoryQuests[territory.id] || []
         },
         failure: {
           goldCost: Math.floor(baseCost * 0.3),
@@ -392,7 +392,7 @@ export class TerritoryControlSystem {
   }
 
   public applyTerritoryControl(territoryId: string, influenceLevel: number): void {
-    const territory = AVAILABLE_TERRITORIES.find(t => t.id === territoryId);
+    const territory = availableTerritories.find(t => t.id === territoryId);
     if (territory) {
       territory.controlled = influenceLevel >= 100;
       territory.influenceLevel = Math.min(100, influenceLevel);
@@ -567,7 +567,7 @@ export class TerritoryControlSystem {
       }
 
       if (territory.benefits.questAccess) {
-        const territoryQuests = TERRITORY_QUESTS[territory.id] || [];
+        const territoryQuests = territoryQuests[territory.id] || [];
         availableQuests.push(...territoryQuests);
       }
 
@@ -580,7 +580,7 @@ export class TerritoryControlSystem {
   }
 
   public getTerritoryById(territoryId: string): Territory | undefined {
-    return AVAILABLE_TERRITORIES.find(t => t.id === territoryId);
+    return availableTerritories.find(t => t.id === territoryId);
   }
 
   public getExpansionRequirements(territory: Territory, expansionType: TerritoryExpansion['type']): string[] {

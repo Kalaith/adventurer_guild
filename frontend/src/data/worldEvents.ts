@@ -1,6 +1,6 @@
 import { WorldEvent, Quest } from '../types/game';
 
-export const WORLD_EVENTS: WorldEvent[] = [
+export const worldEvents: WorldEvent[] = [
   {
     id: 'merchant_festival',
     name: 'Grand Merchant Festival',
@@ -97,7 +97,7 @@ export const WORLD_EVENTS: WorldEvent[] = [
   }
 ];
 
-export const WORLD_EVENT_QUESTS: { [eventId: string]: Quest[] } = {
+export const worldEventQuests: { [eventId: string]: Quest[] } = {
   'merchant_festival': [
     {
       id: 'festival_guard_duty',
@@ -304,15 +304,15 @@ export const WORLD_EVENT_QUESTS: { [eventId: string]: Quest[] } = {
 };
 
 export function getActiveWorldEvents(): WorldEvent[] {
-  return WORLD_EVENTS.filter(event => event.active);
+  return worldEvents.filter(event => event.active);
 }
 
 export function getWorldEventById(eventId: string): WorldEvent | undefined {
-  return WORLD_EVENTS.find(event => event.id === eventId);
+  return worldEvents.find(event => event.id === eventId);
 }
 
 export function getWorldEventQuests(eventId: string): Quest[] {
-  return WORLD_EVENT_QUESTS[eventId] || [];
+  return worldEventQuests[eventId] || [];
 }
 
 export function getAllActiveWorldEventQuests(): Quest[] {
@@ -328,7 +328,7 @@ export function getAllActiveWorldEventQuests(): Quest[] {
 }
 
 export function activateRandomWorldEvent(): WorldEvent | null {
-  const inactiveEvents = WORLD_EVENTS.filter(event => !event.active);
+  const inactiveEvents = worldEvents.filter(event => !event.active);
   if (inactiveEvents.length === 0) return null;
 
   const randomEvent = inactiveEvents[Math.floor(Math.random() * inactiveEvents.length)];

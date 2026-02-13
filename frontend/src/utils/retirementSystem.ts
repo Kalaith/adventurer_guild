@@ -22,7 +22,7 @@ export interface RetirementOption {
   benefits: RetiredAdventurer['benefits'];
 }
 
-export const RETIREMENT_ROLES: RetirementOption[] = [
+export const retirementRoles: RetirementOption[] = [
   {
     role: 'trainer',
     name: 'Guild Trainer',
@@ -190,7 +190,7 @@ export class RetirementSystem {
   }
 
   public getBestRetirementRole(adventurer: Adventurer): RetirementOption | null {
-    const eligibleRoles = RETIREMENT_ROLES.filter(role =>
+    const eligibleRoles = retirementRoles.filter(role =>
       this.meetsRequirements(adventurer, role.requirements)
     );
 

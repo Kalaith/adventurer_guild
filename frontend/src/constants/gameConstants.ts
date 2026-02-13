@@ -1,4 +1,4 @@
-export const GUILD_CONSTANTS = {
+export const guildConstants = {
   RECRUIT_REFRESH_COST: 50,
   MAX_ADVENTURERS: 25, // Increased for larger guilds
   QUEST_COMPLETION_XP: 100,
@@ -41,7 +41,7 @@ export const GUILD_CONSTANTS = {
 };
 
 // Skill categories and their base values
-export const SKILL_DEFAULTS = {
+export const skillDefaults = {
   combat: {
     weaponMastery: 0,
     tacticalKnowledge: 0,
@@ -65,7 +65,7 @@ export const SKILL_DEFAULTS = {
 };
 
 // Personality trait defaults
-export const PERSONALITY_DEFAULTS = {
+export const personalityDefaults = {
   courage: 50,
   loyalty: 50,
   ambition: 50,
@@ -74,7 +74,7 @@ export const PERSONALITY_DEFAULTS = {
 };
 
 // World event frequencies
-export const WORLD_EVENT_FREQUENCY = {
+export const worldEventFrequency = {
   COMMON: 0.15, // 15% chance per week
   UNCOMMON: 0.08, // 8% chance per week
   RARE: 0.03, // 3% chance per week
@@ -82,7 +82,7 @@ export const WORLD_EVENT_FREQUENCY = {
 };
 
 // Legacy system constants
-export const LEGACY_CONSTANTS = {
+export const legacyConstants = {
   GENERATION_DURATION_MIN: 100, // Minimum quests before generation can end
   HEIRLOOM_ENHANCEMENT: 1.2, // Stat multiplier for heirloom items
   DESCENDANT_INHERITANCE: 0.3, // Percentage of parent stats inherited

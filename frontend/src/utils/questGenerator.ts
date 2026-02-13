@@ -15,7 +15,7 @@ interface QuestTemplate {
   };
 }
 
-const QUEST_TEMPLATES: QuestTemplate[] = [
+const questTemplates: QuestTemplate[] = [
   {
     nameTemplates: [
       'Goblin Raiders in {location}',
@@ -122,7 +122,7 @@ const FACTIONS = [
   'Royal Guard', 'Thieves\' Brotherhood', 'Mage Circle', 'Artisan League'
 ];
 
-const PERSON_NAMES = [
+const personNames = [
   'Elena Brightblade', 'Marcus Goldweaver', 'Sara Nightwhisper', 'Tom Ironforge',
   'Lady Catherine', 'Sir Roderick', 'Merchant Aldwin', 'Scholar Lysander'
 ];
@@ -136,7 +136,7 @@ function replacePlaceholders(template: string, _guildLevel: number): string {
     .replace('{location}', getRandomElement(LOCATIONS))
     .replace('{enemy}', getRandomElement(ENEMIES))
     .replace('{faction}', getRandomElement(FACTIONS))
-    .replace('{name}', getRandomElement(PERSON_NAMES));
+    .replace('{name}', getRandomElement(personNames));
 }
 
 function generateQuestRequirements(
@@ -290,7 +290,7 @@ function generateEquipmentStats(rarity: string, questType: string) {
 }
 
 export function generateProceduralQuest(guildLevel: number, difficulty?: 'Easy' | 'Medium' | 'Hard' | 'Epic'): Quest {
-  const template = getRandomElement(QUEST_TEMPLATES);
+  const template = getRandomElement(questTemplates);
   const questDifficulty = difficulty || getRandomElement(['Easy', 'Medium', 'Hard', 'Epic'] as const);
   const modifier = template.difficultyModifiers[questDifficulty];
 
