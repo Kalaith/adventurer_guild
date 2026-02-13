@@ -1,6 +1,19 @@
-import React from 'react';
+﻿import React from 'react';
+import { Quest } from '../types/game';
 
-const GuildHall: React.FC = () => {
+interface GuildHallProps {
+  adventurerCount: number;
+  activeQuestCount: number;
+  completedQuestCount: number;
+  activeQuests: Quest[];
+}
+
+const GuildHall: React.FC<GuildHallProps> = ({
+  adventurerCount,
+  activeQuestCount,
+  completedQuestCount,
+  activeQuests,
+}) => {
   return (
     <div className="guild-overview">
       <div className="guild-image">
@@ -17,30 +30,40 @@ const GuildHall: React.FC = () => {
           <div className="stat-card">
             <h3>Active Adventurers</h3>
             <div className="stat-number" id="active-adventurers">
-              1
+              {adventurerCount}
             </div>
           </div>
           <div className="stat-card">
             <h3>Active Quests</h3>
             <div className="stat-number" id="active-quests">
-              0
+              {activeQuestCount}
             </div>
           </div>
           <div className="stat-card">
             <h3>Completed Quests</h3>
             <div className="stat-number" id="completed-quests">
-              0
+              {completedQuestCount}
             </div>
           </div>
         </div>
         <div className="active-quest-panel">
-          <h3>🕐 Active Quests</h3>
+          <h3>Active Quests</h3>
           <div id="active-quests-list" className="active-quests-container">
-            <p className="no-quests">No active quests</p>
+            {activeQuests.length === 0 ? (
+              <p className="no-quests">No active quests</p>
+            ) : (
+              activeQuests.map((quest) => (
+                <div key={quest.id} className="active-quest-item">
+                  <h4>{quest.name}</h4>
+                  <p>Difficulty: {quest.difficulty}</p>
+                  <p>Reward: {quest.reward} gold</p>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className="activity-log">
-          <h3>📜 Recent Activity</h3>
+          <h3>Recent Activity</h3>
           <div id="activity-log" className="log-container">
             <p>Welcome to your new guild! Start by hiring adventurers and taking on quests.</p>
           </div>

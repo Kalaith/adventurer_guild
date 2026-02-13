@@ -883,6 +883,7 @@ body {
 
 /* Cards */
 .quest-card,
+.quest-item,
 .adventurer-card,
 .recruit-card {
   background: var(--color-fantasy-parchment);
@@ -894,6 +895,7 @@ body {
 }
 
 .quest-card:hover,
+.quest-item:hover,
 .adventurer-card:hover,
 .recruit-card:hover {
   transform: translateY(-4px);
@@ -1206,12 +1208,18 @@ body {
 }
 
 /* Active Quest Display */
+.quest-list,
+.active-quests-container {
+  display: grid;
+  gap: var(--space-12);
+}
+
 .active-quest-item {
-  background: var(--color-fantasy-parchment-dark);
-  border: 1px solid var(--color-fantasy-gold-dark);
-  border-radius: var(--radius-base);
-  padding: var(--space-12);
-  margin-bottom: var(--space-8);
+  background: var(--color-fantasy-parchment);
+  border: 2px solid var(--color-fantasy-brown);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-16);
 }
 
 .quest-timer {

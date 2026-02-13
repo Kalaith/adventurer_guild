@@ -21,6 +21,7 @@ export function GamePage() {
     gold,
     adventurers,
     activeQuests,
+    completedQuests,
     recruits,
     hireAdventurer,
     startQuest,
@@ -51,7 +52,12 @@ export function GamePage() {
       case 'guild-hall':
         return (
           <section className="tab-content active" id="guild-hall">
-            <GuildHall />
+            <GuildHall
+              adventurerCount={adventurers.length}
+              activeQuestCount={activeQuests.length}
+              completedQuestCount={completedQuests.length}
+              activeQuests={activeQuests}
+            />
           </section>
         );
       case 'adventurers':
@@ -87,7 +93,12 @@ export function GamePage() {
       default:
         return (
           <section className="tab-content active" id="guild-hall">
-            <GuildHall />
+            <GuildHall
+              adventurerCount={adventurers.length}
+              activeQuestCount={activeQuests.length}
+              completedQuestCount={completedQuests.length}
+              activeQuests={activeQuests}
+            />
           </section>
         );
     }
