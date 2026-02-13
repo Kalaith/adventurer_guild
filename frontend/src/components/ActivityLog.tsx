@@ -7,9 +7,9 @@ interface ActivityLogProps {
 const ActivityLog: React.FC<ActivityLogProps> = ({ logEntries = [] }) => {
   // For now, show a simple placeholder since we're not implementing full activity logging yet
   const defaultEntries = [
-    "Welcome to your Adventurer Guild!",
-    "Start by hiring adventurers and taking on quests.",
-    "Complete quests to earn gold and reputation."
+    'Welcome to your Adventurer Guild!',
+    'Start by hiring adventurers and taking on quests.',
+    'Complete quests to earn gold and reputation.',
   ];
 
   const entries = logEntries.length > 0 ? logEntries : defaultEntries;

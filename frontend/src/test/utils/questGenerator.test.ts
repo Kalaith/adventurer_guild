@@ -43,7 +43,9 @@ describe('Quest Generator', () => {
       const highLevelQuest = generateProceduralQuest(10);
 
       expect(highLevelQuest.reward).toBeGreaterThan(lowLevelQuest.reward);
-      expect(highLevelQuest.requirements.minLevel).toBeGreaterThanOrEqual(lowLevelQuest.requirements.minLevel);
+      expect(highLevelQuest.requirements.minLevel).toBeGreaterThanOrEqual(
+        lowLevelQuest.requirements.minLevel
+      );
     });
 
     it('should respect specified difficulty', () => {
@@ -99,7 +101,7 @@ describe('Quest Generator', () => {
       // Generate multiple quests to test different types
       const quests = Array.from({ length: 20 }, () => generateProceduralQuest(3));
 
-      quests.forEach(quest => {
+      quests.forEach((quest) => {
         expect(quest.skillRewards).toBeDefined();
         expect(Object.keys(quest.skillRewards!)).toHaveLength(1);
 
@@ -147,7 +149,7 @@ describe('Quest Generator', () => {
     it('should generate unique quests', () => {
       const quests = generateMultipleQuests(3, 10);
 
-      const questIds = quests.map(q => q.id);
+      const questIds = quests.map((q) => q.id);
       const uniqueIds = new Set(questIds);
 
       expect(uniqueIds.size).toBe(questIds.length);
@@ -156,7 +158,7 @@ describe('Quest Generator', () => {
     it('should generate quests with varied difficulties', () => {
       const quests = generateMultipleQuests(5, 20);
 
-      const difficulties = quests.map(q => q.difficulty);
+      const difficulties = quests.map((q) => q.difficulty);
       const uniqueDifficulties = new Set(difficulties);
 
       // Should have at least 2 different difficulty levels in 20 quests
@@ -166,7 +168,7 @@ describe('Quest Generator', () => {
     it('should generate quests with varied quest types', () => {
       const quests = generateMultipleQuests(5, 30);
 
-      const questNames = quests.map(q => q.name);
+      const questNames = quests.map((q) => q.name);
       const uniqueNames = new Set(questNames);
 
       // Should have variety in quest names
@@ -189,16 +191,17 @@ describe('Quest Generator', () => {
     it('should generate combat quests with appropriate classes', () => {
       // Generate many quests to find combat quests
       const quests = generateMultipleQuests(5, 50);
-      const combatQuests = quests.filter(q =>
-        q.requirements.preferredClasses.includes('Warrior') ||
-        q.requirements.preferredClasses.includes('Archer')
+      const combatQuests = quests.filter(
+        (q) =>
+          q.requirements.preferredClasses.includes('Warrior') ||
+          q.requirements.preferredClasses.includes('Archer')
       );
 
       expect(combatQuests.length).toBeGreaterThan(0);
 
-      combatQuests.forEach(quest => {
+      combatQuests.forEach((quest) => {
         // Combat quests should have at least one combat-appropriate class
-        const hasCombatClass = quest.requirements.preferredClasses.some(cls =>
+        const hasCombatClass = quest.requirements.preferredClasses.some((cls) =>
           ['Warrior', 'Archer', 'Rogue'].includes(cls)
         );
         expect(hasCombatClass).toBe(true);
@@ -207,9 +210,10 @@ describe('Quest Generator', () => {
 
     it('should generate exploration quests with appropriate classes', () => {
       const quests = generateMultipleQuests(5, 50);
-      const explorationQuests = quests.filter(q =>
-        q.requirements.preferredClasses.includes('Rogue') &&
-        q.requirements.preferredClasses.includes('Archer')
+      const explorationQuests = quests.filter(
+        (q) =>
+          q.requirements.preferredClasses.includes('Rogue') &&
+          q.requirements.preferredClasses.includes('Archer')
       );
 
       expect(explorationQuests.length).toBeGreaterThan(0);
@@ -217,9 +221,10 @@ describe('Quest Generator', () => {
 
     it('should generate diplomatic quests with mage preference', () => {
       const quests = generateMultipleQuests(5, 50);
-      const diplomaticQuests = quests.filter(q =>
-        q.requirements.preferredClasses.includes('Mage') &&
-        q.requirements.preferredClasses.length === 1
+      const diplomaticQuests = quests.filter(
+        (q) =>
+          q.requirements.preferredClasses.includes('Mage') &&
+          q.requirements.preferredClasses.length === 1
       );
 
       expect(diplomaticQuests.length).toBeGreaterThan(0);
@@ -243,19 +248,26 @@ describe('Quest Generator', () => {
       const lootItem = quest.lootTable?.[0];
       if (!lootItem) throw new Error('Expected quest to include a loot table item');
 
-      expect(lootItem.name).toMatch(/^(Simple|Basic|Plain|Fine|Quality|Improved|Masterwork|Superior|Excellent|Enchanted|Mystical|Legendary|Godforged|Artifact|Divine)/);
-      expect(lootItem.name).toMatch(/(Sword|Axe|Bow|Staff|Dagger|Chainmail|Plate|Robes|Leather Armor|Scale Mail|Ring|Amulet|Cloak|Belt|Boots)$/);
+      expect(lootItem.name).toMatch(
+        /^(Simple|Basic|Plain|Fine|Quality|Improved|Masterwork|Superior|Excellent|Enchanted|Mystical|Legendary|Godforged|Artifact|Divine)/
+      );
+      expect(lootItem.name).toMatch(
+        /(Sword|Axe|Bow|Staff|Dagger|Chainmail|Plate|Robes|Leather Armor|Scale Mail|Ring|Amulet|Cloak|Belt|Boots)$/
+      );
     });
 
     it('should generate equipment with correct rarity distribution', () => {
       const quests = generateMultipleQuests(5, 100);
-      const lootItems = quests.flatMap(q => q.lootTable ?? []);
+      const lootItems = quests.flatMap((q) => q.lootTable ?? []);
 
-      const rarities = lootItems.map(item => item.rarity);
-      const rarityCounts = rarities.reduce((counts, rarity) => {
-        counts[rarity] = (counts[rarity] || 0) + 1;
-        return counts;
-      }, {} as Record<string, number>);
+      const rarities = lootItems.map((item) => item.rarity);
+      const rarityCounts = rarities.reduce(
+        (counts, rarity) => {
+          counts[rarity] = (counts[rarity] || 0) + 1;
+          return counts;
+        },
+        {} as Record<string, number>
+      );
 
       // Should have variety in rarities
       expect(Object.keys(rarityCounts).length).toBeGreaterThan(1);

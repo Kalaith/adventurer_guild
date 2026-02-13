@@ -27,13 +27,13 @@ const mockInitialAdventurers = [
       combat: { weaponMastery: 12, tacticalKnowledge: 8, battleRage: 6 },
       magic: { spellPower: 0, manaEfficiency: 0, elementalMastery: 0 },
       stealth: { lockpicking: 2, sneaking: 4, assassination: 1 },
-      survival: { tracking: 6, herbalism: 3, animalHandling: 5 }
+      survival: { tracking: 6, herbalism: 3, animalHandling: 5 },
     },
     equipment: {},
     relationships: [],
     questsCompleted: 12,
     yearsInGuild: 1,
-    retirementEligible: false
+    retirementEligible: false,
   },
   {
     id: 'adv2',
@@ -49,14 +49,14 @@ const mockInitialAdventurers = [
       combat: { weaponMastery: 4, tacticalKnowledge: 10, battleRage: 2 },
       magic: { spellPower: 18, manaEfficiency: 15, elementalMastery: 12 },
       stealth: { lockpicking: 1, sneaking: 6, assassination: 0 },
-      survival: { tracking: 4, herbalism: 8, animalHandling: 3 }
+      survival: { tracking: 4, herbalism: 8, animalHandling: 3 },
     },
     equipment: {},
     relationships: [],
     questsCompleted: 16,
     yearsInGuild: 2,
-    retirementEligible: false
-  }
+    retirementEligible: false,
+  },
 ];
 
 // const mockAvailableQuests = [
@@ -102,8 +102,8 @@ const mockRecruits = [
     class: 'Warrior',
     cost: 240,
     personality: { courage: 70, loyalty: 60, ambition: 50, teamwork: 65, greed: 35 },
-    potentialSkills: { 'combat.weaponMastery': 8, 'combat.tacticalKnowledge': 5 }
-  }
+    potentialSkills: { 'combat.weaponMastery': 8, 'combat.tacticalKnowledge': 5 },
+  },
 ];
 
 interface MockGameState {
@@ -124,7 +124,7 @@ describe('Game Flow Integration Tests', () => {
     startQuest: vi.fn(),
     completeQuest: vi.fn(),
     refreshRecruits: vi.fn(),
-    spendGold: vi.fn()
+    spendGold: vi.fn(),
   };
 
   beforeEach(() => {
@@ -139,7 +139,7 @@ describe('Game Flow Integration Tests', () => {
       recruits: mockRecruits.slice(0, 1), // Reduce data size
 
       // Actions
-      ...mockActions
+      ...mockActions,
     } as MockGameState);
 
     // Mock UI store as empty since GamePage doesn't seem to use it directly
@@ -167,7 +167,7 @@ describe('Game Flow Integration Tests', () => {
         adventurers: [],
         activeQuests: [],
         recruits: [],
-        ...mockActions
+        ...mockActions,
       } as MockGameState);
 
       expect(() => render(<GamePage />)).not.toThrow();

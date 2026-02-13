@@ -17,26 +17,26 @@ const mockAdventurer = {
     strength: 15,
     intelligence: 10,
     dexterity: 12,
-    vitality: 18
+    vitality: 18,
   },
   personality: {
     courage: 70,
     loyalty: 60,
     ambition: 50,
     teamwork: 65,
-    greed: 30
+    greed: 30,
   },
   skills: {
     combat: { weaponMastery: 5, tacticalKnowledge: 3, battleRage: 2 },
     magic: { spellPower: 0, manaEfficiency: 0, elementalMastery: 0 },
     stealth: { lockpicking: 0, sneaking: 1, assassination: 0 },
-    survival: { tracking: 2, herbalism: 1, animalHandling: 3 }
+    survival: { tracking: 2, herbalism: 1, animalHandling: 3 },
   },
   equipment: {},
   relationships: [],
   questsCompleted: 0,
   yearsInGuild: 0,
-  retirementEligible: false
+  retirementEligible: false,
 };
 
 const mockRecruit = {
@@ -50,13 +50,13 @@ const mockRecruit = {
     loyalty: 55,
     ambition: 65,
     teamwork: 60,
-    greed: 40
+    greed: 40,
   },
   potentialSkills: {
     'magic.spellPower': 10,
     'magic.elementalMastery': 8,
-    'combat.tacticalKnowledge': 5
-  }
+    'combat.tacticalKnowledge': 5,
+  },
 };
 
 const mockQuest = questData[0];
@@ -150,7 +150,7 @@ describe('gameStore', () => {
     beforeEach(() => {
       // Add a recruit to hire
       useGuildStore.setState({
-        recruits: [mockRecruit]
+        recruits: [mockRecruit],
       });
     });
 
@@ -164,7 +164,7 @@ describe('gameStore', () => {
       expect(state.gold).toBe(1000 - mockRecruit.cost);
       expect(state.recruits).toHaveLength(0);
 
-      const hiredAdventurer = state.adventurers.find(adv => adv.id === mockRecruit.id);
+      const hiredAdventurer = state.adventurers.find((adv) => adv.id === mockRecruit.id);
       expect(hiredAdventurer).toBeDefined();
       expect(hiredAdventurer?.name).toBe(mockRecruit.name);
       expect(hiredAdventurer?.class).toBe(mockRecruit.class);
@@ -173,14 +173,17 @@ describe('gameStore', () => {
 
     it('should not hire adventurer when at maximum capacity', () => {
       // Fill up to max capacity
-      const maxAdventurers = Array.from({ length: guildConstants.MAX_ADVENTURERS - initialAdventurers.length + 1 }, (_, i) => ({
-        ...mockAdventurer,
-        id: `extra-${i}`,
-        name: `Extra ${i}`
-      }));
+      const maxAdventurers = Array.from(
+        { length: guildConstants.MAX_ADVENTURERS - initialAdventurers.length + 1 },
+        (_, i) => ({
+          ...mockAdventurer,
+          id: `extra-${i}`,
+          name: `Extra ${i}`,
+        })
+      );
 
       useGuildStore.setState({
-        adventurers: [...initialAdventurers, ...maxAdventurers]
+        adventurers: [...initialAdventurers, ...maxAdventurers],
       });
 
       const { hireAdventurer } = useGuildStore.getState();
@@ -219,7 +222,7 @@ describe('gameStore', () => {
       expect(activeQuest.assignedAdventurers).toContain(adventurerId);
       expect(activeQuest.status).toBe('active');
 
-      const adventurer = state.adventurers.find(adv => adv.id === adventurerId);
+      const adventurer = state.adventurers.find((adv) => adv.id === adventurerId);
       expect(adventurer?.status).toBe('on quest');
     });
 
@@ -241,7 +244,7 @@ describe('gameStore', () => {
       expect(state.gold).toBeGreaterThan(initialGold);
       expect(state.reputation).toBeGreaterThan(initialReputation);
 
-      const adventurer = state.adventurers.find(adv => adv.id === adventurerId);
+      const adventurer = state.adventurers.find((adv) => adv.id === adventurerId);
       expect(adventurer?.status).toBe('available');
       expect(adventurer?.experience).toBeGreaterThan(0);
     });
@@ -258,7 +261,7 @@ describe('gameStore', () => {
       expect(state.recruits).toHaveLength(3);
       expect(state.gold).toBe(initialGold - guildConstants.RECRUIT_REFRESH_COST);
 
-      state.recruits.forEach(recruit => {
+      state.recruits.forEach((recruit) => {
         expect(recruit.id).toMatch(/^recruit_\d+_\d+$/);
         expect(['Warrior', 'Mage', 'Rogue', 'Archer']).toContain(recruit.class);
         expect(recruit.level).toBeGreaterThanOrEqual(1);
@@ -285,8 +288,14 @@ describe('gameStore', () => {
       const { calculateRecruitCost } = useGuildStore.getState();
 
       expect(calculateRecruitCost(1)).toBe(guildConstants.RECRUIT_BASE_COST);
-      expect(calculateRecruitCost(2)).toBe(Math.floor(guildConstants.RECRUIT_BASE_COST * guildConstants.RECRUIT_COST_MULTIPLIER));
-      expect(calculateRecruitCost(3)).toBe(Math.floor(guildConstants.RECRUIT_BASE_COST * Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, 2)));
+      expect(calculateRecruitCost(2)).toBe(
+        Math.floor(guildConstants.RECRUIT_BASE_COST * guildConstants.RECRUIT_COST_MULTIPLIER)
+      );
+      expect(calculateRecruitCost(3)).toBe(
+        Math.floor(
+          guildConstants.RECRUIT_BASE_COST * Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, 2)
+        )
+      );
     });
 
     it('should calculate quest reward correctly', () => {

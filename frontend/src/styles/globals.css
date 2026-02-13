@@ -1,5 +1,4 @@
-@import "tailwindcss";
-
+@import 'tailwindcss';
 
 :root {
   /* Colors */
@@ -39,10 +38,11 @@
   --color-info-rgb: 98, 108, 113;
 
   /* Typography */
-  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, monospace;
+  --font-family-base:
+    'FKGroteskNeue', 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-family-mono:
+    'Berkeley Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-base: 14px;
@@ -84,12 +84,9 @@
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
-    0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
-    0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.03);
 
   /* Animation */
   --duration-fast: 150ms;
@@ -125,8 +122,7 @@
     --color-btn-primary-text: rgba(19, 52, 59, 1);
     --color-card-border: rgba(119, 124, 124, 0.2);
     --color-card-border-inner: rgba(119, 124, 124, 0.15);
-    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
     --button-border-secondary: rgba(119, 124, 124, 0.2);
     --color-border-secondary: rgba(119, 124, 124, 0.2);
     --color-select-caret: rgba(245, 245, 245, 0.8);
@@ -148,7 +144,7 @@
 }
 
 /* Data attribute for manual theme switching */
-[data-color-scheme="dark"] {
+[data-color-scheme='dark'] {
   --color-background: rgba(31, 33, 33, 1);
   --color-surface: rgba(38, 40, 40, 1);
   --color-text: rgba(245, 245, 245, 1);
@@ -168,8 +164,7 @@
   --color-btn-primary-text: rgba(19, 52, 59, 1);
   --color-card-border: rgba(119, 124, 124, 0.15);
   --color-card-border-inner: rgba(119, 124, 124, 0.15);
-  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   --color-border-secondary: rgba(119, 124, 124, 0.2);
   --color-select-caret: rgba(245, 245, 245, 0.8);
 
@@ -188,7 +183,7 @@
   --color-info-rgb: 167, 169, 169;
 }
 
-[data-color-scheme="light"] {
+[data-color-scheme='light'] {
   --color-background: rgba(252, 252, 249, 1);
   --color-surface: rgba(255, 255, 253, 1);
   --color-text: rgba(10, 30, 40, 1);
@@ -399,7 +394,8 @@ pre code {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
-  transition: border-color var(--duration-fast) var(--ease-standard),
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 }
 
@@ -428,11 +424,11 @@ select.form-control {
 }
 
 /* Also handle data-color-scheme */
-[data-color-scheme="dark"] select.form-control {
+[data-color-scheme='dark'] select.form-control {
   background-image: var(--select-caret-dark);
 }
 
-[data-color-scheme="light"] select.form-control {
+[data-color-scheme='light'] select.form-control {
   background-image: var(--select-caret-light);
 }
 
@@ -487,43 +483,27 @@ select.form-control {
 }
 
 .status--success {
-  background-color: rgba(
-    var(--color-success-rgb, 33, 128, 141),
-    var(--status-bg-opacity)
-  );
+  background-color: rgba(var(--color-success-rgb, 33, 128, 141), var(--status-bg-opacity));
   color: var(--color-success);
-  border: 1px solid
-    rgba(var(--color-success-rgb, 33, 128, 141), var(--status-border-opacity));
+  border: 1px solid rgba(var(--color-success-rgb, 33, 128, 141), var(--status-border-opacity));
 }
 
 .status--error {
-  background-color: rgba(
-    var(--color-error-rgb, 192, 21, 47),
-    var(--status-bg-opacity)
-  );
+  background-color: rgba(var(--color-error-rgb, 192, 21, 47), var(--status-bg-opacity));
   color: var(--color-error);
-  border: 1px solid
-    rgba(var(--color-error-rgb, 192, 21, 47), var(--status-border-opacity));
+  border: 1px solid rgba(var(--color-error-rgb, 192, 21, 47), var(--status-border-opacity));
 }
 
 .status--warning {
-  background-color: rgba(
-    var(--color-warning-rgb, 168, 75, 47),
-    var(--status-bg-opacity)
-  );
+  background-color: rgba(var(--color-warning-rgb, 168, 75, 47), var(--status-bg-opacity));
   color: var(--color-warning);
-  border: 1px solid
-    rgba(var(--color-warning-rgb, 168, 75, 47), var(--status-border-opacity));
+  border: 1px solid rgba(var(--color-warning-rgb, 168, 75, 47), var(--status-border-opacity));
 }
 
 .status--info {
-  background-color: rgba(
-    var(--color-info-rgb, 98, 108, 113),
-    var(--status-bg-opacity)
-  );
+  background-color: rgba(var(--color-info-rgb, 98, 108, 113), var(--status-bg-opacity));
   color: var(--color-info);
-  border: 1px solid
-    rgba(var(--color-info-rgb, 98, 108, 113), var(--status-border-opacity));
+  border: 1px solid rgba(var(--color-info-rgb, 98, 108, 113), var(--status-border-opacity));
 }
 
 /* Container layout */
@@ -646,14 +626,13 @@ select.form-control {
 }
 
 /* Dark mode specifics */
-[data-color-scheme="dark"] .btn--outline {
+[data-color-scheme='dark'] .btn--outline {
   border: 1px solid var(--color-border-secondary);
 }
 
 @font-face {
   font-family: 'FKGroteskNeue';
-  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
-    format('woff2');
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
 }
 
 /* Import the design system first, then override with fantasy theme */
@@ -662,15 +641,15 @@ select.form-control {
 :root {
   /* Fantasy Color Palette */
   --color-fantasy-brown-dark: #654321;
-  --color-fantasy-brown: #8B4513;
-  --color-fantasy-brown-light: #A0522D;
-  --color-fantasy-gold: #FFD700;
-  --color-fantasy-gold-dark: #DAA520;
-  --color-fantasy-parchment: #F5DEB3;
-  --color-fantasy-parchment-dark: #DEB887;
-  --color-fantasy-green: #228B22;
-  --color-fantasy-red: #8B0000;
-  
+  --color-fantasy-brown: #8b4513;
+  --color-fantasy-brown-light: #a0522d;
+  --color-fantasy-gold: #ffd700;
+  --color-fantasy-gold-dark: #daa520;
+  --color-fantasy-parchment: #f5deb3;
+  --color-fantasy-parchment-dark: #deb887;
+  --color-fantasy-green: #228b22;
+  --color-fantasy-red: #8b0000;
+
   /* Override design system colors for fantasy theme */
   --color-background: var(--color-fantasy-parchment);
   --color-surface: var(--color-fantasy-parchment-dark);
@@ -685,7 +664,11 @@ select.form-control {
 
 /* Base Layout */
 body {
-  background: linear-gradient(135deg, var(--color-fantasy-parchment) 0%, var(--color-fantasy-parchment-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-fantasy-parchment) 0%,
+    var(--color-fantasy-parchment-dark) 100%
+  );
   min-height: 100vh;
   font-family: 'Georgia', 'Times New Roman', serif;
 }
@@ -698,7 +681,11 @@ body {
 
 /* Header Styling */
 .game-header {
-  background: linear-gradient(135deg, var(--color-fantasy-brown) 0%, var(--color-fantasy-brown-light) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-fantasy-brown) 0%,
+    var(--color-fantasy-brown-light) 100%
+  );
   color: var(--color-fantasy-parchment);
   padding: var(--space-20);
   border-radius: var(--radius-lg);
@@ -713,7 +700,7 @@ body {
 .game-header h1 {
   font-size: var(--font-size-3xl);
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .guild-stats {
@@ -848,7 +835,8 @@ body {
   color: var(--color-fantasy-brown);
 }
 
-.active-quest-panel, .activity-log {
+.active-quest-panel,
+.activity-log {
   background: rgba(255, 215, 0, 0.1);
   padding: var(--space-20);
   border-radius: var(--radius-base);
@@ -856,7 +844,8 @@ body {
   border: 1px solid var(--color-fantasy-gold-dark);
 }
 
-.active-quest-panel h3, .activity-log h3 {
+.active-quest-panel h3,
+.activity-log h3 {
   margin: 0 0 var(--space-16) 0;
   color: var(--color-fantasy-brown);
 }
@@ -884,14 +873,18 @@ body {
   border: 2px solid var(--color-fantasy-gold);
 }
 
-.quest-grid, .adventurer-grid, .recruit-grid {
+.quest-grid,
+.adventurer-grid,
+.recruit-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-20);
 }
 
 /* Cards */
-.quest-card, .adventurer-card, .recruit-card {
+.quest-card,
+.adventurer-card,
+.recruit-card {
   background: var(--color-fantasy-parchment);
   border: 2px solid var(--color-fantasy-brown);
   border-radius: var(--radius-lg);
@@ -900,25 +893,33 @@ body {
   transition: transform var(--duration-normal) var(--ease-standard);
 }
 
-.quest-card:hover, .adventurer-card:hover, .recruit-card:hover {
+.quest-card:hover,
+.adventurer-card:hover,
+.recruit-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
 
-.quest-header, .adventurer-header, .recruit-header {
+.quest-header,
+.adventurer-header,
+.recruit-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--space-12);
 }
 
-.quest-title, .adventurer-name, .recruit-name {
+.quest-title,
+.adventurer-name,
+.recruit-name {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-fantasy-brown);
 }
 
-.difficulty-badge, .rank-badge, .class-badge {
+.difficulty-badge,
+.rank-badge,
+.class-badge {
   padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
@@ -926,17 +927,22 @@ body {
   text-transform: uppercase;
 }
 
-.difficulty-easy, .rank-novice {
+.difficulty-easy,
+.rank-novice {
   background: var(--color-fantasy-green);
   color: white;
 }
 
-.difficulty-medium, .rank-experienced, .rank-veteran {
+.difficulty-medium,
+.rank-experienced,
+.rank-veteran {
   background: var(--color-fantasy-gold);
   color: var(--color-fantasy-brown-dark);
 }
 
-.difficulty-hard, .rank-elite, .rank-legendary {
+.difficulty-hard,
+.rank-elite,
+.rank-legendary {
   background: var(--color-fantasy-red);
   color: white;
 }
@@ -946,13 +952,15 @@ body {
   color: var(--color-fantasy-parchment);
 }
 
-.quest-description, .adventurer-description {
+.quest-description,
+.adventurer-description {
   font-size: var(--font-size-sm);
   margin: var(--space-12) 0;
   line-height: 1.5;
 }
 
-.quest-details, .adventurer-stats {
+.quest-details,
+.adventurer-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-8);
@@ -1121,13 +1129,15 @@ body {
   gap: var(--space-20);
 }
 
-.financial-stats, .progress-stats {
+.financial-stats,
+.progress-stats {
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
 }
 
-.financial-item, .progress-item {
+.financial-item,
+.progress-item {
   display: flex;
   justify-content: space-between;
   padding: var(--space-8) 0;
@@ -1230,27 +1240,29 @@ body {
     grid-template-columns: 1fr;
     gap: var(--space-20);
   }
-  
+
   .guild-stats {
     flex-direction: column;
     gap: var(--space-8);
   }
-  
+
   .game-header {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .quick-stats {
     grid-template-columns: 1fr;
   }
-  
+
   .quest-board-header {
     flex-direction: column;
     gap: var(--space-16);
   }
-  
-  .quest-grid, .adventurer-grid, .recruit-grid {
+
+  .quest-grid,
+  .adventurer-grid,
+  .recruit-grid {
     grid-template-columns: 1fr;
   }
 }

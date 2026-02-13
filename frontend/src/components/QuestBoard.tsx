@@ -15,22 +15,21 @@ const QuestBoard: React.FC<QuestBoardProps> = ({ onQuestSelect }) => {
       </div>
       <div className="quest-grid">
         {questData.map((quest) => (
-          <div
-            key={quest.id}
-            className="quest-item"
-            onClick={() => onQuestSelect(quest)}
-          >
+          <div key={quest.id} className="quest-item" onClick={() => onQuestSelect(quest)}>
             <h3>{quest.name}</h3>
             <p>{quest.description}</p>
             <div className="quest-details">
               <p>Reward: {quest.reward} gold</p>
-              <p>Difficulty: <span className={`difficulty-${quest.difficulty.toLowerCase()}`}>{quest.difficulty}</span></p>
+              <p>
+                Difficulty:{' '}
+                <span className={`difficulty-${quest.difficulty.toLowerCase()}`}>
+                  {quest.difficulty}
+                </span>
+              </p>
               <p>Duration: {Math.floor(quest.duration / 60000)} minutes</p>
               <p>Min Level: {quest.requirements.minLevel}</p>
             </div>
-            <button className="btn btn--primary">
-              View Quest
-            </button>
+            <button className="btn btn--primary">View Quest</button>
           </div>
         ))}
       </div>

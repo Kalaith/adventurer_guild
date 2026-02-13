@@ -1,4 +1,10 @@
-import { Adventurer, RetiredAdventurer, Recruit, PersonalityTraits, SkillTree } from '../types/game';
+import {
+  Adventurer,
+  RetiredAdventurer,
+  Recruit,
+  PersonalityTraits,
+  SkillTree,
+} from '../types/game';
 
 export interface RetirementEvent {
   id: string;
@@ -32,12 +38,12 @@ export const retirementRoles: RetirementOption[] = [
       minQuestsCompleted: 20,
       specificSkills: [
         { skill: 'combat.weaponMastery', minValue: 20 },
-        { skill: 'magic.spellPower', minValue: 15 }
-      ]
+        { skill: 'magic.spellPower', minValue: 15 },
+      ],
     },
     benefits: {
-      trainingBonus: 25 // 25% faster skill growth for new adventurers
-    }
+      trainingBonus: 25, // 25% faster skill growth for new adventurers
+    },
   },
   {
     role: 'advisor',
@@ -46,17 +52,15 @@ export const retirementRoles: RetirementOption[] = [
     requirements: {
       minLevel: 6,
       minQuestsCompleted: 30,
-      specificSkills: [
-        { skill: 'combat.tacticalKnowledge', minValue: 20 }
-      ],
+      specificSkills: [{ skill: 'combat.tacticalKnowledge', minValue: 20 }],
       personality: [
         { trait: 'loyalty', minValue: 70 },
-        { trait: 'ambition', minValue: 60 }
-      ]
+        { trait: 'ambition', minValue: 60 },
+      ],
     },
     benefits: {
-      questAdvice: true // Provides tactical advice that improves success rates
-    }
+      questAdvice: true, // Provides tactical advice that improves success rates
+    },
   },
   {
     role: 'recruiter',
@@ -65,13 +69,11 @@ export const retirementRoles: RetirementOption[] = [
     requirements: {
       minLevel: 4,
       minQuestsCompleted: 25,
-      personality: [
-        { trait: 'teamwork', minValue: 60 }
-      ]
+      personality: [{ trait: 'teamwork', minValue: 60 }],
     },
     benefits: {
-      recruitCostReduction: 30 // 30% reduction in recruit costs
-    }
+      recruitCostReduction: 30, // 30% reduction in recruit costs
+    },
   },
   {
     role: 'quartermaster',
@@ -82,13 +84,13 @@ export const retirementRoles: RetirementOption[] = [
       minQuestsCompleted: 15,
       personality: [
         { trait: 'loyalty', minValue: 80 },
-        { trait: 'greed', minValue: 30 }
-      ]
+        { trait: 'greed', minValue: 30 },
+      ],
     },
     benefits: {
-      questAdvice: true // Helps optimize resource allocation
-    }
-  }
+      questAdvice: true, // Helps optimize resource allocation
+    },
+  },
 ];
 
 export class RetirementSystem {
@@ -120,7 +122,7 @@ export class RetirementSystem {
       reason,
       description: this.getRetirementDescription(adventurer, reason),
       benefits: availableRole?.benefits || {},
-      farewellMessage: this.generateFarewellMessage(adventurer, reason)
+      farewellMessage: this.generateFarewellMessage(adventurer, reason),
     };
   }
 
@@ -132,14 +134,17 @@ export class RetirementSystem {
 
     // Check personality-based retirement
     if (adventurer.personality.greed >= 80) return 'wealth';
-    if (adventurer.relationships.some(rel => rel.type === 'romance' && rel.strength >= 90)) {
+    if (adventurer.relationships.some((rel) => rel.type === 'romance' && rel.strength >= 90)) {
       return 'relationship';
     }
 
     return 'voluntary';
   }
 
-  private getRetirementDescription(adventurer: Adventurer, reason: RetirementEvent['reason']): string {
+  private getRetirementDescription(
+    adventurer: Adventurer,
+    reason: RetirementEvent['reason']
+  ): string {
     switch (reason) {
       case 'age':
         return `${adventurer.name} feels the weight of years of adventuring and wishes to settle into a quieter role within the guild.`;
@@ -156,33 +161,36 @@ export class RetirementSystem {
     }
   }
 
-  private generateFarewellMessage(adventurer: Adventurer, reason: RetirementEvent['reason']): string {
+  private generateFarewellMessage(
+    adventurer: Adventurer,
+    reason: RetirementEvent['reason']
+  ): string {
     const messages = {
       age: [
         `"My bones creak like old floorboards, but my spirit remains with this guild forever."`,
         `"I may be stepping down, but I'll always be here if you need guidance."`,
-        `"Time to let younger heroes take the spotlight - I'll be cheering from the sidelines."`
+        `"Time to let younger heroes take the spotlight - I'll be cheering from the sidelines."`,
       ],
       injury: [
         `"This body may be broken, but my dedication to this guild is unbreakable."`,
-        `"I can't swing a sword anymore, but I can still train others to swing theirs better."`
+        `"I can't swing a sword anymore, but I can still train others to swing theirs better."`,
       ],
       achievement: [
         `"I've climbed every mountain there is to climb. Now I want to help others reach those same peaks."`,
-        `"They say legends never die - I plan to live on through the adventurers I train."`
+        `"They say legends never die - I plan to live on through the adventurers I train."`,
       ],
       relationship: [
         `"Adventure called to me once, but now love calls louder. I'll serve the guild in new ways."`,
-        `"Starting a family doesn't mean ending my loyalty to this guild."`
+        `"Starting a family doesn't mean ending my loyalty to this guild."`,
       ],
       wealth: [
         `"I have enough gold to last several lifetimes. Time to invest in the guild's future instead."`,
-        `"Riches are meaningless without purpose. My purpose is helping this guild thrive."`
+        `"Riches are meaningless without purpose. My purpose is helping this guild thrive."`,
       ],
       voluntary: [
         `"It's been an honor serving alongside all of you. Time for the next chapter."`,
-        `"I'm not leaving - just changing how I contribute to our shared mission."`
-      ]
+        `"I'm not leaving - just changing how I contribute to our shared mission."`,
+      ],
     };
 
     const categoryMessages = messages[reason] || messages.voluntary;
@@ -190,7 +198,7 @@ export class RetirementSystem {
   }
 
   public getBestRetirementRole(adventurer: Adventurer): RetirementOption | null {
-    const eligibleRoles = retirementRoles.filter(role =>
+    const eligibleRoles = retirementRoles.filter((role) =>
       this.meetsRequirements(adventurer, role.requirements)
     );
 
@@ -206,9 +214,16 @@ export class RetirementSystem {
     return eligibleRoles[0];
   }
 
-  private meetsRequirements(adventurer: Adventurer, requirements: RetirementOption['requirements']): boolean {
+  private meetsRequirements(
+    adventurer: Adventurer,
+    requirements: RetirementOption['requirements']
+  ): boolean {
     if (requirements.minLevel && adventurer.level < requirements.minLevel) return false;
-    if (requirements.minQuestsCompleted && adventurer.questsCompleted < requirements.minQuestsCompleted) return false;
+    if (
+      requirements.minQuestsCompleted &&
+      adventurer.questsCompleted < requirements.minQuestsCompleted
+    )
+      return false;
 
     if (requirements.specificSkills) {
       for (const skillReq of requirements.specificSkills) {
@@ -235,14 +250,14 @@ export class RetirementSystem {
 
     // Bonus for exceeding requirements
     if (role.requirements.specificSkills) {
-      role.requirements.specificSkills.forEach(skillReq => {
+      role.requirements.specificSkills.forEach((skillReq) => {
         const skillValue = this.getSkillValue(adventurer.skills, skillReq.skill);
         score += Math.max(0, skillValue - skillReq.minValue);
       });
     }
 
     if (role.requirements.personality) {
-      role.requirements.personality.forEach(personalityReq => {
+      role.requirements.personality.forEach((personalityReq) => {
         const personalityValue = adventurer.personality[personalityReq.trait];
         score += Math.max(0, personalityValue - personalityReq.minValue);
       });
@@ -271,7 +286,7 @@ export class RetirementSystem {
       originalAdventurer: adventurer,
       retirementDate: Date.now(),
       role: role?.role || 'advisor',
-      benefits: retirementEvent.benefits
+      benefits: retirementEvent.benefits,
     };
   }
 
@@ -280,7 +295,7 @@ export class RetirementSystem {
     const descendantNames = [
       `${parent.name} Jr.`,
       `${this.getDescendantFirstName()} ${parent.name.split(' ').pop()}`,
-      `${parent.name.split(' ')[0]} the Younger`
+      `${parent.name.split(' ')[0]} the Younger`,
     ];
 
     const descendantName = descendantNames[Math.floor(Math.random() * descendantNames.length)];
@@ -289,23 +304,31 @@ export class RetirementSystem {
     const inheritedPersonality: PersonalityTraits = {
       courage: Math.min(100, Math.max(0, parent.personality.courage + (Math.random() - 0.5) * 30)),
       loyalty: Math.min(100, Math.max(0, parent.personality.loyalty + (Math.random() - 0.5) * 20)),
-      ambition: Math.min(100, Math.max(0, parent.personality.ambition + (Math.random() - 0.5) * 40)),
-      teamwork: Math.min(100, Math.max(0, parent.personality.teamwork + (Math.random() - 0.5) * 25)),
-      greed: Math.min(100, Math.max(0, parent.personality.greed + (Math.random() - 0.5) * 35))
+      ambition: Math.min(
+        100,
+        Math.max(0, parent.personality.ambition + (Math.random() - 0.5) * 40)
+      ),
+      teamwork: Math.min(
+        100,
+        Math.max(0, parent.personality.teamwork + (Math.random() - 0.5) * 25)
+      ),
+      greed: Math.min(100, Math.max(0, parent.personality.greed + (Math.random() - 0.5) * 35)),
     };
 
     // Inherit class preference (80% chance) or get random class
-    const inheritedClass = Math.random() < 0.8 ? parent.class :
-      (['Warrior', 'Mage', 'Rogue', 'Archer'] as const)[Math.floor(Math.random() * 4)];
+    const inheritedClass =
+      Math.random() < 0.8
+        ? parent.class
+        : (['Warrior', 'Mage', 'Rogue', 'Archer'] as const)[Math.floor(Math.random() * 4)];
 
     const baseLevel = Math.max(1, Math.floor(parent.level * 0.3) + Math.floor(Math.random() * 3));
 
     // Inherit some skill potential from parent
     const potentialSkills: { [skillType: string]: number } = {};
-    Object.keys(parent.skills).forEach(category => {
+    Object.keys(parent.skills).forEach((category) => {
       const skillCategory = parent.skills[category as keyof SkillTree];
       if (typeof skillCategory === 'object') {
-        Object.keys(skillCategory).forEach(skill => {
+        Object.keys(skillCategory).forEach((skill) => {
           const parentValue = (skillCategory as Record<string, number>)[skill];
           const inheritedValue = Math.floor(parentValue * 0.2 + Math.random() * 5);
           if (inheritedValue > 0) {
@@ -323,15 +346,36 @@ export class RetirementSystem {
       cost: Math.floor((300 + baseLevel * 50) * 0.8), // 20% discount for descendants
       personality: inheritedPersonality,
       potentialSkills,
-      descendantOf: parent.id
+      descendantOf: parent.id,
     };
   }
 
   private getDescendantFirstName(): string {
     const names = [
-      'Alex', 'Jordan', 'Casey', 'Morgan', 'Riley', 'Avery', 'Quinn', 'Sage',
-      'Rowan', 'River', 'Phoenix', 'Skylar', 'Ember', 'Aspen', 'Wren', 'Kai',
-      'Nova', 'Orion', 'Luna', 'Aria', 'Zara', 'Felix', 'Iris', 'Leo'
+      'Alex',
+      'Jordan',
+      'Casey',
+      'Morgan',
+      'Riley',
+      'Avery',
+      'Quinn',
+      'Sage',
+      'Rowan',
+      'River',
+      'Phoenix',
+      'Skylar',
+      'Ember',
+      'Aspen',
+      'Wren',
+      'Kai',
+      'Nova',
+      'Orion',
+      'Luna',
+      'Aria',
+      'Zara',
+      'Felix',
+      'Iris',
+      'Leo',
     ];
     return names[Math.floor(Math.random() * names.length)];
   }
@@ -344,10 +388,10 @@ export class RetirementSystem {
     const benefits = {
       trainingBonus: 0,
       recruitCostReduction: 0,
-      questAdvice: false
+      questAdvice: false,
     };
 
-    retiredAdventurers.forEach(retired => {
+    retiredAdventurers.forEach((retired) => {
       if (retired.benefits.trainingBonus) {
         benefits.trainingBonus += retired.benefits.trainingBonus;
       }
@@ -379,8 +423,8 @@ export class RetirementSystem {
       benefits: {
         moraleBonus: 15 + adventurer.level * 2,
         reputationGain: 20 + adventurer.questsCompleted,
-        guildLoyalty: 25 // Improves loyalty of all remaining adventurers
-      }
+        guildLoyalty: 25, // Improves loyalty of all remaining adventurers
+      },
     };
   }
 }

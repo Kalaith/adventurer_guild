@@ -8,19 +8,27 @@ interface AdventurersProps {
 const Adventurers: React.FC<AdventurersProps> = ({ adventurers }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'available': return 'text-green-600';
-      case 'on quest': return 'text-blue-600';
-      default: return 'text-gray-600';
+      case 'available':
+        return 'text-green-600';
+      case 'on quest':
+        return 'text-blue-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
   const getClassIcon = (adventurerClass: string) => {
     switch (adventurerClass) {
-      case 'Warrior': return '⚔️';
-      case 'Mage': return '🔮';
-      case 'Rogue': return '🗡️';
-      case 'Archer': return '🏹';
-      default: return '👤';
+      case 'Warrior':
+        return '⚔️';
+      case 'Mage':
+        return '🔮';
+      case 'Rogue':
+        return '🗡️';
+      case 'Archer':
+        return '🏹';
+      default:
+        return '👤';
     }
   };
 
@@ -48,9 +56,7 @@ const Adventurers: React.FC<AdventurersProps> = ({ adventurers }) => {
               <p>Rank: {adventurer.rank}</p>
               <p>Level: {adventurer.level}</p>
               <p>Experience: {adventurer.experience}</p>
-              <p className={getStatusColor(adventurer.status)}>
-                Status: {adventurer.status}
-              </p>
+              <p className={getStatusColor(adventurer.status)}>Status: {adventurer.status}</p>
             </div>
             <div className="adventurer-stats">
               <h4>Stats:</h4>

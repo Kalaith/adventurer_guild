@@ -55,9 +55,7 @@ const ActiveQuests: React.FC<ActiveQuestsProps> = ({ activeQuests, onCompleteQue
             <p>Reward: {quest.reward} gold</p>
             <p>Difficulty: {quest.difficulty}</p>
             <p>Time Remaining: {formatTime(timeRemaining[quest.id] || quest.duration)}</p>
-            {quest.assignedAdventurers && (
-              <p>Adventurers: {quest.assignedAdventurers.length}</p>
-            )}
+            {quest.assignedAdventurers && <p>Adventurers: {quest.assignedAdventurers.length}</p>}
           </div>
         ))}
       </div>

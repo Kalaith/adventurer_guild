@@ -26,7 +26,8 @@ interface GuildStore extends GuildState {
   saveGame: () => void;
 }
 
-const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value));
 
 const randomInt = (minInclusive: number, maxInclusive: number): number => {
   return Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) + minInclusive;
@@ -45,7 +46,10 @@ const hasOwn = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
   return Object.prototype.hasOwnProperty.call(obj, key);
 };
 
-const applyPotentialSkills = (base: Adventurer['skills'], potential: Recruit['potentialSkills']): Adventurer['skills'] => {
+const applyPotentialSkills = (
+  base: Adventurer['skills'],
+  potential: Recruit['potentialSkills']
+): Adventurer['skills'] => {
   const next = {
     combat: { ...base.combat },
     magic: { ...base.magic },
@@ -101,7 +105,7 @@ export const useGuildStore = create<GuildStore>()(
 
       hireAdventurer: (recruitId: string) => {
         const state = get();
-        const recruit = state.recruits.find(r => r.id === recruitId);
+        const recruit = state.recruits.find((r) => r.id === recruitId);
 
         if (!recruit) return;
 
@@ -143,7 +147,7 @@ export const useGuildStore = create<GuildStore>()(
 
         set((prevState) => ({
           adventurers: [...prevState.adventurers, newAdventurer],
-          recruits: prevState.recruits.filter(r => r.id !== recruitId)
+          recruits: prevState.recruits.filter((r) => r.id !== recruitId),
         }));
       },
 
@@ -157,7 +161,9 @@ export const useGuildStore = create<GuildStore>()(
         }
 
         const availableAdventurers = state.getAvailableAdventurers();
-        const selectedAdventurers = availableAdventurers.filter(a => adventurerIds.includes(a.id));
+        const selectedAdventurers = availableAdventurers.filter((a) =>
+          adventurerIds.includes(a.id)
+        );
 
         if (selectedAdventurers.length === 0) {
           console.warn('No available adventurers selected');
@@ -169,47 +175,44 @@ export const useGuildStore = create<GuildStore>()(
         const questWithAdventurers: Quest = {
           ...quest,
           assignedAdventurers: assignedAdventurerIds,
-          status: 'active'
+          status: 'active',
         };
 
         set((prevState) => ({
           activeQuests: [...prevState.activeQuests, questWithAdventurers],
-          adventurers: prevState.adventurers.map(adv =>
-            assignedAdventurerIds.includes(adv.id)
-              ? { ...adv, status: 'on quest' }
-              : adv
-          )
+          adventurers: prevState.adventurers.map((adv) =>
+            assignedAdventurerIds.includes(adv.id) ? { ...adv, status: 'on quest' } : adv
+          ),
         }));
       },
 
       completeQuest: (questId: string) => {
         const state = get();
-        const quest = state.activeQuests.find(q => q.id === questId);
+        const quest = state.activeQuests.find((q) => q.id === questId);
 
         if (!quest) return;
 
         const reward = state.calculateQuestReward(quest);
         const xpReward =
-          quest.experienceReward ?? quest.requirements.minLevel * guildConstants.EXPERIENCE_PER_QUEST_LEVEL;
+          quest.experienceReward ??
+          quest.requirements.minLevel * guildConstants.EXPERIENCE_PER_QUEST_LEVEL;
 
         set((prevState) => ({
           gold: prevState.gold + reward,
           reputation: prevState.reputation + Math.floor(reward / 10),
-          activeQuests: prevState.activeQuests.filter(q => q.id !== questId),
+          activeQuests: prevState.activeQuests.filter((q) => q.id !== questId),
           completedQuests: [...prevState.completedQuests, questId],
-          adventurers: prevState.adventurers.map(adv =>
+          adventurers: prevState.adventurers.map((adv) =>
             quest.assignedAdventurers?.includes(adv.id)
               ? {
                   ...adv,
                   status: 'available',
                   questsCompleted: adv.questsCompleted + 1,
                   experience: adv.experience + xpReward,
-                  level: adv.experience + xpReward >= adv.level * 100
-                    ? adv.level + 1
-                    : adv.level
+                  level: adv.experience + xpReward >= adv.level * 100 ? adv.level + 1 : adv.level,
                 }
               : adv
-          )
+          ),
         }));
       },
 
@@ -223,7 +226,9 @@ export const useGuildStore = create<GuildStore>()(
         for (let i = 0; i < 3; i++) {
           const level = Math.floor(Math.random() * 5) + 1;
           const classType =
-            guildConstants.RECRUIT_CLASSES[Math.floor(Math.random() * guildConstants.RECRUIT_CLASSES.length)];
+            guildConstants.RECRUIT_CLASSES[
+              Math.floor(Math.random() * guildConstants.RECRUIT_CLASSES.length)
+            ];
           const cost = get().calculateRecruitCost(level);
 
           const personality = createDefaultPersonality();
@@ -238,16 +243,27 @@ export const useGuildStore = create<GuildStore>()(
             | keyof typeof skillDefaults.magic
             | keyof typeof skillDefaults.stealth
             | keyof typeof skillDefaults.survival
-          > =
-            ['weaponMastery', 'tacticalKnowledge', 'spellPower', 'elementalMastery', 'sneaking', 'lockpicking', 'tracking', 'herbalism'];
+          > = [
+            'weaponMastery',
+            'tacticalKnowledge',
+            'spellPower',
+            'elementalMastery',
+            'sneaking',
+            'lockpicking',
+            'tracking',
+            'herbalism',
+          ];
 
           for (let j = 0; j < 3; j++) {
             const key = potentialKeys[randomInt(0, potentialKeys.length - 1)];
             const category =
-              key in skillDefaults.combat ? 'combat' :
-              key in skillDefaults.magic ? 'magic' :
-              key in skillDefaults.stealth ? 'stealth' :
-              'survival';
+              key in skillDefaults.combat
+                ? 'combat'
+                : key in skillDefaults.magic
+                  ? 'magic'
+                  : key in skillDefaults.stealth
+                    ? 'stealth'
+                    : 'survival';
 
             potentialSkills[`${category}.${String(key)}`] = randomInt(1, 10);
           }
@@ -282,18 +298,20 @@ export const useGuildStore = create<GuildStore>()(
 
       calculateRecruitCost: (level: number) => {
         return Math.floor(
-          guildConstants.RECRUIT_BASE_COST * Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, level - 1)
+          guildConstants.RECRUIT_BASE_COST *
+            Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, level - 1)
         );
       },
 
       calculateQuestReward: (quest: Quest) => {
         const baseReward = quest.requirements.minLevel * guildConstants.GOLD_PER_QUEST_LEVEL;
-        const difficultyMultiplier = quest.difficulty === 'Easy' ? 1 : quest.difficulty === 'Medium' ? 1.5 : 2;
+        const difficultyMultiplier =
+          quest.difficulty === 'Easy' ? 1 : quest.difficulty === 'Medium' ? 1.5 : 2;
         return Math.floor(baseReward * difficultyMultiplier);
       },
 
       getAvailableAdventurers: () => {
-        return get().adventurers.filter(adv => adv.status === 'available');
+        return get().adventurers.filter((adv) => adv.status === 'available');
       },
 
       getActiveQuests: () => {

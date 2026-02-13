@@ -44,7 +44,7 @@ export class RelationshipSystem {
     const events: RelationshipEvent[] = [];
 
     // Check for new relationship events
-    const availableAdventurers = adventurers.filter(adv => adv.status === 'available');
+    const availableAdventurers = adventurers.filter((adv) => adv.status === 'available');
 
     // Generate random relationship events
     if (availableAdventurers.length >= 2 && Math.random() < 0.3) {
@@ -55,9 +55,10 @@ export class RelationshipSystem {
     }
 
     // Check for existing relationships that might evolve
-    availableAdventurers.forEach(adventurer => {
-      adventurer.relationships.forEach(relationship => {
-        if (Math.random() < 0.15) { // 15% chance for existing relationship to evolve
+    availableAdventurers.forEach((adventurer) => {
+      adventurer.relationships.forEach((relationship) => {
+        if (Math.random() < 0.15) {
+          // 15% chance for existing relationship to evolve
           const evolutionEvent = this.evolveRelationship(adventurer, relationship, adventurers);
           if (evolutionEvent) {
             events.push(evolutionEvent);
@@ -82,7 +83,9 @@ export class RelationshipSystem {
     }
 
     // Check if they already have a relationship
-    const existingRelationship = adventurer1.relationships.find(rel => rel.targetId === adventurer2.id);
+    const existingRelationship = adventurer1.relationships.find(
+      (rel) => rel.targetId === adventurer2.id
+    );
     if (existingRelationship && existingRelationship.strength > 70) {
       return null; // Skip if they already have a strong relationship
     }
@@ -93,7 +96,10 @@ export class RelationshipSystem {
     return this.createRelationshipEvent(adventurer1, adventurer2, eventType);
   }
 
-  private determineEventType(personality1: PersonalityTraits, personality2: PersonalityTraits): RelationshipEvent['type'] {
+  private determineEventType(
+    personality1: PersonalityTraits,
+    personality2: PersonalityTraits
+  ): RelationshipEvent['type'] {
     // High teamwork personalities tend to bond
     if (personality1.teamwork > 70 && personality2.teamwork > 70) {
       return Math.random() < 0.7 ? 'bonding' : 'friendship_deepens';
@@ -105,8 +111,12 @@ export class RelationshipSystem {
     }
 
     // Loyal and high teamwork with courage can lead to romance
-    if (personality1.loyalty > 60 && personality2.loyalty > 60 &&
-        personality1.courage > 50 && personality2.courage > 50) {
+    if (
+      personality1.loyalty > 60 &&
+      personality2.loyalty > 60 &&
+      personality1.courage > 50 &&
+      personality2.courage > 50
+    ) {
       return Math.random() < 0.3 ? 'romance' : 'bonding';
     }
 
@@ -134,16 +144,16 @@ export class RelationshipSystem {
                 adventurerId: adventurer1.id,
                 targetId: adventurer2.id,
                 relationshipType: 'friendship',
-                strengthChange: 15
+                strengthChange: 15,
               },
               {
                 adventurerId: adventurer2.id,
                 targetId: adventurer1.id,
                 relationshipType: 'friendship',
-                strengthChange: 15
-              }
-            ]
-          }
+                strengthChange: 15,
+              },
+            ],
+          },
         };
 
       case 'romance':
@@ -158,30 +168,30 @@ export class RelationshipSystem {
                 adventurerId: adventurer1.id,
                 targetId: adventurer2.id,
                 relationshipType: 'romance',
-                strengthChange: 25
+                strengthChange: 25,
               },
               {
                 adventurerId: adventurer2.id,
                 targetId: adventurer1.id,
                 relationshipType: 'romance',
-                strengthChange: 25
-              }
+                strengthChange: 25,
+              },
             ],
             skillBonuses: [
               {
                 adventurerId: adventurer1.id,
                 skillType: 'teamwork',
                 bonus: 10,
-                duration: 30
+                duration: 30,
               },
               {
                 adventurerId: adventurer2.id,
                 skillType: 'teamwork',
                 bonus: 10,
-                duration: 30
-              }
-            ]
-          }
+                duration: 30,
+              },
+            ],
+          },
         };
 
       case 'rivalry_start':
@@ -196,30 +206,30 @@ export class RelationshipSystem {
                 adventurerId: adventurer1.id,
                 targetId: adventurer2.id,
                 relationshipType: 'rivalry',
-                strengthChange: 20
+                strengthChange: 20,
               },
               {
                 adventurerId: adventurer2.id,
                 targetId: adventurer1.id,
                 relationshipType: 'rivalry',
-                strengthChange: 20
-              }
+                strengthChange: 20,
+              },
             ],
             skillBonuses: [
               {
                 adventurerId: adventurer1.id,
                 skillType: 'combat.battleRage',
                 bonus: 5,
-                duration: 14
+                duration: 14,
               },
               {
                 adventurerId: adventurer2.id,
                 skillType: 'combat.battleRage',
                 bonus: 5,
-                duration: 14
-              }
-            ]
-          }
+                duration: 14,
+              },
+            ],
+          },
         };
 
       case 'conflict':
@@ -234,17 +244,17 @@ export class RelationshipSystem {
                 adventurerId: adventurer1.id,
                 targetId: adventurer2.id,
                 relationshipType: 'rivalry',
-                strengthChange: -10
+                strengthChange: -10,
               },
               {
                 adventurerId: adventurer2.id,
                 targetId: adventurer1.id,
                 relationshipType: 'rivalry',
-                strengthChange: -10
-              }
+                strengthChange: -10,
+              },
             ],
-            moraleChange: -5
-          }
+            moraleChange: -5,
+          },
         };
 
       default:
@@ -257,7 +267,7 @@ export class RelationshipSystem {
     relationship: AdventurerRelationship,
     allAdventurers: Adventurer[]
   ): RelationshipEvent | null {
-    const target = allAdventurers.find(adv => adv.id === relationship.targetId);
+    const target = allAdventurers.find((adv) => adv.id === relationship.targetId);
     if (!target) return null;
 
     const eventId = `evolve_${Date.now()}_${Math.random()}`;
@@ -275,10 +285,10 @@ export class RelationshipSystem {
               adventurerId: adventurer.id,
               targetId: target.id,
               relationshipType: 'romance',
-              strengthChange: 20
-            }
-          ]
-        }
+              strengthChange: 20,
+            },
+          ],
+        },
       };
     }
 
@@ -296,11 +306,11 @@ export class RelationshipSystem {
                 adventurerId: adventurer.id,
                 targetId: target.id,
                 relationshipType: 'rivalry',
-                strengthChange: 10
-              }
+                strengthChange: 10,
+              },
             ],
-            moraleChange: -10
-          }
+            moraleChange: -10,
+          },
         };
       } else if (relationship.strength < 30 && Math.random() < 0.4) {
         return {
@@ -314,10 +324,10 @@ export class RelationshipSystem {
                 adventurerId: adventurer.id,
                 targetId: target.id,
                 relationshipType: 'friendship',
-                strengthChange: 25
-              }
-            ]
-          }
+                strengthChange: 25,
+              },
+            ],
+          },
         };
       }
     }
@@ -326,11 +336,11 @@ export class RelationshipSystem {
   }
 
   public applyRelationshipEvent(event: RelationshipEvent, adventurers: Adventurer[]): void {
-    event.impact.relationshipChanges.forEach(change => {
-      const adventurer = adventurers.find(adv => adv.id === change.adventurerId);
+    event.impact.relationshipChanges.forEach((change) => {
+      const adventurer = adventurers.find((adv) => adv.id === change.adventurerId);
       if (!adventurer) return;
 
-      let relationship = adventurer.relationships.find(rel => rel.targetId === change.targetId);
+      let relationship = adventurer.relationships.find((rel) => rel.targetId === change.targetId);
 
       if (!relationship) {
         // Create new relationship
@@ -338,14 +348,17 @@ export class RelationshipSystem {
           targetId: change.targetId,
           type: change.relationshipType,
           strength: 0,
-          history: []
+          history: [],
         };
         adventurer.relationships.push(relationship);
       }
 
       // Update relationship
       relationship.type = change.relationshipType;
-      relationship.strength = Math.max(0, Math.min(100, relationship.strength + change.strengthChange));
+      relationship.strength = Math.max(
+        0,
+        Math.min(100, relationship.strength + change.strengthChange)
+      );
       relationship.history.push(event.description);
 
       // Keep only last 5 history entries
@@ -363,12 +376,14 @@ export class RelationshipSystem {
 
     for (let i = 0; i < adventurerIds.length - 1; i++) {
       for (let j = i + 1; j < adventurerIds.length; j++) {
-        const adventurer1 = allAdventurers.find(adv => adv.id === adventurerIds[i]);
-        const adventurer2 = allAdventurers.find(adv => adv.id === adventurerIds[j]);
+        const adventurer1 = allAdventurers.find((adv) => adv.id === adventurerIds[i]);
+        const adventurer2 = allAdventurers.find((adv) => adv.id === adventurerIds[j]);
 
         if (!adventurer1 || !adventurer2) continue;
 
-        const relationship = adventurer1.relationships.find(rel => rel.targetId === adventurer2.id);
+        const relationship = adventurer1.relationships.find(
+          (rel) => rel.targetId === adventurer2.id
+        );
 
         if (relationship) {
           switch (relationship.type) {
@@ -395,8 +410,8 @@ export class RelationshipSystem {
   public getRelationshipSummary(adventurer: Adventurer, allAdventurers: Adventurer[]): string[] {
     const summaries: string[] = [];
 
-    adventurer.relationships.forEach(relationship => {
-      const target = allAdventurers.find(adv => adv.id === relationship.targetId);
+    adventurer.relationships.forEach((relationship) => {
+      const target = allAdventurers.find((adv) => adv.id === relationship.targetId);
       if (!target) return;
 
       let relationshipLevel = 'acquaintance';
@@ -405,10 +420,16 @@ export class RelationshipSystem {
       else if (relationship.strength >= 40) relationshipLevel = 'good';
       else if (relationship.strength >= 20) relationshipLevel = 'casual';
 
-      const typeDescription = relationship.type === 'friendship' ? 'friend' :
-                            relationship.type === 'romance' ? 'romantic partner' : 'rival';
+      const typeDescription =
+        relationship.type === 'friendship'
+          ? 'friend'
+          : relationship.type === 'romance'
+            ? 'romantic partner'
+            : 'rival';
 
-      summaries.push(`${adventurer.name} has a ${relationshipLevel} ${typeDescription}ship with ${target.name}.`);
+      summaries.push(
+        `${adventurer.name} has a ${relationshipLevel} ${typeDescription}ship with ${target.name}.`
+      );
     });
 
     return summaries;
@@ -416,12 +437,16 @@ export class RelationshipSystem {
 
   public triggerRelationshipCrisis(adventurers: Adventurer[]): RelationshipEvent | null {
     // Find adventurers with strong negative relationships
-    const problematicPairs: Array<{ adv1: Adventurer; adv2: Adventurer; relationship: AdventurerRelationship }> = [];
+    const problematicPairs: Array<{
+      adv1: Adventurer;
+      adv2: Adventurer;
+      relationship: AdventurerRelationship;
+    }> = [];
 
-    adventurers.forEach(adventurer => {
-      adventurer.relationships.forEach(relationship => {
+    adventurers.forEach((adventurer) => {
+      adventurer.relationships.forEach((relationship) => {
         if (relationship.type === 'rivalry' && relationship.strength > 70) {
-          const target = adventurers.find(adv => adv.id === relationship.targetId);
+          const target = adventurers.find((adv) => adv.id === relationship.targetId);
           if (target) {
             problematicPairs.push({ adv1: adventurer, adv2: target, relationship });
           }
@@ -444,11 +469,11 @@ export class RelationshipSystem {
             adventurerId: pair.adv1.id,
             targetId: pair.adv2.id,
             relationshipType: 'rivalry',
-            strengthChange: 15
-          }
+            strengthChange: 15,
+          },
         ],
-        moraleChange: -20
-      }
+        moraleChange: -20,
+      },
     };
   }
 }

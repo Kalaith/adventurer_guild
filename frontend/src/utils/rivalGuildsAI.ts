@@ -7,7 +7,7 @@ export const rivalGuilds: RivalGuild[] = [
     level: 3,
     reputation: 150,
     adventurerCount: 12,
-    competitionLevel: 70 // Higher values mean more aggressive competition
+    competitionLevel: 70, // Higher values mean more aggressive competition
   },
   {
     id: 'shadow_runners',
@@ -15,7 +15,7 @@ export const rivalGuilds: RivalGuild[] = [
     level: 5,
     reputation: 280,
     adventurerCount: 8,
-    competitionLevel: 85
+    competitionLevel: 85,
   },
   {
     id: 'crimson_blade_guild',
@@ -23,7 +23,7 @@ export const rivalGuilds: RivalGuild[] = [
     level: 4,
     reputation: 220,
     adventurerCount: 15,
-    competitionLevel: 60
+    competitionLevel: 60,
   },
   {
     id: 'arcane_seekers',
@@ -31,7 +31,7 @@ export const rivalGuilds: RivalGuild[] = [
     level: 6,
     reputation: 320,
     adventurerCount: 10,
-    competitionLevel: 75
+    competitionLevel: 75,
   },
   {
     id: 'golden_eagles',
@@ -39,8 +39,8 @@ export const rivalGuilds: RivalGuild[] = [
     level: 2,
     reputation: 90,
     adventurerCount: 18,
-    competitionLevel: 50
-  }
+    competitionLevel: 50,
+  },
 ];
 
 interface QuestCompetition {
@@ -77,7 +77,11 @@ export class RivalGuildsAI {
     return RivalGuildsAI.instance;
   }
 
-  public update(playerGuild: { level: number; reputation: number; gold: number }): RivalGuildAction[] {
+  public update(playerGuild: {
+    level: number;
+    reputation: number;
+    gold: number;
+  }): RivalGuildAction[] {
     const now = Date.now();
     if (now - this.lastUpdate < this.updateInterval) {
       return [];
@@ -87,7 +91,7 @@ export class RivalGuildsAI {
     const actions: RivalGuildAction[] = [];
 
     // Update rival guild stats and generate actions
-    rivalGuilds.forEach(guild => {
+    rivalGuilds.forEach((guild) => {
       if (Math.random() * 100 < this.calculateActionChance(guild, playerGuild)) {
         const action = this.generateRivalAction(guild, playerGuild);
         if (action) {
@@ -97,7 +101,8 @@ export class RivalGuildsAI {
       }
 
       // Slowly improve rival guilds over time
-      if (Math.random() < 0.1) { // 10% chance per update
+      if (Math.random() < 0.1) {
+        // 10% chance per update
         guild.reputation += Math.floor(Math.random() * 5) + 1;
 
         if (guild.reputation > guild.level * 100) {
@@ -110,8 +115,11 @@ export class RivalGuildsAI {
     return actions;
   }
 
-  private calculateActionChance(guild: RivalGuild, playerGuild: { level: number; reputation: number }): number {
-    let baseChance = guild.competitionLevel / 100 * 15; // Base 0-15% chance
+  private calculateActionChance(
+    guild: RivalGuild,
+    playerGuild: { level: number; reputation: number }
+  ): number {
+    let baseChance = (guild.competitionLevel / 100) * 15; // Base 0-15% chance
 
     // Higher chance if rival guild is stronger than player
     if (guild.level > playerGuild.level) {
@@ -131,7 +139,10 @@ export class RivalGuildsAI {
     return Math.min(baseChance, 25); // Cap at 25%
   }
 
-  private generateRivalAction(guild: RivalGuild, playerGuild: { level: number; reputation: number; gold: number }): RivalGuildAction | null {
+  private generateRivalAction(
+    guild: RivalGuild,
+    playerGuild: { level: number; reputation: number; gold: number }
+  ): RivalGuildAction | null {
     const actionTypes = ['quest_steal', 'reputation_campaign', 'expansion', 'recruitment'];
     const weights = this.calculateActionWeights(guild, playerGuild);
     const actionType = this.weightedRandom(actionTypes, weights) as RivalGuildAction['actionType'];
@@ -150,7 +161,10 @@ export class RivalGuildsAI {
     }
   }
 
-  private calculateActionWeights(guild: RivalGuild, playerGuild: { level: number; reputation: number }): number[] {
+  private calculateActionWeights(
+    guild: RivalGuild,
+    playerGuild: { level: number; reputation: number }
+  ): number[] {
     const weights = [0, 0, 0, 0]; // quest_steal, reputation_campaign, expansion, recruitment
 
     // Quest stealing more likely if guild is aggressive
@@ -182,7 +196,10 @@ export class RivalGuildsAI {
     return items[items.length - 1];
   }
 
-  private generateQuestStealAction(guild: RivalGuild, _playerGuild: { level: number; reputation: number }): RivalGuildAction {
+  private generateQuestStealAction(
+    guild: RivalGuild,
+    _playerGuild: { level: number; reputation: number }
+  ): RivalGuildAction {
     const goldLoss = Math.floor(Math.random() * 200) + 50;
     const reputationLoss = Math.floor(Math.random() * 10) + 5;
 
@@ -193,8 +210,8 @@ export class RivalGuildsAI {
       impact: {
         playerGoldLoss: goldLoss,
         playerReputationLoss: reputationLoss,
-        rivalGainReputation: reputationLoss * 2
-      }
+        rivalGainReputation: reputationLoss * 2,
+      },
     };
   }
 
@@ -204,8 +221,8 @@ export class RivalGuildsAI {
       actionType: 'reputation_campaign',
       description: `${guild.name} has launched a public relations campaign, spreading word of their heroic deeds throughout the land.`,
       impact: {
-        rivalGainReputation: Math.floor(Math.random() * 30) + 20
-      }
+        rivalGainReputation: Math.floor(Math.random() * 30) + 20,
+      },
     };
   }
 
@@ -216,8 +233,8 @@ export class RivalGuildsAI {
       description: `${guild.name} has opened a new branch office, expanding their influence in the region.`,
       impact: {
         rivalGainReputation: Math.floor(Math.random() * 20) + 10,
-        rivalGainLevel: Math.random() < 0.3 // 30% chance to gain level
-      }
+        rivalGainLevel: Math.random() < 0.3, // 30% chance to gain level
+      },
     };
   }
 
@@ -227,13 +244,13 @@ export class RivalGuildsAI {
       actionType: 'recruitment',
       description: `${guild.name} has successfully recruited several new adventurers, strengthening their ranks.`,
       impact: {
-        rivalGainReputation: Math.floor(Math.random() * 15) + 5
-      }
+        rivalGainReputation: Math.floor(Math.random() * 15) + 5,
+      },
     };
   }
 
   private applyRivalAction(action: RivalGuildAction): void {
-    const guild = rivalGuilds.find(g => g.id === action.guildId);
+    const guild = rivalGuilds.find((g) => g.id === action.guildId);
     if (!guild) return;
 
     if (action.impact.rivalGainReputation) {
@@ -249,14 +266,17 @@ export class RivalGuildsAI {
     }
   }
 
-  public simulateQuestCompetition(availableQuests: Quest[], playerGuild: { level: number; reputation: number }): QuestCompetition[] {
+  public simulateQuestCompetition(
+    availableQuests: Quest[],
+    playerGuild: { level: number; reputation: number }
+  ): QuestCompetition[] {
     const competitions: QuestCompetition[] = [];
 
-    availableQuests.forEach(quest => {
+    availableQuests.forEach((quest) => {
       // Only high-value quests attract competition
       if (quest.reward < 200) return;
 
-      rivalGuilds.forEach(guild => {
+      rivalGuilds.forEach((guild) => {
         if (Math.random() * 100 < guild.competitionLevel / 2) {
           const playerChance = this.calculatePlayerQuestChance(quest, guild, playerGuild);
 
@@ -264,7 +284,7 @@ export class RivalGuildsAI {
             questId: quest.id,
             competingGuild: guild,
             playerChance,
-            timeRemaining: Math.floor(Math.random() * 12) + 1 // 1-12 hours
+            timeRemaining: Math.floor(Math.random() * 12) + 1, // 1-12 hours
           });
         }
       });
@@ -273,7 +293,11 @@ export class RivalGuildsAI {
     return competitions;
   }
 
-  private calculatePlayerQuestChance(quest: Quest, rivalGuild: RivalGuild, playerGuild: { level: number; reputation: number }): number {
+  private calculatePlayerQuestChance(
+    quest: Quest,
+    rivalGuild: RivalGuild,
+    playerGuild: { level: number; reputation: number }
+  ): number {
     let baseChance = 60; // Start with 60% chance
 
     // Adjust based on guild level difference
@@ -297,7 +321,10 @@ export class RivalGuildsAI {
     return Math.max(10, Math.min(90, baseChance));
   }
 
-  public resolveQuestCompetition(competition: QuestCompetition): { playerWon: boolean; description: string } {
+  public resolveQuestCompetition(competition: QuestCompetition): {
+    playerWon: boolean;
+    description: string;
+  } {
     const playerWon = Math.random() * 100 < competition.playerChance;
 
     const description = playerWon
@@ -321,17 +348,20 @@ export class RivalGuildsAI {
   }
 
   public getGuildById(guildId: string): RivalGuild | undefined {
-    return rivalGuilds.find(guild => guild.id === guildId);
+    return rivalGuilds.find((guild) => guild.id === guildId);
   }
 
   // Player actions against rival guilds
-  public sabotageRivalGuild(targetGuildId: string, playerGuild: { level: number; reputation: number }): { success: boolean; description: string; cost: number } {
+  public sabotageRivalGuild(
+    targetGuildId: string,
+    playerGuild: { level: number; reputation: number }
+  ): { success: boolean; description: string; cost: number } {
     const targetGuild = this.getGuildById(targetGuildId);
     if (!targetGuild) {
       return { success: false, description: 'Guild not found.', cost: 0 };
     }
 
-    const cost = 300 + (targetGuild.level * 100);
+    const cost = 300 + targetGuild.level * 100;
     const successChance = Math.max(20, 80 - (targetGuild.level - playerGuild.level) * 10);
     const success = Math.random() * 100 < successChance;
 
@@ -342,24 +372,27 @@ export class RivalGuildsAI {
       return {
         success: true,
         description: `Your sabotage of ${targetGuild.name} was successful! Their reputation and competitive edge have been damaged.`,
-        cost
+        cost,
       };
     } else {
       return {
         success: false,
         description: `Your attempt to sabotage ${targetGuild.name} was discovered and failed. Your guild's reputation suffers.`,
-        cost
+        cost,
       };
     }
   }
 
-  public formAllianceWithGuild(targetGuildId: string, playerGuild: { level: number; reputation: number }): { success: boolean; description: string; cost: number } {
+  public formAllianceWithGuild(
+    targetGuildId: string,
+    playerGuild: { level: number; reputation: number }
+  ): { success: boolean; description: string; cost: number } {
     const targetGuild = this.getGuildById(targetGuildId);
     if (!targetGuild) {
       return { success: false, description: 'Guild not found.', cost: 0 };
     }
 
-    const cost = 500 + (targetGuild.level * 150);
+    const cost = 500 + targetGuild.level * 150;
     const successChance = Math.min(80, 30 + (playerGuild.reputation - targetGuild.reputation) / 10);
     const success = Math.random() * 100 < successChance;
 
@@ -369,13 +402,13 @@ export class RivalGuildsAI {
       return {
         success: true,
         description: `You've successfully formed an alliance with ${targetGuild.name}! They will be less competitive with your guild.`,
-        cost
+        cost,
       };
     } else {
       return {
         success: false,
         description: `${targetGuild.name} rejected your alliance proposal. They may become more hostile toward your guild.`,
-        cost: cost / 2 // Still costs something for the attempt
+        cost: cost / 2, // Still costs something for the attempt
       };
     }
   }

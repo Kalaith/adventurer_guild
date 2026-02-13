@@ -28,11 +28,13 @@ test/
 ## Test Categories
 
 ### 🧩 Component Tests
+
 - **Treasury.test.tsx**: Tests the treasury display component
 - **NavigationTabs.test.tsx**: Tests tab navigation functionality
 - **Modal.test.tsx**: Tests modal dialog behavior and accessibility
 
 ### 📊 Store Tests
+
 - **gameStore.test.ts**: Comprehensive tests for the main game state management
   - Initial state validation
   - Gold management operations
@@ -42,35 +44,42 @@ test/
   - Calculation utilities
 
 ### 🛠️ Utility Tests
+
 - **formatters.test.ts**: Number formatting utilities
 - **questGenerator.test.ts**: Procedural quest generation system
 - **relationshipSystem.test.ts**: Adventurer relationship mechanics
 
 ### 📦 Data Layer Tests
+
 - **crafting.test.ts**: Crafting system data integrity and business logic
 
 ### 🔄 Integration Tests
+
 - **gameFlow.test.tsx**: End-to-end game workflows and user interactions
 
 ## Running Tests
 
 ### All Tests
+
 ```bash
 npm run test
 ```
 
 ### Specific Test Files
+
 ```bash
 npm run test formatters.test.ts
 npm run test gameStore.test.ts
 ```
 
 ### With Coverage
+
 ```bash
 npm run test:coverage
 ```
 
 ### Watch Mode
+
 ```bash
 npm run test:watch
 ```
@@ -80,6 +89,7 @@ npm run test:watch
 The `testUtils.tsx` file provides:
 
 ### Mock Factories
+
 ```typescript
 createMockAdventurer(overrides?)    // Generate test adventurers
 createMockQuest(overrides?)         // Generate test quests
@@ -88,22 +98,25 @@ createMockGameState(overrides?)     // Generate test game states
 ```
 
 ### Helper Functions
+
 ```typescript
-generateMockAdventurers(count)      // Generate multiple adventurers
-generateMockQuests(count)           // Generate multiple quests
-measureRenderTime(renderFn)         // Performance testing
-checkAccessibilityAttributes(el)    // Accessibility validation
+generateMockAdventurers(count); // Generate multiple adventurers
+generateMockQuests(count); // Generate multiple quests
+measureRenderTime(renderFn); // Performance testing
+checkAccessibilityAttributes(el); // Accessibility validation
 ```
 
 ### Store Mocks
+
 ```typescript
-createMockGameActions()             // Mock store actions
-createMockUIActions()               // Mock UI actions
+createMockGameActions(); // Mock store actions
+createMockUIActions(); // Mock UI actions
 ```
 
 ## Test Patterns
 
 ### Component Testing Pattern
+
 ```typescript
 describe('Component', () => {
   beforeEach(() => {
@@ -125,6 +138,7 @@ describe('Component', () => {
 ```
 
 ### Store Testing Pattern
+
 ```typescript
 describe('Store', () => {
   beforeEach(() => {
@@ -141,6 +155,7 @@ describe('Store', () => {
 ```
 
 ### Integration Testing Pattern
+
 ```typescript
 describe('Integration', () => {
   it('should complete user workflow', async () => {
@@ -160,12 +175,14 @@ describe('Integration', () => {
 ## Coverage Goals
 
 ### Target Coverage
+
 - **Statements**: >90%
 - **Branches**: >85%
 - **Functions**: >90%
 - **Lines**: >90%
 
 ### Current Coverage Areas
+
 - ✅ Utility functions: 95%+ coverage
 - ✅ Store logic: 90%+ coverage
 - ✅ Component rendering: 85%+ coverage
@@ -175,6 +192,7 @@ describe('Integration', () => {
 ## Testing Best Practices
 
 ### ✅ Do
+
 - Write descriptive test names that explain the behavior being tested
 - Use `beforeEach` for common setup code
 - Test both success and failure cases
@@ -184,6 +202,7 @@ describe('Integration', () => {
 - Test user interactions, not implementation details
 
 ### ❌ Don't
+
 - Test implementation details (internal state, private methods)
 - Write tests that depend on other tests
 - Use too many mocks (prefer integration when possible)
@@ -193,12 +212,14 @@ describe('Integration', () => {
 ## Mock Strategy
 
 ### What We Mock
+
 - **External APIs**: All network calls
 - **Browser APIs**: LocalStorage, Date, Math.random
 - **Store Dependencies**: Zustand stores in component tests
 - **Time-dependent Operations**: Quest timers, save intervals
 
 ### What We Don't Mock
+
 - **Pure Functions**: Formatters, calculators
 - **React Hooks**: useState, useEffect (unless necessary)
 - **DOM APIs**: When testing actual user interactions
@@ -206,12 +227,14 @@ describe('Integration', () => {
 ## Debugging Tests
 
 ### Common Issues
+
 1. **Async Operations**: Use `waitFor`, `findBy*` queries
 2. **State Updates**: Ensure proper mocking of store actions
 3. **Time-dependent Code**: Use `vi.useFakeTimers()`
 4. **DOM Updates**: Use `act()` for complex state updates
 
 ### Debug Utilities
+
 ```typescript
 // Debug rendered output
 screen.debug();
@@ -226,11 +249,13 @@ screen.logTestingPlaygroundURL();
 ## Continuous Integration
 
 Tests run automatically on:
+
 - **Pre-commit**: Via husky hooks
 - **Pull Requests**: Full test suite
 - **Main Branch**: Full test suite + coverage report
 
 ### CI Configuration
+
 ```yaml
 # Example GitHub Actions workflow
 - name: Run Tests
@@ -246,6 +271,7 @@ Tests run automatically on:
 ## Performance Testing
 
 ### Render Performance
+
 ```typescript
 it('should render quickly with large datasets', () => {
   const manyItems = generateMockAdventurers(1000);
@@ -259,7 +285,9 @@ it('should render quickly with large datasets', () => {
 ```
 
 ### Memory Usage
+
 Monitor for memory leaks in component tests:
+
 ```typescript
 afterEach(() => {
   // Clean up listeners, timers, etc.

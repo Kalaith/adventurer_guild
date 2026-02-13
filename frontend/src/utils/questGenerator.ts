@@ -21,110 +21,139 @@ const questTemplates: QuestTemplate[] = [
       'Goblin Raiders in {location}',
       'Bandit Assault on {location}',
       'Orc Warband Threat',
-      'Wolf Pack Elimination'
+      'Wolf Pack Elimination',
     ],
     descriptionTemplates: [
       'A group of {enemy} has been terrorizing the {location}. The local authorities have posted a bounty for their elimination.',
       'Merchants report attacks by {enemy} near {location}. Brave adventurers needed to restore safe passage.',
-      'The {enemy} have been growing bolder in their attacks. Time to show them the might of our guild!'
+      'The {enemy} have been growing bolder in their attacks. Time to show them the might of our guild!',
     ],
     questType: 'combat',
     baseReward: 100,
     baseDuration: 2,
     difficultyModifiers: {
-      'Easy': { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
-      'Medium': { rewardMultiplier: 1.5, durationMultiplier: 1.2, levelMultiplier: 1.5 },
-      'Hard': { rewardMultiplier: 2.5, durationMultiplier: 1.5, levelMultiplier: 2 },
-      'Epic': { rewardMultiplier: 4, durationMultiplier: 2, levelMultiplier: 3 }
-    }
+      Easy: { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
+      Medium: { rewardMultiplier: 1.5, durationMultiplier: 1.2, levelMultiplier: 1.5 },
+      Hard: { rewardMultiplier: 2.5, durationMultiplier: 1.5, levelMultiplier: 2 },
+      Epic: { rewardMultiplier: 4, durationMultiplier: 2, levelMultiplier: 3 },
+    },
   },
   {
     nameTemplates: [
       'Ancient Ruins of {location}',
       'Lost Temple Discovery',
       'Forgotten Catacombs',
-      'Mysterious Cave System'
+      'Mysterious Cave System',
     ],
     descriptionTemplates: [
       'Ancient ruins have been discovered in {location}. Scholars seek brave explorers to map and investigate the site.',
       'A lost temple has been found containing unknown treasures. Adventurers needed for careful exploration.',
-      'Deep underground passages have been uncovered. What secrets do they hold?'
+      'Deep underground passages have been uncovered. What secrets do they hold?',
     ],
     questType: 'exploration',
     baseReward: 150,
     baseDuration: 3,
     difficultyModifiers: {
-      'Easy': { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
-      'Medium': { rewardMultiplier: 1.4, durationMultiplier: 1.3, levelMultiplier: 1.5 },
-      'Hard': { rewardMultiplier: 2.2, durationMultiplier: 1.6, levelMultiplier: 2 },
-      'Epic': { rewardMultiplier: 3.5, durationMultiplier: 2.2, levelMultiplier: 3 }
-    }
+      Easy: { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
+      Medium: { rewardMultiplier: 1.4, durationMultiplier: 1.3, levelMultiplier: 1.5 },
+      Hard: { rewardMultiplier: 2.2, durationMultiplier: 1.6, levelMultiplier: 2 },
+      Epic: { rewardMultiplier: 3.5, durationMultiplier: 2.2, levelMultiplier: 3 },
+    },
   },
   {
     nameTemplates: [
       'Peace Negotiations with {faction}',
       'Trade Agreement Mediation',
       'Diplomatic Mission to {location}',
-      'Alliance Building Initiative'
+      'Alliance Building Initiative',
     ],
     descriptionTemplates: [
       'Tensions are rising between local factions. Skilled diplomats needed to prevent conflict.',
       'A trade dispute threatens regional stability. Mediators required to find common ground.',
-      'An important diplomatic mission requires representatives who can navigate complex political waters.'
+      'An important diplomatic mission requires representatives who can navigate complex political waters.',
     ],
     questType: 'diplomatic',
     baseReward: 200,
     baseDuration: 4,
     difficultyModifiers: {
-      'Easy': { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
-      'Medium': { rewardMultiplier: 1.3, durationMultiplier: 1.1, levelMultiplier: 1.5 },
-      'Hard': { rewardMultiplier: 2, durationMultiplier: 1.4, levelMultiplier: 2 },
-      'Epic': { rewardMultiplier: 3, durationMultiplier: 1.8, levelMultiplier: 3 }
-    }
+      Easy: { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
+      Medium: { rewardMultiplier: 1.3, durationMultiplier: 1.1, levelMultiplier: 1.5 },
+      Hard: { rewardMultiplier: 2, durationMultiplier: 1.4, levelMultiplier: 2 },
+      Epic: { rewardMultiplier: 3, durationMultiplier: 1.8, levelMultiplier: 3 },
+    },
   },
   {
     nameTemplates: [
       'Missing Person: {name}',
       'Kidnapped Noble',
       'Lost Caravan Rescue',
-      'Trapped Miners'
+      'Trapped Miners',
     ],
     descriptionTemplates: [
       '{name} has gone missing in the {location}. Their family offers a substantial reward for their safe return.',
       'A caravan has disappeared while traveling through dangerous territory. Rescue mission urgently needed.',
-      'Miners trapped in a collapsed tunnel need immediate rescue. Time is of the essence!'
+      'Miners trapped in a collapsed tunnel need immediate rescue. Time is of the essence!',
     ],
     questType: 'rescue',
     baseReward: 180,
     baseDuration: 1,
     difficultyModifiers: {
-      'Easy': { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
-      'Medium': { rewardMultiplier: 1.6, durationMultiplier: 1.2, levelMultiplier: 1.5 },
-      'Hard': { rewardMultiplier: 2.8, durationMultiplier: 1.8, levelMultiplier: 2 },
-      'Epic': { rewardMultiplier: 4.5, durationMultiplier: 2.5, levelMultiplier: 3 }
-    }
-  }
+      Easy: { rewardMultiplier: 1, durationMultiplier: 1, levelMultiplier: 1 },
+      Medium: { rewardMultiplier: 1.6, durationMultiplier: 1.2, levelMultiplier: 1.5 },
+      Hard: { rewardMultiplier: 2.8, durationMultiplier: 1.8, levelMultiplier: 2 },
+      Epic: { rewardMultiplier: 4.5, durationMultiplier: 2.5, levelMultiplier: 3 },
+    },
+  },
 ];
 
 const LOCATIONS = [
-  'Whispering Woods', 'Crystal Caves', 'Sunken Valley', 'Frost Peak Mountains',
-  'Goldstream Village', 'Iron Hills', 'Shadowmere Swamp', 'Dragon\'s Rest',
-  'Merchant\'s Road', 'Ancient Bridge', 'Mystic Grove', 'Thunder Rapids'
+  'Whispering Woods',
+  'Crystal Caves',
+  'Sunken Valley',
+  'Frost Peak Mountains',
+  'Goldstream Village',
+  'Iron Hills',
+  'Shadowmere Swamp',
+  "Dragon's Rest",
+  "Merchant's Road",
+  'Ancient Bridge',
+  'Mystic Grove',
+  'Thunder Rapids',
 ];
 
 const ENEMIES = [
-  'goblins', 'bandits', 'orcs', 'wolves', 'undead', 'cultists',
-  'raiders', 'brigands', 'wild beasts', 'corrupted spirits'
+  'goblins',
+  'bandits',
+  'orcs',
+  'wolves',
+  'undead',
+  'cultists',
+  'raiders',
+  'brigands',
+  'wild beasts',
+  'corrupted spirits',
 ];
 
 const FACTIONS = [
-  'Merchant\'s Guild', 'Temple of Light', 'Forest Druids', 'Mountain Clans',
-  'Royal Guard', 'Thieves\' Brotherhood', 'Mage Circle', 'Artisan League'
+  "Merchant's Guild",
+  'Temple of Light',
+  'Forest Druids',
+  'Mountain Clans',
+  'Royal Guard',
+  "Thieves' Brotherhood",
+  'Mage Circle',
+  'Artisan League',
 ];
 
 const personNames = [
-  'Elena Brightblade', 'Marcus Goldweaver', 'Sara Nightwhisper', 'Tom Ironforge',
-  'Lady Catherine', 'Sir Roderick', 'Merchant Aldwin', 'Scholar Lysander'
+  'Elena Brightblade',
+  'Marcus Goldweaver',
+  'Sara Nightwhisper',
+  'Tom Ironforge',
+  'Lady Catherine',
+  'Sir Roderick',
+  'Merchant Aldwin',
+  'Scholar Lysander',
 ];
 
 function getRandomElement<T>(array: readonly T[]): T {
@@ -144,12 +173,12 @@ function generateQuestRequirements(
   questType: string,
   guildLevel: number
 ): QuestRequirements {
-  const difficultyLevelMap = { 'Easy': 1, 'Medium': 3, 'Hard': 5, 'Epic': 8 };
+  const difficultyLevelMap = { Easy: 1, Medium: 3, Hard: 5, Epic: 8 };
   const baseLevel = Math.max(1, guildLevel - 2 + difficultyLevelMap[difficulty]);
 
   const requirements: QuestRequirements = {
     minLevel: baseLevel,
-    preferredClasses: []
+    preferredClasses: [],
   };
 
   // Add class preferences based on quest type
@@ -209,16 +238,21 @@ function generateQuestRequirements(
   return requirements;
 }
 
-function generateLootTable(difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic', questType: string): EquipmentItem[] {
+function generateLootTable(
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic',
+  questType: string
+): EquipmentItem[] {
   const loot: EquipmentItem[] = [];
   const rarityMap = {
-    'Easy': ['common', 'uncommon'],
-    'Medium': ['uncommon', 'rare'],
-    'Hard': ['rare', 'epic'],
-    'Epic': ['epic', 'legendary']
+    Easy: ['common', 'uncommon'],
+    Medium: ['uncommon', 'rare'],
+    Hard: ['rare', 'epic'],
+    Epic: ['epic', 'legendary'],
   };
 
-  const availableRarities = rarityMap[difficulty] as Array<'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'>;
+  const availableRarities = rarityMap[difficulty] as Array<
+    'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
+  >;
   const rarity = getRandomElement(availableRarities);
 
   // Generate a random equipment item
@@ -231,7 +265,7 @@ function generateLootTable(difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic', ques
     type: equipmentType,
     rarity,
     stats: generateEquipmentStats(rarity, questType),
-    crafted: false
+    crafted: false,
   };
 
   loot.push(item);
@@ -244,7 +278,7 @@ function generateEquipmentName(type: 'weapon' | 'armor' | 'accessory', rarity: s
     uncommon: ['Fine', 'Quality', 'Improved'],
     rare: ['Masterwork', 'Superior', 'Excellent'],
     epic: ['Enchanted', 'Mystical', 'Legendary'],
-    legendary: ['Godforged', 'Artifact', 'Divine']
+    legendary: ['Godforged', 'Artifact', 'Divine'],
   };
 
   const weaponNames = ['Sword', 'Axe', 'Bow', 'Staff', 'Dagger'];
@@ -260,7 +294,11 @@ function generateEquipmentName(type: 'weapon' | 'armor' | 'accessory', rarity: s
 
 function generateEquipmentStats(rarity: string, questType: string) {
   const rarityMultiplier = {
-    common: 1, uncommon: 1.5, rare: 2.5, epic: 4, legendary: 6
+    common: 1,
+    uncommon: 1.5,
+    rare: 2.5,
+    epic: 4,
+    legendary: 6,
   };
 
   const multiplier = rarityMultiplier[rarity as keyof typeof rarityMultiplier];
@@ -289,13 +327,20 @@ function generateEquipmentStats(rarity: string, questType: string) {
   return baseStats;
 }
 
-export function generateProceduralQuest(guildLevel: number, difficulty?: 'Easy' | 'Medium' | 'Hard' | 'Epic'): Quest {
+export function generateProceduralQuest(
+  guildLevel: number,
+  difficulty?: 'Easy' | 'Medium' | 'Hard' | 'Epic'
+): Quest {
   const template = getRandomElement(questTemplates);
-  const questDifficulty = difficulty || getRandomElement(['Easy', 'Medium', 'Hard', 'Epic'] as const);
+  const questDifficulty =
+    difficulty || getRandomElement(['Easy', 'Medium', 'Hard', 'Epic'] as const);
   const modifier = template.difficultyModifiers[questDifficulty];
 
   const name = replacePlaceholders(getRandomElement(template.nameTemplates), guildLevel);
-  const description = replacePlaceholders(getRandomElement(template.descriptionTemplates), guildLevel);
+  const description = replacePlaceholders(
+    getRandomElement(template.descriptionTemplates),
+    guildLevel
+  );
 
   const baseReward = template.baseReward * modifier.rewardMultiplier * (guildLevel * 0.5 + 1);
   const baseDuration = Math.ceil(template.baseDuration * modifier.durationMultiplier);
@@ -314,8 +359,9 @@ export function generateProceduralQuest(guildLevel: number, difficulty?: 'Easy' 
     lootTable: generateLootTable(questDifficulty, template.questType),
     experienceReward: Math.floor(baseReward / 10),
     skillRewards: {
-      [`${template.questType === 'combat' ? 'combat' : template.questType === 'exploration' ? 'survival' : template.questType === 'diplomatic' ? 'magic' : 'stealth'}.${template.questType === 'combat' ? 'weaponMastery' : template.questType === 'exploration' ? 'tracking' : template.questType === 'diplomatic' ? 'spellPower' : 'sneaking'}`]: Math.floor(modifier.levelMultiplier * 2)
-    }
+      [`${template.questType === 'combat' ? 'combat' : template.questType === 'exploration' ? 'survival' : template.questType === 'diplomatic' ? 'magic' : 'stealth'}.${template.questType === 'combat' ? 'weaponMastery' : template.questType === 'exploration' ? 'tracking' : template.questType === 'diplomatic' ? 'spellPower' : 'sneaking'}`]:
+        Math.floor(modifier.levelMultiplier * 2),
+    },
   };
 }
 

@@ -15,27 +15,27 @@ export const createMockAdventurer = (overrides = {}) => ({
     strength: 15,
     intelligence: 10,
     dexterity: 12,
-    vitality: 18
+    vitality: 18,
   },
   personality: {
     courage: 50,
     loyalty: 50,
     ambition: 50,
     teamwork: 50,
-    greed: 50
+    greed: 50,
   },
   skills: {
     combat: { weaponMastery: 0, tacticalKnowledge: 0, battleRage: 0 },
     magic: { spellPower: 0, manaEfficiency: 0, elementalMastery: 0 },
     stealth: { lockpicking: 0, sneaking: 0, assassination: 0 },
-    survival: { tracking: 0, herbalism: 0, animalHandling: 0 }
+    survival: { tracking: 0, herbalism: 0, animalHandling: 0 },
   },
   equipment: {},
   relationships: [],
   questsCompleted: 0,
   yearsInGuild: 0,
   retirementEligible: false,
-  ...overrides
+  ...overrides,
 });
 
 export const createMockQuest = (overrides = {}) => ({
@@ -46,16 +46,16 @@ export const createMockQuest = (overrides = {}) => ({
   duration: 2,
   requirements: {
     minLevel: 1,
-    preferredClasses: ['Warrior']
+    preferredClasses: ['Warrior'],
   },
   difficulty: 'Easy',
   status: 'available',
   questType: 'standard',
   experienceReward: 50,
   skillRewards: {
-    'combat.weaponMastery': 5
+    'combat.weaponMastery': 5,
   },
-  ...overrides
+  ...overrides,
 });
 
 export const createMockRecruit = (overrides = {}) => ({
@@ -69,12 +69,12 @@ export const createMockRecruit = (overrides = {}) => ({
     loyalty: 50,
     ambition: 50,
     teamwork: 50,
-    greed: 50
+    greed: 50,
   },
   potentialSkills: {
-    'combat.weaponMastery': 5
+    'combat.weaponMastery': 5,
   },
-  ...overrides
+  ...overrides,
 });
 
 // Mock store states
@@ -87,7 +87,7 @@ export const createMockGameState = (overrides = {}) => ({
   completedQuests: [],
   recruits: [],
   lastSave: Date.now(),
-  ...overrides
+  ...overrides,
 });
 
 export const createMockUIState = (overrides = {}) => ({
@@ -95,7 +95,7 @@ export const createMockUIState = (overrides = {}) => ({
   selectedQuest: null,
   modalOpen: false,
   notifications: [],
-  ...overrides
+  ...overrides,
 });
 
 // Mock store actions
@@ -111,7 +111,7 @@ export const createMockGameActions = () => ({
   getAvailableAdventurers: vi.fn(() => []),
   getActiveQuests: vi.fn(() => []),
   formatNumber: vi.fn((num: number) => num.toString()),
-  saveGame: vi.fn()
+  saveGame: vi.fn(),
 });
 
 export const createMockUIActions = () => ({
@@ -119,22 +119,16 @@ export const createMockUIActions = () => ({
   openModal: vi.fn(),
   closeModal: vi.fn(),
   showNotification: vi.fn(),
-  clearNotifications: vi.fn()
+  clearNotifications: vi.fn(),
 });
 
 // Custom render function that includes providers if needed
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 };
 
-const customRender = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) => render(ui, { wrapper: AllTheProviders, ...options });
+const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
+  render(ui, { wrapper: AllTheProviders, ...options });
 
 // Re-export everything
 export * from '@testing-library/react';
@@ -142,7 +136,7 @@ export { customRender as render };
 
 // Utility functions for testing
 export const waitForLoadingToFinish = () => {
-  return new Promise(resolve => setTimeout(resolve, 0));
+  return new Promise((resolve) => setTimeout(resolve, 0));
 };
 
 export const simulateTimePassage = (milliseconds: number) => {
@@ -158,7 +152,7 @@ export const generateMockAdventurers = (count: number) => {
       id: `adventurer-${i}`,
       name: `Hero ${i}`,
       class: classes[i % classes.length],
-      level: Math.floor(Math.random() * 10) + 1
+      level: Math.floor(Math.random() * 10) + 1,
     })
   );
 };
@@ -171,7 +165,7 @@ export const generateMockQuests = (count: number) => {
       id: `quest-${i}`,
       name: `Quest ${i}`,
       difficulty: difficulties[i % difficulties.length],
-      reward: (i + 1) * 100
+      reward: (i + 1) * 100,
     })
   );
 };
@@ -182,14 +176,14 @@ export const mockSuccessfulQuestCompletion = () => {
     reward: 200,
     experience: 50,
     reputation: 20,
-    items: []
+    items: [],
   };
 };
 
 export const mockFailedQuestAttempt = () => {
   return {
     reason: 'insufficient_requirements',
-    message: 'Adventurer does not meet quest requirements'
+    message: 'Adventurer does not meet quest requirements',
   };
 };
 
@@ -207,7 +201,7 @@ export const checkAccessibilityAttributes = (element: HTMLElement) => {
     hasAriaLabel: element.hasAttribute('aria-label'),
     hasAriaDescribedBy: element.hasAttribute('aria-describedby'),
     hasRole: element.hasAttribute('role'),
-    hasTabIndex: element.hasAttribute('tabindex')
+    hasTabIndex: element.hasAttribute('tabindex'),
   };
 
   return checks;

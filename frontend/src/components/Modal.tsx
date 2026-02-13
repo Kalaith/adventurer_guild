@@ -28,7 +28,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, className, childr
   useEffect(() => {
     if (!isOpen) return;
 
-    priorFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    priorFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     priorBodyOverflowRef.current = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
@@ -87,7 +88,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, className, childr
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
-        className={['w-full max-w-lg rounded-lg bg-white shadow-xl', className].filter(Boolean).join(' ')}
+        className={['w-full max-w-lg rounded-lg bg-white shadow-xl', className]
+          .filter(Boolean)
+          .join(' ')}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">

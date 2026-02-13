@@ -57,9 +57,9 @@ export const availableTerritories: Territory[] = [
     benefits: {
       goldBonus: 0.1, // 10% gold bonus from village quests
       questAccess: ['forest_patrol', 'bandit_cleanup', 'harvest_protection'],
-      recruitAccess: true
+      recruitAccess: true,
     },
-    cost: 500
+    cost: 500,
   },
   {
     id: 'iron_hills_mine',
@@ -68,9 +68,9 @@ export const availableTerritories: Territory[] = [
     influenceLevel: 0,
     benefits: {
       goldBonus: 0.15,
-      questAccess: ['mine_security', 'ore_transport', 'underground_exploration']
+      questAccess: ['mine_security', 'ore_transport', 'underground_exploration'],
     },
-    cost: 800
+    cost: 800,
   },
   {
     id: 'crystal_caves',
@@ -79,21 +79,21 @@ export const availableTerritories: Territory[] = [
     influenceLevel: 0,
     benefits: {
       questAccess: ['crystal_harvesting', 'cave_mapping', 'monster_clearing'],
-      goldBonus: 0.2
+      goldBonus: 0.2,
     },
-    cost: 1200
+    cost: 1200,
   },
   {
     id: 'merchants_quarter',
-    name: 'Merchants\' Quarter',
+    name: "Merchants' Quarter",
     controlled: false,
     influenceLevel: 0,
     benefits: {
       goldBonus: 0.25,
       recruitAccess: true,
-      questAccess: ['trade_route_security', 'merchant_escort', 'market_investigation']
+      questAccess: ['trade_route_security', 'merchant_escort', 'market_investigation'],
     },
-    cost: 1500
+    cost: 1500,
   },
   {
     id: 'ancient_ruins',
@@ -102,9 +102,9 @@ export const availableTerritories: Territory[] = [
     influenceLevel: 0,
     benefits: {
       questAccess: ['archaeological_expedition', 'relic_recovery', 'guardian_awakening'],
-      goldBonus: 0.3
+      goldBonus: 0.3,
     },
-    cost: 2000
+    cost: 2000,
   },
   {
     id: 'frontier_outpost',
@@ -114,9 +114,9 @@ export const availableTerritories: Territory[] = [
     benefits: {
       questAccess: ['wilderness_scout', 'monster_hunt', 'territory_expansion'],
       recruitAccess: true,
-      goldBonus: 0.1
+      goldBonus: 0.1,
     },
-    cost: 1000
+    cost: 1000,
   },
   {
     id: 'magical_academy',
@@ -125,9 +125,9 @@ export const availableTerritories: Territory[] = [
     influenceLevel: 0,
     benefits: {
       questAccess: ['magical_research', 'artifact_study', 'spell_component_gathering'],
-      goldBonus: 0.15
+      goldBonus: 0.15,
     },
-    cost: 1800
+    cost: 1800,
   },
   {
     id: 'port_district',
@@ -137,14 +137,14 @@ export const availableTerritories: Territory[] = [
     benefits: {
       questAccess: ['pirate_hunting', 'cargo_protection', 'naval_exploration'],
       goldBonus: 0.2,
-      recruitAccess: true
+      recruitAccess: true,
     },
-    cost: 1600
-  }
+    cost: 1600,
+  },
 ];
 
 export const territoryQuests: { [territoryId: string]: Quest[] } = {
-  'greenwood_village': [
+  greenwood_village: [
     {
       id: 'forest_patrol',
       name: 'Forest Patrol',
@@ -153,15 +153,15 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       duration: 2,
       requirements: {
         minLevel: 2,
-        preferredClasses: ['Archer', 'Rogue']
+        preferredClasses: ['Archer', 'Rogue'],
       },
       difficulty: 'Easy',
       status: 'available',
       questType: 'standard',
       experienceReward: 30,
       skillRewards: {
-        'survival.tracking': 5
-      }
+        'survival.tracking': 5,
+      },
     },
     {
       id: 'harvest_protection',
@@ -171,19 +171,19 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       duration: 3,
       requirements: {
         minLevel: 3,
-        preferredClasses: ['Warrior', 'Archer']
+        preferredClasses: ['Warrior', 'Archer'],
       },
       difficulty: 'Medium',
       status: 'available',
       questType: 'standard',
       experienceReward: 50,
       skillRewards: {
-        'combat.weaponMastery': 6
-      }
-    }
+        'combat.weaponMastery': 6,
+      },
+    },
   ],
 
-  'iron_hills_mine': [
+  iron_hills_mine: [
     {
       id: 'mine_security',
       name: 'Mine Security Detail',
@@ -192,7 +192,7 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       duration: 4,
       requirements: {
         minLevel: 4,
-        preferredClasses: ['Warrior', 'Mage']
+        preferredClasses: ['Warrior', 'Mage'],
       },
       difficulty: 'Medium',
       status: 'available',
@@ -200,8 +200,8 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       experienceReward: 60,
       skillRewards: {
         'combat.weaponMastery': 7,
-        'magic.spellPower': 5
-      }
+        'magic.spellPower': 5,
+      },
     },
     {
       id: 'underground_exploration',
@@ -211,7 +211,7 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       duration: 6,
       requirements: {
         minLevel: 6,
-        preferredClasses: ['Rogue', 'Archer']
+        preferredClasses: ['Rogue', 'Archer'],
       },
       difficulty: 'Hard',
       status: 'available',
@@ -219,21 +219,22 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       experienceReward: 100,
       skillRewards: {
         'survival.tracking': 10,
-        'stealth.sneaking': 8
-      }
-    }
+        'stealth.sneaking': 8,
+      },
+    },
   ],
 
-  'crystal_caves': [
+  crystal_caves: [
     {
       id: 'crystal_harvesting',
       name: 'Crystal Harvesting Expedition',
-      description: 'Harvest valuable crystals while protecting the mining teams from cave dwellers.',
+      description:
+        'Harvest valuable crystals while protecting the mining teams from cave dwellers.',
       reward: 350,
       duration: 5,
       requirements: {
         minLevel: 5,
-        preferredClasses: ['Mage', 'Warrior']
+        preferredClasses: ['Mage', 'Warrior'],
       },
       difficulty: 'Medium',
       status: 'available',
@@ -241,10 +242,10 @@ export const territoryQuests: { [territoryId: string]: Quest[] } = {
       experienceReward: 80,
       skillRewards: {
         'magic.elementalMastery': 8,
-        'survival.tracking': 6
-      }
-    }
-  ]
+        'survival.tracking': 6,
+      },
+    },
+  ],
 };
 
 export class TerritoryControlSystem {
@@ -258,16 +259,16 @@ export class TerritoryControlSystem {
   }
 
   public getAvailableTerritories(): Territory[] {
-    return availableTerritories.filter(territory => !territory.controlled);
+    return availableTerritories.filter((territory) => !territory.controlled);
   }
 
   public getControlledTerritories(): Territory[] {
-    return availableTerritories.filter(territory => territory.controlled);
+    return availableTerritories.filter((territory) => territory.controlled);
   }
 
   public calculateExpansionCost(territory: Territory, guildLevel: number): number {
     const baseCost = territory.cost;
-    const levelModifier = Math.max(0.5, 1 - (guildLevel * 0.05)); // Slight discount for higher level guilds
+    const levelModifier = Math.max(0.5, 1 - guildLevel * 0.05); // Slight discount for higher level guilds
     return Math.floor(baseCost * levelModifier);
   }
 
@@ -284,30 +285,33 @@ export class TerritoryControlSystem {
         costMultiplier: 1.0,
         duration: 7,
         baseSuccessChance: 70,
-        requiredSkills: [{ skill: 'magic.spellPower', minValue: 15 }]
+        requiredSkills: [{ skill: 'magic.spellPower', minValue: 15 }],
       },
       military: {
         costMultiplier: 1.2,
         duration: 5,
         baseSuccessChance: 60,
-        requiredSkills: [{ skill: 'combat.weaponMastery', minValue: 20 }]
+        requiredSkills: [{ skill: 'combat.weaponMastery', minValue: 20 }],
       },
       economic: {
         costMultiplier: 1.5,
         duration: 10,
         baseSuccessChance: 80,
-        requiredSkills: []
+        requiredSkills: [],
       },
       cultural: {
         costMultiplier: 0.8,
         duration: 14,
         baseSuccessChance: 50,
-        requiredSkills: [{ skill: 'magic.spellPower', minValue: 12 }]
-      }
+        requiredSkills: [{ skill: 'magic.spellPower', minValue: 12 }],
+      },
     };
 
     const data = expansionData[expansionType];
-    const adjustedSuccessChance = Math.min(95, data.baseSuccessChance + (guildReputation / 20) + (guildLevel * 2));
+    const adjustedSuccessChance = Math.min(
+      95,
+      data.baseSuccessChance + guildReputation / 20 + guildLevel * 2
+    );
 
     return {
       id: `expansion_${territory.id}_${Date.now()}`,
@@ -319,7 +323,7 @@ export class TerritoryControlSystem {
         minLevel: Math.max(1, Math.floor(baseCost / 500)),
         minReputation: Math.floor(baseCost / 10),
         requiredAdventurers: Math.max(2, Math.floor(baseCost / 800)),
-        specificSkills: data.requiredSkills
+        specificSkills: data.requiredSkills,
       },
       successChance: adjustedSuccessChance,
       consequences: {
@@ -327,14 +331,14 @@ export class TerritoryControlSystem {
           influenceGain: 100,
           reputationChange: 50,
           unlockBenefits: territory.benefits,
-          questsUnlocked: territoryQuests[territory.id] || []
+          questsUnlocked: territoryQuests[territory.id] || [],
         },
         failure: {
           goldCost: Math.floor(baseCost * 0.3),
           reputationChange: -20,
-          influenceGain: 25
-        }
-      }
+          influenceGain: 25,
+        },
+      },
     };
   }
 
@@ -352,12 +356,13 @@ export class TerritoryControlSystem {
     }
 
     // Bonus for adventurer levels
-    const averageLevel = assignedAdventurers.reduce((sum, adv) => sum + adv.level, 0) / assignedAdventurers.length;
+    const averageLevel =
+      assignedAdventurers.reduce((sum, adv) => sum + adv.level, 0) / assignedAdventurers.length;
     const levelBonus = Math.max(0, (averageLevel - expansion.requirements.minLevel) * 3);
     actualSuccessChance = Math.min(95, actualSuccessChance + levelBonus);
 
     // Check skill bonuses
-    expansion.requirements.specificSkills?.forEach(skillReq => {
+    expansion.requirements.specificSkills?.forEach((skillReq) => {
       const skillBonus = assignedAdventurers.reduce((bonus, adv) => {
         const skillValue = this.getSkillValue(adv, skillReq.skill);
         return bonus + Math.max(0, skillValue - skillReq.minValue);
@@ -392,7 +397,7 @@ export class TerritoryControlSystem {
   }
 
   public applyTerritoryControl(territoryId: string, influenceLevel: number): void {
-    const territory = availableTerritories.find(t => t.id === territoryId);
+    const territory = availableTerritories.find((t) => t.id === territoryId);
     if (territory) {
       territory.controlled = influenceLevel >= 100;
       territory.influenceLevel = Math.min(100, influenceLevel);
@@ -405,13 +410,14 @@ export class TerritoryControlSystem {
     // Random chance for conflict
     if (Math.random() > 0.15) return null; // 15% chance per update
 
-    const territory = controlledTerritories[Math.floor(Math.random() * controlledTerritories.length)];
+    const territory =
+      controlledTerritories[Math.floor(Math.random() * controlledTerritories.length)];
 
     const conflictTypes: Array<{ type: TerritoryConflict['conflictType']; weight: number }> = [
       { type: 'rival_guild', weight: 30 },
       { type: 'local_resistance', weight: 25 },
       { type: 'faction_dispute', weight: 20 },
-      { type: 'monster_invasion', weight: 25 }
+      { type: 'monster_invasion', weight: 25 },
     ];
 
     const totalWeight = conflictTypes.reduce((sum, type) => sum + type.weight, 0);
@@ -433,7 +439,7 @@ export class TerritoryControlSystem {
       rival_guild: `A rival guild is challenging your control over ${territory.name}, claiming they have a better right to manage the territory.`,
       local_resistance: `Local inhabitants in ${territory.name} are resisting your guild's influence, preferring their traditional ways.`,
       faction_dispute: `Different factions within ${territory.name} are in conflict, and your guild's authority is being questioned.`,
-      monster_invasion: `A group of dangerous monsters has moved into ${territory.name}, threatening the established order.`
+      monster_invasion: `A group of dangerous monsters has moved into ${territory.name}, threatening the established order.`,
     };
 
     const severityMultipliers = { minor: 0.5, moderate: 1, major: 1.5, critical: 2 };
@@ -448,9 +454,9 @@ export class TerritoryControlSystem {
       duration: Math.ceil((3 + Math.random() * 7) * multiplier), // 3-10 days based on severity
       effects: {
         influenceLoss: Math.ceil(10 * multiplier),
-        benefitReduction: Math.ceil(20 * multiplier)
+        benefitReduction: Math.ceil(20 * multiplier),
       },
-      resolutionOptions: this.generateResolutionOptions(selectedType, severity)
+      resolutionOptions: this.generateResolutionOptions(selectedType, severity),
     };
   }
 
@@ -466,20 +472,20 @@ export class TerritoryControlSystem {
         type: 'military' as const,
         cost: Math.floor(200 * multiplier),
         successChance: 70,
-        description: 'Send armed forces to resolve the conflict through strength.'
+        description: 'Send armed forces to resolve the conflict through strength.',
       },
       {
         type: 'diplomatic' as const,
         cost: Math.floor(150 * multiplier),
         successChance: 60,
-        description: 'Negotiate a peaceful resolution through dialogue.'
+        description: 'Negotiate a peaceful resolution through dialogue.',
       },
       {
         type: 'economic' as const,
         cost: Math.floor(300 * multiplier),
         successChance: 80,
-        description: 'Use gold and resources to resolve the situation.'
-      }
+        description: 'Use gold and resources to resolve the situation.',
+      },
     ];
 
     // Adjust success chances based on conflict type
@@ -506,12 +512,12 @@ export class TerritoryControlSystem {
     resolutionType: 'military' | 'diplomatic' | 'economic',
     assignedAdventurers: Adventurer[]
   ): { success: boolean; description: string; consequences: Record<string, unknown> } {
-    const option = conflict.resolutionOptions.find(opt => opt.type === resolutionType);
+    const option = conflict.resolutionOptions.find((opt) => opt.type === resolutionType);
     if (!option) {
       return {
         success: false,
         description: 'Invalid resolution option selected.',
-        consequences: {}
+        consequences: {},
       };
     }
 
@@ -519,7 +525,7 @@ export class TerritoryControlSystem {
     let actualSuccessChance = option.successChance;
 
     // Bonus for adventurer skills relevant to resolution type
-    assignedAdventurers.forEach(adventurer => {
+    assignedAdventurers.forEach((adventurer) => {
       switch (resolutionType) {
         case 'military':
           actualSuccessChance += this.getSkillValue(adventurer, 'combat.weaponMastery') / 10;
@@ -561,7 +567,7 @@ export class TerritoryControlSystem {
     const availableQuests: Quest[] = [];
     let specialRecruits = false;
 
-    controlledTerritories.forEach(territory => {
+    controlledTerritories.forEach((territory) => {
       if (territory.benefits.goldBonus) {
         totalGoldBonus += territory.benefits.goldBonus * (territory.influenceLevel / 100);
       }
@@ -580,10 +586,13 @@ export class TerritoryControlSystem {
   }
 
   public getTerritoryById(territoryId: string): Territory | undefined {
-    return availableTerritories.find(t => t.id === territoryId);
+    return availableTerritories.find((t) => t.id === territoryId);
   }
 
-  public getExpansionRequirements(territory: Territory, expansionType: TerritoryExpansion['type']): string[] {
+  public getExpansionRequirements(
+    territory: Territory,
+    expansionType: TerritoryExpansion['type']
+  ): string[] {
     const expansion = this.createTerritoryExpansion(territory, expansionType, 1, 0);
     const requirements: string[] = [];
 
@@ -593,7 +602,7 @@ export class TerritoryControlSystem {
     requirements.push(`Min Reputation: ${expansion.requirements.minReputation}`);
     requirements.push(`Required Adventurers: ${expansion.requirements.requiredAdventurers}`);
 
-    expansion.requirements.specificSkills?.forEach(skill => {
+    expansion.requirements.specificSkills?.forEach((skill) => {
       requirements.push(`Required Skill: ${skill.skill} (${skill.minValue}+)`);
     });
 

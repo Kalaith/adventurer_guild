@@ -27,7 +27,7 @@ export const guildConstants = {
     uncommon: 30,
     rare: 15,
     epic: 4,
-    legendary: 1
+    legendary: 1,
   },
 
   // Facility upgrade costs
@@ -36,8 +36,8 @@ export const guildConstants = {
     training_ground: 800,
     library: 600,
     barracks: 1000,
-    treasury: 1200
-  }
+    treasury: 1200,
+  },
 };
 
 // Skill categories and their base values
@@ -45,23 +45,23 @@ export const skillDefaults = {
   combat: {
     weaponMastery: 0,
     tacticalKnowledge: 0,
-    battleRage: 0
+    battleRage: 0,
   },
   magic: {
     spellPower: 0,
     manaEfficiency: 0,
-    elementalMastery: 0
+    elementalMastery: 0,
   },
   stealth: {
     lockpicking: 0,
     sneaking: 0,
-    assassination: 0
+    assassination: 0,
   },
   survival: {
     tracking: 0,
     herbalism: 0,
-    animalHandling: 0
-  }
+    animalHandling: 0,
+  },
 };
 
 // Personality trait defaults
@@ -70,7 +70,7 @@ export const personalityDefaults = {
   loyalty: 50,
   ambition: 50,
   teamwork: 50,
-  greed: 50
+  greed: 50,
 };
 
 // World event frequencies
@@ -78,7 +78,7 @@ export const worldEventFrequency = {
   COMMON: 0.15, // 15% chance per week
   UNCOMMON: 0.08, // 8% chance per week
   RARE: 0.03, // 3% chance per week
-  LEGENDARY: 0.01 // 1% chance per week
+  LEGENDARY: 0.01, // 1% chance per week
 };
 
 // Legacy system constants

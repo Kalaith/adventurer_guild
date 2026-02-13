@@ -1,11 +1,6 @@
 import { create } from 'zustand';
 
-export type TabId =
-  | 'guild-hall'
-  | 'adventurers'
-  | 'quest-board'
-  | 'hiring-hall'
-  | 'treasury';
+export type TabId = 'guild-hall' | 'adventurers' | 'quest-board' | 'hiring-hall' | 'treasury';
 
 interface UIState {
   isModalOpen: boolean;

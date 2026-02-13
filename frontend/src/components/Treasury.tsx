@@ -41,4 +41,3 @@ const Treasury: React.FC = () => {
 };
 
 export default Treasury;
-

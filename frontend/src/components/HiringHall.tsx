@@ -14,7 +14,7 @@ const HiringHall: React.FC<HiringHallProps> = ({
   gold,
   recruits,
   onHireAdventurer,
-  onRefreshRecruits
+  onRefreshRecruits,
 }) => {
   const handleHireAdventurer = (recruitId: string) => {
     onHireAdventurer(recruitId);

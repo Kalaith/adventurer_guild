@@ -84,7 +84,8 @@ export class GuildPoliticsSystem {
     if (adventurers.length < 5) return events;
 
     // Generate random political events
-    if (Math.random() < 0.4) { // 40% chance per week
+    if (Math.random() < 0.4) {
+      // 40% chance per week
       const event = this.generatePoliticalEvent(adventurers, guildLevel);
       if (event) events.push(event);
     }
@@ -92,8 +93,16 @@ export class GuildPoliticsSystem {
     return events;
   }
 
-  private generatePoliticalEvent(adventurers: Adventurer[], guildLevel: number): PoliticalEvent | null {
-    const eventTypes: PoliticalEvent['type'][] = ['vote_proposal', 'leadership_challenge', 'policy_dispute', 'faction_formation'];
+  private generatePoliticalEvent(
+    adventurers: Adventurer[],
+    guildLevel: number
+  ): PoliticalEvent | null {
+    const eventTypes: PoliticalEvent['type'][] = [
+      'vote_proposal',
+      'leadership_challenge',
+      'policy_dispute',
+      'faction_formation',
+    ];
     const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
 
     switch (eventType) {
@@ -111,7 +120,9 @@ export class GuildPoliticsSystem {
   }
 
   private generateVoteProposal(adventurers: Adventurer[], guildLevel: number): PoliticalEvent {
-    const proposer = adventurers.find(adv => adv.personality.ambition > 60 && adv.personality.loyalty > 50);
+    const proposer = adventurers.find(
+      (adv) => adv.personality.ambition > 60 && adv.personality.loyalty > 50
+    );
     const fallbackProposer = adventurers[Math.floor(Math.random() * adventurers.length)];
     const actualProposer = proposer || fallbackProposer;
 
@@ -120,26 +131,26 @@ export class GuildPoliticsSystem {
         title: 'Guild Training Facility Expansion',
         description: 'Invest in expanding our training facilities to improve skill development.',
         type: 'resource_allocation' as const,
-        goldCost: 500 + guildLevel * 200
+        goldCost: 500 + guildLevel * 200,
       },
       {
         title: 'Risk Assessment Policy',
         description: 'Should we take on more dangerous quests for higher rewards or play it safe?',
         type: 'policy' as const,
-        goldCost: 0
+        goldCost: 0,
       },
       {
         title: 'Guild Leadership Structure',
         description: 'Establish a council of senior adventurers to help guide guild decisions.',
         type: 'leadership' as const,
-        goldCost: 300
+        goldCost: 300,
       },
       {
         title: 'Territory Expansion Initiative',
         description: 'Expand guild influence to neighboring regions through diplomatic missions.',
         type: 'guild_expansion' as const,
-        goldCost: 800 + guildLevel * 300
-      }
+        goldCost: 800 + guildLevel * 300,
+      },
     ];
 
     const proposal = proposals[Math.floor(Math.random() * proposals.length)];
@@ -151,18 +162,16 @@ export class GuildPoliticsSystem {
       description: `${actualProposer.name} has proposed: ${proposal.description}`,
       participants: [actualProposer.id],
       impact: {
-        moraleChange: 5 // Proposing something shows initiative
+        moraleChange: 5, // Proposing something shows initiative
       },
-      duration: 3 // 3 days to vote
+      duration: 3, // 3 days to vote
     };
   }
 
   private generateLeadershipChallenge(adventurers: Adventurer[]): PoliticalEvent {
     // Find ambitious adventurers who might challenge leadership
-    const challenger = adventurers.find(adv =>
-      adv.personality.ambition > 80 &&
-      adv.level >= 5 &&
-      adv.questsCompleted >= 15
+    const challenger = adventurers.find(
+      (adv) => adv.personality.ambition > 80 && adv.level >= 5 && adv.questsCompleted >= 15
     );
 
     if (!challenger) {
@@ -171,9 +180,9 @@ export class GuildPoliticsSystem {
 
     const supporterCount = Math.floor(Math.random() * Math.floor(adventurers.length / 3));
     const supporters = adventurers
-      .filter(adv => adv.id !== challenger.id)
+      .filter((adv) => adv.id !== challenger.id)
       .slice(0, supporterCount)
-      .map(adv => adv.id);
+      .map((adv) => adv.id);
 
     return {
       id: `leadership_${Date.now()}`,
@@ -183,11 +192,9 @@ export class GuildPoliticsSystem {
       participants: [challenger.id, ...supporters],
       impact: {
         moraleChange: -10,
-        adventurerLoyaltyChanges: [
-          { adventurerId: challenger.id, loyaltyChange: 10 }
-        ]
+        adventurerLoyaltyChanges: [{ adventurerId: challenger.id, loyaltyChange: 10 }],
       },
-      duration: 5
+      duration: 5,
     };
   }
 
@@ -195,20 +202,23 @@ export class GuildPoliticsSystem {
     const disputes = [
       {
         title: 'Quest Reward Distribution',
-        description: 'Disagreement over how quest rewards should be distributed among participating adventurers.'
+        description:
+          'Disagreement over how quest rewards should be distributed among participating adventurers.',
       },
       {
         title: 'Recruitment Standards',
-        description: 'Debate about whether the guild should maintain high standards or recruit more adventurers.'
+        description:
+          'Debate about whether the guild should maintain high standards or recruit more adventurers.',
       },
       {
         title: 'Risk Management',
-        description: 'Conflict over the guild\'s approach to dangerous missions and acceptable casualties.'
+        description:
+          "Conflict over the guild's approach to dangerous missions and acceptable casualties.",
       },
       {
         title: 'External Relations',
-        description: 'Disagreement about forming alliances with other organizations.'
-      }
+        description: 'Disagreement about forming alliances with other organizations.',
+      },
     ];
 
     const dispute = disputes[Math.floor(Math.random() * disputes.length)];
@@ -217,7 +227,7 @@ export class GuildPoliticsSystem {
       .slice()
       .sort(() => 0.5 - Math.random())
       .slice(0, participantCount)
-      .map(adv => adv.id);
+      .map((adv) => adv.id);
 
     return {
       id: `dispute_${Date.now()}`,
@@ -227,21 +237,19 @@ export class GuildPoliticsSystem {
       participants,
       impact: {
         moraleChange: -5,
-        adventurerLoyaltyChanges: participants.map(id => ({
+        adventurerLoyaltyChanges: participants.map((id) => ({
           adventurerId: id,
-          loyaltyChange: Math.floor(Math.random() * 10) - 5 // -5 to +5
-        }))
+          loyaltyChange: Math.floor(Math.random() * 10) - 5, // -5 to +5
+        })),
       },
-      duration: 4
+      duration: 4,
     };
   }
 
   private generateFactionFormation(adventurers: Adventurer[]): PoliticalEvent {
     // Find potential faction leaders
-    const leaders = adventurers.filter(adv =>
-      adv.personality.ambition > 65 &&
-      adv.personality.teamwork > 50 &&
-      adv.level >= 4
+    const leaders = adventurers.filter(
+      (adv) => adv.personality.ambition > 65 && adv.personality.teamwork > 50 && adv.level >= 4
     );
 
     if (leaders.length === 0) {
@@ -253,9 +261,12 @@ export class GuildPoliticsSystem {
 
     // Find compatible members based on personality
     const potentialMembers = adventurers
-      .filter(adv => adv.id !== leader.id)
-      .sort((a, b) => this.calculatePersonalityCompatibility(leader.personality, b.personality) -
-                     this.calculatePersonalityCompatibility(leader.personality, a.personality))
+      .filter((adv) => adv.id !== leader.id)
+      .sort(
+        (a, b) =>
+          this.calculatePersonalityCompatibility(leader.personality, b.personality) -
+          this.calculatePersonalityCompatibility(leader.personality, a.personality)
+      )
       .slice(0, factionSize);
 
     const factionNames = [
@@ -263,7 +274,7 @@ export class GuildPoliticsSystem {
       'Guild Traditionalists',
       'The Reform Coalition',
       'Unity Party',
-      'The Veteran\'s Circle'
+      "The Veteran's Circle",
     ];
 
     const factionName = factionNames[Math.floor(Math.random() * factionNames.length)];
@@ -273,19 +284,22 @@ export class GuildPoliticsSystem {
       type: 'faction_formation',
       title: 'New Faction Formed',
       description: `${leader.name} has formed "${factionName}" with like-minded adventurers to promote their vision for the guild.`,
-      participants: [leader.id, ...potentialMembers.map(adv => adv.id)],
+      participants: [leader.id, ...potentialMembers.map((adv) => adv.id)],
       impact: {
         moraleChange: 0, // Neutral initially
         adventurerLoyaltyChanges: [
           { adventurerId: leader.id, loyaltyChange: 15 },
-          ...potentialMembers.map(adv => ({ adventurerId: adv.id, loyaltyChange: 5 }))
-        ]
+          ...potentialMembers.map((adv) => ({ adventurerId: adv.id, loyaltyChange: 5 })),
+        ],
       },
-      duration: 7
+      duration: 7,
     };
   }
 
-  private calculatePersonalityCompatibility(personality1: PersonalityTraits, personality2: PersonalityTraits): number {
+  private calculatePersonalityCompatibility(
+    personality1: PersonalityTraits,
+    personality2: PersonalityTraits
+  ): number {
     let compatibility = 0;
 
     // Similar loyalty values are compatible
@@ -308,7 +322,7 @@ export class GuildPoliticsSystem {
   }
 
   public createVote(proposal: VoteProposal): GuildVote {
-    const voteOptions: string[] = proposal.options.map(option => option.text);
+    const voteOptions: string[] = proposal.options.map((option) => option.text);
 
     return {
       id: proposal.id,
@@ -317,12 +331,17 @@ export class GuildPoliticsSystem {
       options: voteOptions,
       votes: {},
       deadline: proposal.deadline,
-      passed: false
+      passed: false,
     };
   }
 
-  public castVote(vote: GuildVote, adventurerId: string, optionIndex: number, adventurers: Adventurer[]): boolean {
-    const adventurer = adventurers.find(adv => adv.id === adventurerId);
+  public castVote(
+    vote: GuildVote,
+    adventurerId: string,
+    optionIndex: number,
+    adventurers: Adventurer[]
+  ): boolean {
+    const adventurer = adventurers.find((adv) => adv.id === adventurerId);
     if (!adventurer) return false;
 
     if (Date.now() > vote.deadline) return false; // Vote has ended
@@ -333,17 +352,20 @@ export class GuildPoliticsSystem {
     return true;
   }
 
-  public resolveVote(vote: GuildVote, adventurers: Adventurer[]): {
+  public resolveVote(
+    vote: GuildVote,
+    adventurers: Adventurer[]
+  ): {
     winningOption: string;
     winningIndex: number;
     results: { [option: string]: number };
     participation: number;
   } {
     const results: { [option: string]: number } = {};
-    vote.options.forEach(option => results[option] = 0);
+    vote.options.forEach((option) => (results[option] = 0));
 
     // Count votes
-    Object.values(vote.votes).forEach(optionIndex => {
+    Object.values(vote.votes).forEach((optionIndex) => {
       const option = vote.options[optionIndex];
       if (option) {
         results[option]++;
@@ -371,7 +393,7 @@ export class GuildPoliticsSystem {
       winningOption,
       winningIndex,
       results,
-      participation
+      participation,
     };
   }
 
@@ -392,7 +414,11 @@ export class GuildPoliticsSystem {
     return power;
   }
 
-  public predictVotingBehavior(adventurer: Adventurer, vote: GuildVote, proposal: VoteProposal): number {
+  public predictVotingBehavior(
+    adventurer: Adventurer,
+    vote: GuildVote,
+    proposal: VoteProposal
+  ): number {
     // This is a simplified prediction system
     // In reality, this would be much more complex based on adventurer history, relationships, etc.
 
@@ -415,9 +441,11 @@ export class GuildPoliticsSystem {
       // Look for options that mention gold, profit, or expansion
       for (let i = 0; i < proposal.options.length; i++) {
         const option = proposal.options[i];
-        if (option.description.toLowerCase().includes('gold') ||
-            option.description.toLowerCase().includes('profit') ||
-            option.description.toLowerCase().includes('expansion')) {
+        if (
+          option.description.toLowerCase().includes('gold') ||
+          option.description.toLowerCase().includes('profit') ||
+          option.description.toLowerCase().includes('expansion')
+        ) {
           preferredOption = i;
           break;
         }
@@ -443,7 +471,7 @@ export class GuildPoliticsSystem {
       conservative: ['Guild Traditionalists', 'The Old Guard', 'Heritage Keepers'],
       militaristic: ['Iron Will Brigade', 'The War Council', 'Martial Order'],
       diplomatic: ['Peace Builders', 'Unity Circle', 'Harmony Guild'],
-      mercenary: ['Gold Standard Society', 'Profit Alliance', 'Fortune Seekers']
+      mercenary: ['Gold Standard Society', 'Profit Alliance', 'Fortune Seekers'],
     };
 
     const possibleNames = factionNames[ideology];
@@ -452,19 +480,23 @@ export class GuildPoliticsSystem {
     const agendas: { [key in GuildFaction['ideology']]: string[] } = {
       progressive: ['Modernize guild practices', 'Embrace new technologies', 'Expand recruitment'],
       conservative: ['Maintain traditions', 'Preserve guild values', 'Careful growth'],
-      militaristic: ['Strengthen combat training', 'Take on harder quests', 'Build reputation through victory'],
+      militaristic: [
+        'Strengthen combat training',
+        'Take on harder quests',
+        'Build reputation through victory',
+      ],
       diplomatic: ['Form alliances', 'Peaceful conflict resolution', 'Community engagement'],
-      mercenary: ['Maximize profits', 'Efficient operations', 'Strategic investments']
+      mercenary: ['Maximize profits', 'Efficient operations', 'Strategic investments'],
     };
 
     return {
       id: `faction_${leader.id}_${Date.now()}`,
       name,
       leader: leader.id,
-      members: members.map(member => member.id),
+      members: members.map((member) => member.id),
       ideology,
       influence: Math.min(100, (members.length / 10) * 100 + leader.level * 5),
-      agenda: agendas[ideology]
+      agenda: agendas[ideology],
     };
   }
 
@@ -482,7 +514,7 @@ export class GuildPoliticsSystem {
       goldCost: 0,
       reputationChange: 0,
       moraleChange: 0,
-      adventurerEffects: [] as Array<{ adventurerId: string; effect: string; value: number }>
+      adventurerEffects: [] as Array<{ adventurerId: string; effect: string; value: number }>,
     };
 
     switch (eventType) {
@@ -496,14 +528,16 @@ export class GuildPoliticsSystem {
         // Successful challenges improve morale, failed ones hurt it
         {
           const recordOutcome =
-            typeof outcome === 'object' && outcome !== null ? (outcome as Record<string, unknown>) : null;
+            typeof outcome === 'object' && outcome !== null
+              ? (outcome as Record<string, unknown>)
+              : null;
           const successful = recordOutcome?.successful;
 
           if (successful === true) {
-          consequences.moraleChange = 10;
-          consequences.reputationChange = 5;
+            consequences.moraleChange = 10;
+            consequences.reputationChange = 5;
           } else {
-          consequences.moraleChange = -15;
+            consequences.moraleChange = -15;
           }
         }
         break;

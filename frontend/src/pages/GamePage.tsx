@@ -26,7 +26,7 @@ export function GamePage() {
     startQuest,
     completeQuest,
     refreshRecruits,
-    spendGold
+    spendGold,
   } = useGuildStore();
 
   const handleOpenQuestModal = (quest: Quest) => {
@@ -49,29 +49,47 @@ export function GamePage() {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'guild-hall':
-        return <section className="tab-content active" id="guild-hall"><GuildHall /></section>;
+        return (
+          <section className="tab-content active" id="guild-hall">
+            <GuildHall />
+          </section>
+        );
       case 'adventurers':
-        return <section className="tab-content active" id="adventurers">
-          <Adventurers adventurers={adventurers} />
-        </section>;
+        return (
+          <section className="tab-content active" id="adventurers">
+            <Adventurers adventurers={adventurers} />
+          </section>
+        );
       case 'quest-board':
-        return <section className="tab-content active" id="quest-board">
-          <QuestBoard onQuestSelect={handleOpenQuestModal} />
-        </section>;
+        return (
+          <section className="tab-content active" id="quest-board">
+            <QuestBoard onQuestSelect={handleOpenQuestModal} />
+          </section>
+        );
       case 'hiring-hall':
-        return <section className="tab-content active" id="hiring-hall">
-          <HiringHall
-            gold={gold}
-            recruits={recruits}
-            onHireAdventurer={hireAdventurer}
-            onRefreshRecruits={refreshRecruits}
-            onGoldDeduction={handleGoldDeduction}
-          />
-        </section>;
+        return (
+          <section className="tab-content active" id="hiring-hall">
+            <HiringHall
+              gold={gold}
+              recruits={recruits}
+              onHireAdventurer={hireAdventurer}
+              onRefreshRecruits={refreshRecruits}
+              onGoldDeduction={handleGoldDeduction}
+            />
+          </section>
+        );
       case 'treasury':
-        return <section className="tab-content active" id="treasury"><Treasury /></section>;
+        return (
+          <section className="tab-content active" id="treasury">
+            <Treasury />
+          </section>
+        );
       default:
-        return <section className="tab-content active" id="guild-hall"><GuildHall /></section>;
+        return (
+          <section className="tab-content active" id="guild-hall">
+            <GuildHall />
+          </section>
+        );
     }
   };
 

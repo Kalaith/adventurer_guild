@@ -16,13 +16,13 @@ const mockAdventurer1: Adventurer = {
     combat: { weaponMastery: 15, tacticalKnowledge: 10, battleRage: 8 },
     magic: { spellPower: 0, manaEfficiency: 0, elementalMastery: 0 },
     stealth: { lockpicking: 2, sneaking: 5, assassination: 1 },
-    survival: { tracking: 8, herbalism: 3, animalHandling: 6 }
+    survival: { tracking: 8, herbalism: 3, animalHandling: 6 },
   },
   equipment: {},
   relationships: [],
   questsCompleted: 15,
   yearsInGuild: 2,
-  retirementEligible: false
+  retirementEligible: false,
 };
 
 const mockAdventurer2: Adventurer = {
@@ -39,13 +39,13 @@ const mockAdventurer2: Adventurer = {
     combat: { weaponMastery: 5, tacticalKnowledge: 12, battleRage: 3 },
     magic: { spellPower: 20, manaEfficiency: 18, elementalMastery: 15 },
     stealth: { lockpicking: 0, sneaking: 3, assassination: 0 },
-    survival: { tracking: 5, herbalism: 10, animalHandling: 4 }
+    survival: { tracking: 5, herbalism: 10, animalHandling: 4 },
   },
   equipment: {},
   relationships: [],
   questsCompleted: 20,
   yearsInGuild: 3,
-  retirementEligible: false
+  retirementEligible: false,
 };
 
 const mockAdventurer3: Adventurer = {
@@ -62,13 +62,13 @@ const mockAdventurer3: Adventurer = {
     combat: { weaponMastery: 8, tacticalKnowledge: 6, battleRage: 4 },
     magic: { spellPower: 3, manaEfficiency: 2, elementalMastery: 1 },
     stealth: { lockpicking: 15, sneaking: 18, assassination: 10 },
-    survival: { tracking: 12, herbalism: 2, animalHandling: 1 }
+    survival: { tracking: 12, herbalism: 2, animalHandling: 1 },
   },
   equipment: {},
   relationships: [],
   questsCompleted: 8,
   yearsInGuild: 1,
-  retirementEligible: false
+  retirementEligible: false,
 };
 
 describe('RelationshipSystem', () => {
@@ -77,7 +77,10 @@ describe('RelationshipSystem', () => {
 
   beforeEach(() => {
     relationshipSystem = RelationshipSystem.getInstance();
-    adventurers = [mockAdventurer1, mockAdventurer2, mockAdventurer3].map(adv => ({ ...adv, relationships: [] }));
+    adventurers = [mockAdventurer1, mockAdventurer2, mockAdventurer3].map((adv) => ({
+      ...adv,
+      relationships: [],
+    }));
     vi.clearAllMocks();
   });
 
@@ -142,7 +145,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'friendship',
         strength: 80,
-        history: ['Became friends']
+        history: ['Became friends'],
       });
 
       const synergy = relationshipSystem.calculateTeamSynergy(
@@ -160,7 +163,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'romance',
         strength: 90,
-        history: ['Fell in love']
+        history: ['Fell in love'],
       });
 
       const romanceSynergy = relationshipSystem.calculateTeamSynergy(
@@ -173,7 +176,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'friendship',
         strength: 90,
-        history: ['Became friends']
+        history: ['Became friends'],
       });
 
       const friendshipSynergy = relationshipSystem.calculateTeamSynergy(
@@ -190,7 +193,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'rivalry',
         strength: 70,
-        history: ['Became rivals']
+        history: ['Became rivals'],
       });
 
       const synergy = relationshipSystem.calculateTeamSynergy(
@@ -208,21 +211,21 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'romance',
         strength: 85,
-        history: ['Romance bloomed']
+        history: ['Romance bloomed'],
       });
 
       adventurers[1].relationships.push({
         targetId: adventurers[2].id,
         type: 'rivalry',
         strength: 60,
-        history: ['Started rivalry']
+        history: ['Started rivalry'],
       });
 
       adventurers[0].relationships.push({
         targetId: adventurers[2].id,
         type: 'friendship',
         strength: 70,
-        history: ['Became friends']
+        history: ['Became friends'],
       });
 
       const synergy = relationshipSystem.calculateTeamSynergy(
@@ -243,14 +246,14 @@ describe('RelationshipSystem', () => {
           targetId: adventurers[1].id,
           type: 'friendship',
           strength: 75,
-          history: ['Became friends']
+          history: ['Became friends'],
         },
         {
           targetId: adventurers[2].id,
           type: 'rivalry',
           strength: 60,
-          history: ['Started competing']
-        }
+          history: ['Started competing'],
+        },
       ];
     });
 
@@ -271,7 +274,7 @@ describe('RelationshipSystem', () => {
       // Test different strength levels
       adventurers[0].relationships = [
         { targetId: adventurers[1].id, type: 'friendship', strength: 90, history: [] },
-        { targetId: adventurers[2].id, type: 'friendship', strength: 50, history: [] }
+        { targetId: adventurers[2].id, type: 'friendship', strength: 50, history: [] },
       ];
 
       const summaries = relationshipSystem.getRelationshipSummary(adventurers[0], adventurers);
@@ -286,8 +289,8 @@ describe('RelationshipSystem', () => {
           targetId: 'non-existent',
           type: 'friendship',
           strength: 75,
-          history: []
-        }
+          history: [],
+        },
       ];
 
       const summaries = relationshipSystem.getRelationshipSummary(adventurers[0], adventurers);
@@ -297,7 +300,7 @@ describe('RelationshipSystem', () => {
   });
 
   describe('applyRelationshipEvent', () => {
-    it('should create new relationships when they don\'t exist', () => {
+    it("should create new relationships when they don't exist", () => {
       const event = {
         id: 'test-event',
         participantIds: [adventurers[0].id, adventurers[1].id],
@@ -309,15 +312,17 @@ describe('RelationshipSystem', () => {
               adventurerId: adventurers[0].id,
               targetId: adventurers[1].id,
               relationshipType: 'friendship' as const,
-              strengthChange: 20
-            }
-          ]
-        }
+              strengthChange: 20,
+            },
+          ],
+        },
       };
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
+      const relationship = adventurers[0].relationships.find(
+        (r) => r.targetId === adventurers[1].id
+      );
       expect(relationship).toBeDefined();
       expect(relationship?.type).toBe('friendship');
       expect(relationship?.strength).toBe(20);
@@ -330,7 +335,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'friendship',
         strength: 50,
-        history: ['Initial meeting']
+        history: ['Initial meeting'],
       });
 
       const event = {
@@ -344,15 +349,17 @@ describe('RelationshipSystem', () => {
               adventurerId: adventurers[0].id,
               targetId: adventurers[1].id,
               relationshipType: 'friendship' as const,
-              strengthChange: 15
-            }
-          ]
-        }
+              strengthChange: 15,
+            },
+          ],
+        },
       };
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
+      const relationship = adventurers[0].relationships.find(
+        (r) => r.targetId === adventurers[1].id
+      );
       expect(relationship?.strength).toBe(65);
       expect(relationship?.history).toContain('Their friendship deepened');
     });
@@ -362,7 +369,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'rivalry',
         strength: 95,
-        history: []
+        history: [],
       });
 
       const event = {
@@ -376,15 +383,17 @@ describe('RelationshipSystem', () => {
               adventurerId: adventurers[0].id,
               targetId: adventurers[1].id,
               relationshipType: 'rivalry' as const,
-              strengthChange: 20 // Would go to 115, should clamp to 100
-            }
-          ]
-        }
+              strengthChange: 20, // Would go to 115, should clamp to 100
+            },
+          ],
+        },
       };
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
+      const relationship = adventurers[0].relationships.find(
+        (r) => r.targetId === adventurers[1].id
+      );
       expect(relationship?.strength).toBe(100);
     });
 
@@ -393,7 +402,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'friendship',
         strength: 50,
-        history: ['Event 1', 'Event 2', 'Event 3', 'Event 4', 'Event 5']
+        history: ['Event 1', 'Event 2', 'Event 3', 'Event 4', 'Event 5'],
       });
 
       const event = {
@@ -407,15 +416,17 @@ describe('RelationshipSystem', () => {
               adventurerId: adventurers[0].id,
               targetId: adventurers[1].id,
               relationshipType: 'friendship' as const,
-              strengthChange: 10
-            }
-          ]
-        }
+              strengthChange: 10,
+            },
+          ],
+        },
       };
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
+      const relationship = adventurers[0].relationships.find(
+        (r) => r.targetId === adventurers[1].id
+      );
       expect(relationship?.history).toHaveLength(5);
       expect(relationship?.history[0]).toBe('Event 2'); // First event should be removed
       expect(relationship?.history[4]).toBe('Event 6'); // New event should be last
@@ -434,7 +445,7 @@ describe('RelationshipSystem', () => {
         targetId: adventurers[1].id,
         type: 'rivalry',
         strength: 80, // Strong rivalry
-        history: ['They compete fiercely']
+        history: ['They compete fiercely'],
       });
 
       const crisis = relationshipSystem.triggerRelationshipCrisis(adventurers);

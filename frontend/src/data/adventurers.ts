@@ -23,7 +23,7 @@ export const initialAdventurers: Adventurer[] = [
       strength: 35,
       intelligence: 15,
       dexterity: 20,
-      vitality: 30
+      vitality: 30,
     },
     personality: createDefaultPersonality(),
     skills: createDefaultSkills(),
@@ -45,7 +45,7 @@ export const initialAdventurers: Adventurer[] = [
       strength: 10,
       intelligence: 30,
       dexterity: 15,
-      vitality: 20
+      vitality: 20,
     },
     personality: createDefaultPersonality(),
     skills: createDefaultSkills(),
@@ -54,18 +54,23 @@ export const initialAdventurers: Adventurer[] = [
     questsCompleted: 0,
     yearsInGuild: 0,
     retirementEligible: false,
-  }
+  },
 ];
 
 export const adventurerNames = {
   Warrior: ['Thrain Ironfist', 'Grom Bloodaxe', 'Valeria Stormblade', 'Bjorn Bearkiller'],
   Mage: ['Elara Stormweaver', 'Mordecai Shadowcaster', 'Sylvana Moonwhisper', 'Zephyr Windcaller'],
   Rogue: ['Shadow Nightstalker', 'Raven Quickblade', 'Silk Shadowstep', 'Ghost Whisperwind'],
-  Archer: ['Falcon Swiftarrow', 'Willow Longshot', 'Hawkeye Stormbow', 'Ranger Greenleaf']
+  Archer: ['Falcon Swiftarrow', 'Willow Longshot', 'Hawkeye Stormbow', 'Ranger Greenleaf'],
 };
 
 export const generateRandomAdventurer = (level: number = 1): Adventurer => {
-  const classes: Array<'Warrior' | 'Mage' | 'Rogue' | 'Archer'> = ['Warrior', 'Mage', 'Rogue', 'Archer'];
+  const classes: Array<'Warrior' | 'Mage' | 'Rogue' | 'Archer'> = [
+    'Warrior',
+    'Mage',
+    'Rogue',
+    'Archer',
+  ];
   const randomClass = classes[Math.floor(Math.random() * classes.length)];
   const names = adventurerNames[randomClass];
   const randomName = names[Math.floor(Math.random() * names.length)];
@@ -82,7 +87,7 @@ export const generateRandomAdventurer = (level: number = 1): Adventurer => {
       strength: level * 10 + Math.floor(Math.random() * 10),
       intelligence: level * 10 + Math.floor(Math.random() * 10),
       dexterity: level * 10 + Math.floor(Math.random() * 10),
-      vitality: level * 10 + Math.floor(Math.random() * 10)
+      vitality: level * 10 + Math.floor(Math.random() * 10),
     },
     personality: createDefaultPersonality(),
     skills: createDefaultSkills(),

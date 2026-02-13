@@ -48,4 +48,3 @@ const NavigationTabs: React.FC = () => {
 };
 
 export default NavigationTabs;
-
