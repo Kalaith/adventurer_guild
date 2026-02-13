@@ -573,8 +573,8 @@ export class TerritoryControlSystem {
       }
 
       if (territory.benefits.questAccess) {
-        const territoryQuests = territoryQuests[territory.id] || [];
-        availableQuests.push(...territoryQuests);
+        const questsForTerritory = territoryQuests[territory.id] || [];
+        availableQuests.push(...questsForTerritory);
       }
 
       if (territory.benefits.recruitAccess) {
