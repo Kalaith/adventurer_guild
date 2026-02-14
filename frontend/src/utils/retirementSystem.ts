@@ -134,7 +134,7 @@ export class RetirementSystem {
 
     // Check personality-based retirement
     if (adventurer.personality.greed >= 80) return 'wealth';
-    if (adventurer.relationships.some((rel) => rel.type === 'romance' && rel.strength >= 90)) {
+    if (adventurer.relationships.some(rel => rel.type === 'romance' && rel.strength >= 90)) {
       return 'relationship';
     }
 
@@ -198,7 +198,7 @@ export class RetirementSystem {
   }
 
   public getBestRetirementRole(adventurer: Adventurer): RetirementOption | null {
-    const eligibleRoles = retirementRoles.filter((role) =>
+    const eligibleRoles = retirementRoles.filter(role =>
       this.meetsRequirements(adventurer, role.requirements)
     );
 
@@ -250,14 +250,14 @@ export class RetirementSystem {
 
     // Bonus for exceeding requirements
     if (role.requirements.specificSkills) {
-      role.requirements.specificSkills.forEach((skillReq) => {
+      role.requirements.specificSkills.forEach(skillReq => {
         const skillValue = this.getSkillValue(adventurer.skills, skillReq.skill);
         score += Math.max(0, skillValue - skillReq.minValue);
       });
     }
 
     if (role.requirements.personality) {
-      role.requirements.personality.forEach((personalityReq) => {
+      role.requirements.personality.forEach(personalityReq => {
         const personalityValue = adventurer.personality[personalityReq.trait];
         score += Math.max(0, personalityValue - personalityReq.minValue);
       });
@@ -325,10 +325,10 @@ export class RetirementSystem {
 
     // Inherit some skill potential from parent
     const potentialSkills: { [skillType: string]: number } = {};
-    Object.keys(parent.skills).forEach((category) => {
+    Object.keys(parent.skills).forEach(category => {
       const skillCategory = parent.skills[category as keyof SkillTree];
       if (typeof skillCategory === 'object') {
-        Object.keys(skillCategory).forEach((skill) => {
+        Object.keys(skillCategory).forEach(skill => {
           const parentValue = (skillCategory as Record<string, number>)[skill];
           const inheritedValue = Math.floor(parentValue * 0.2 + Math.random() * 5);
           if (inheritedValue > 0) {
@@ -391,7 +391,7 @@ export class RetirementSystem {
       questAdvice: false,
     };
 
-    retiredAdventurers.forEach((retired) => {
+    retiredAdventurers.forEach(retired => {
       if (retired.benefits.trainingBonus) {
         benefits.trainingBonus += retired.benefits.trainingBonus;
       }

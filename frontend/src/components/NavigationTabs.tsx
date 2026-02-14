@@ -16,12 +16,12 @@ const TABS: TabSpec[] = [
 ];
 
 const NavigationTabs: React.FC = () => {
-  const activeTab = useUIStore((s) => s.activeTab);
-  const setActiveTab = useUIStore((s) => s.setActiveTab);
+  const activeTab = useUIStore(s => s.activeTab);
+  const setActiveTab = useUIStore(s => s.setActiveTab);
 
   return (
     <nav className="tab-navigation" role="tablist" aria-label="Primary navigation">
-      {TABS.map((tab) => {
+      {TABS.map(tab => {
         const isActive = tab.id === activeTab;
 
         return (
@@ -32,7 +32,7 @@ const NavigationTabs: React.FC = () => {
             aria-selected={isActive}
             className={`tab-btn ${isActive ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
-            onKeyDown={(e) => {
+            onKeyDown={e => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 setActiveTab(tab.id);

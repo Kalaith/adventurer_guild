@@ -52,7 +52,7 @@ const GuildHall: React.FC<GuildHallProps> = ({
             {activeQuests.length === 0 ? (
               <p className="no-quests">No active quests</p>
             ) : (
-              activeQuests.map((quest) => (
+              activeQuests.map(quest => (
                 <div key={quest.id} className="active-quest-item">
                   <h4>{quest.name}</h4>
                   <p>Difficulty: {quest.difficulty}</p>

@@ -117,11 +117,11 @@ export const initialFactions: Faction[] = [
 ];
 
 export function getFactionById(factionId: string): Faction | undefined {
-  return initialFactions.find((faction) => faction.id === factionId);
+  return initialFactions.find(faction => faction.id === factionId);
 }
 
 export function getFactionsByReputationLevel(minReputation: number): Faction[] {
-  return initialFactions.filter((faction) => faction.reputation >= minReputation);
+  return initialFactions.filter(faction => faction.reputation >= minReputation);
 }
 
 export function getFactionQuestTypes(factionId: string): string[] {
@@ -137,7 +137,7 @@ export function calculateFactionReward(baseReward: number, factionId: string): n
 }
 
 export function getFactionsForQuestType(questType: string): Faction[] {
-  return initialFactions.filter((faction) =>
+  return initialFactions.filter(faction =>
     faction.questModifiers.availableQuestTypes.includes(questType)
   );
 }

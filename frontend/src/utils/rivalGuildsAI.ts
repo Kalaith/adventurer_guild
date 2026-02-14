@@ -91,7 +91,7 @@ export class RivalGuildsAI {
     const actions: RivalGuildAction[] = [];
 
     // Update rival guild stats and generate actions
-    rivalGuilds.forEach((guild) => {
+    rivalGuilds.forEach(guild => {
       if (Math.random() * 100 < this.calculateActionChance(guild, playerGuild)) {
         const action = this.generateRivalAction(guild, playerGuild);
         if (action) {
@@ -250,7 +250,7 @@ export class RivalGuildsAI {
   }
 
   private applyRivalAction(action: RivalGuildAction): void {
-    const guild = rivalGuilds.find((g) => g.id === action.guildId);
+    const guild = rivalGuilds.find(g => g.id === action.guildId);
     if (!guild) return;
 
     if (action.impact.rivalGainReputation) {
@@ -272,11 +272,11 @@ export class RivalGuildsAI {
   ): QuestCompetition[] {
     const competitions: QuestCompetition[] = [];
 
-    availableQuests.forEach((quest) => {
+    availableQuests.forEach(quest => {
       // Only high-value quests attract competition
       if (quest.reward < 200) return;
 
-      rivalGuilds.forEach((guild) => {
+      rivalGuilds.forEach(guild => {
         if (Math.random() * 100 < guild.competitionLevel / 2) {
           const playerChance = this.calculatePlayerQuestChance(quest, guild, playerGuild);
 
@@ -348,7 +348,7 @@ export class RivalGuildsAI {
   }
 
   public getGuildById(guildId: string): RivalGuild | undefined {
-    return rivalGuilds.find((guild) => guild.id === guildId);
+    return rivalGuilds.find(guild => guild.id === guildId);
   }
 
   // Player actions against rival guilds

@@ -45,7 +45,7 @@ const Adventurers: React.FC<AdventurersProps> = ({ adventurers }) => {
     <div>
       <h2>⚔️ Your Adventurers</h2>
       <div className="adventurer-grid">
-        {adventurers.map((adventurer) => (
+        {adventurers.map(adventurer => (
           <div key={adventurer.id} className="adventurer-card">
             <div className="adventurer-header">
               <span className="class-icon">{getClassIcon(adventurer.class)}</span>

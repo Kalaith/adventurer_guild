@@ -164,7 +164,7 @@ describe('gameStore', () => {
       expect(state.gold).toBe(1000 - mockRecruit.cost);
       expect(state.recruits).toHaveLength(0);
 
-      const hiredAdventurer = state.adventurers.find((adv) => adv.id === mockRecruit.id);
+      const hiredAdventurer = state.adventurers.find(adv => adv.id === mockRecruit.id);
       expect(hiredAdventurer).toBeDefined();
       expect(hiredAdventurer?.name).toBe(mockRecruit.name);
       expect(hiredAdventurer?.class).toBe(mockRecruit.class);
@@ -222,7 +222,7 @@ describe('gameStore', () => {
       expect(activeQuest.assignedAdventurers).toContain(adventurerId);
       expect(activeQuest.status).toBe('active');
 
-      const adventurer = state.adventurers.find((adv) => adv.id === adventurerId);
+      const adventurer = state.adventurers.find(adv => adv.id === adventurerId);
       expect(adventurer?.status).toBe('on quest');
     });
 
@@ -244,7 +244,7 @@ describe('gameStore', () => {
       expect(state.gold).toBeGreaterThan(initialGold);
       expect(state.reputation).toBeGreaterThan(initialReputation);
 
-      const adventurer = state.adventurers.find((adv) => adv.id === adventurerId);
+      const adventurer = state.adventurers.find(adv => adv.id === adventurerId);
       expect(adventurer?.status).toBe('available');
       expect(adventurer?.experience).toBeGreaterThan(0);
     });
@@ -261,7 +261,7 @@ describe('gameStore', () => {
       expect(state.recruits).toHaveLength(3);
       expect(state.gold).toBe(initialGold - guildConstants.RECRUIT_REFRESH_COST);
 
-      state.recruits.forEach((recruit) => {
+      state.recruits.forEach(recruit => {
         expect(recruit.id).toMatch(/^recruit_\d+_\d+$/);
         expect(['Warrior', 'Mage', 'Rogue', 'Archer']).toContain(recruit.class);
         expect(recruit.level).toBeGreaterThanOrEqual(1);

@@ -105,7 +105,7 @@ export const useGuildStore = create<GuildStore>()(
 
       hireAdventurer: (recruitId: string) => {
         const state = get();
-        const recruit = state.recruits.find((r) => r.id === recruitId);
+        const recruit = state.recruits.find(r => r.id === recruitId);
 
         if (!recruit) return;
 
@@ -145,9 +145,9 @@ export const useGuildStore = create<GuildStore>()(
           retirementEligible: false,
         };
 
-        set((prevState) => ({
+        set(prevState => ({
           adventurers: [...prevState.adventurers, newAdventurer],
-          recruits: prevState.recruits.filter((r) => r.id !== recruitId),
+          recruits: prevState.recruits.filter(r => r.id !== recruitId),
         }));
       },
 
@@ -161,16 +161,14 @@ export const useGuildStore = create<GuildStore>()(
         }
 
         const availableAdventurers = state.getAvailableAdventurers();
-        const selectedAdventurers = availableAdventurers.filter((a) =>
-          adventurerIds.includes(a.id)
-        );
+        const selectedAdventurers = availableAdventurers.filter(a => adventurerIds.includes(a.id));
 
         if (selectedAdventurers.length === 0) {
           console.warn('No available adventurers selected');
           return;
         }
 
-        const assignedAdventurerIds = selectedAdventurers.map((a) => a.id);
+        const assignedAdventurerIds = selectedAdventurers.map(a => a.id);
 
         const questWithAdventurers: Quest = {
           ...quest,
@@ -178,9 +176,9 @@ export const useGuildStore = create<GuildStore>()(
           status: 'active',
         };
 
-        set((prevState) => ({
+        set(prevState => ({
           activeQuests: [...prevState.activeQuests, questWithAdventurers],
-          adventurers: prevState.adventurers.map((adv) =>
+          adventurers: prevState.adventurers.map(adv =>
             assignedAdventurerIds.includes(adv.id) ? { ...adv, status: 'on quest' } : adv
           ),
         }));
@@ -188,7 +186,7 @@ export const useGuildStore = create<GuildStore>()(
 
       completeQuest: (questId: string) => {
         const state = get();
-        const quest = state.activeQuests.find((q) => q.id === questId);
+        const quest = state.activeQuests.find(q => q.id === questId);
 
         if (!quest) return;
 
@@ -197,12 +195,12 @@ export const useGuildStore = create<GuildStore>()(
           quest.experienceReward ??
           quest.requirements.minLevel * guildConstants.EXPERIENCE_PER_QUEST_LEVEL;
 
-        set((prevState) => ({
+        set(prevState => ({
           gold: prevState.gold + reward,
           reputation: prevState.reputation + Math.floor(reward / 10),
-          activeQuests: prevState.activeQuests.filter((q) => q.id !== questId),
+          activeQuests: prevState.activeQuests.filter(q => q.id !== questId),
           completedQuests: [...prevState.completedQuests, questId],
-          adventurers: prevState.adventurers.map((adv) =>
+          adventurers: prevState.adventurers.map(adv =>
             quest.assignedAdventurers?.includes(adv.id)
               ? {
                   ...adv,
@@ -232,7 +230,7 @@ export const useGuildStore = create<GuildStore>()(
           const cost = get().calculateRecruitCost(level);
 
           const personality = createDefaultPersonality();
-          (Object.keys(personality) as Array<keyof typeof personality>).forEach((trait) => {
+          (Object.keys(personality) as Array<keyof typeof personality>).forEach(trait => {
             personality[trait] = clamp(personality[trait] + randomInt(-15, 15), 0, 100);
           });
 
@@ -284,7 +282,7 @@ export const useGuildStore = create<GuildStore>()(
       },
 
       addGold: (amount: number) => {
-        set((state) => ({ gold: state.gold + amount }));
+        set(state => ({ gold: state.gold + amount }));
       },
 
       spendGold: (amount: number) => {
@@ -311,7 +309,7 @@ export const useGuildStore = create<GuildStore>()(
       },
 
       getAvailableAdventurers: () => {
-        return get().adventurers.filter((adv) => adv.status === 'available');
+        return get().adventurers.filter(adv => adv.status === 'available');
       },
 
       getActiveQuests: () => {
@@ -328,7 +326,7 @@ export const useGuildStore = create<GuildStore>()(
     }),
     {
       name: 'adventurer-guild',
-      partialize: (state) => ({
+      partialize: state => ({
         gold: state.gold,
         reputation: state.reputation,
         level: state.level,

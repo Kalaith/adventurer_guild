@@ -14,7 +14,7 @@ const QuestBoard: React.FC<QuestBoardProps> = ({ onQuestSelect }) => {
         <p>Choose from available quests to send your adventurers on exciting adventures!</p>
       </div>
       <div className="quest-grid">
-        {questData.map((quest) => (
+        {questData.map(quest => (
           <div key={quest.id} className="quest-item" onClick={() => onQuestSelect(quest)}>
             <h3>{quest.name}</h3>
             <p>{quest.description}</p>

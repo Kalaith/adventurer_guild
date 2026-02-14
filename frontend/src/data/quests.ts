@@ -66,13 +66,13 @@ export const questData: Quest[] = [
 ];
 
 export const getQuestById = (id: string): Quest | undefined => {
-  return questData.find((quest) => quest.id === id);
+  return questData.find(quest => quest.id === id);
 };
 
 export const getQuestsByDifficulty = (difficulty: 'Easy' | 'Medium' | 'Hard'): Quest[] => {
-  return questData.filter((quest) => quest.difficulty === difficulty);
+  return questData.filter(quest => quest.difficulty === difficulty);
 };
 
 export const getAvailableQuests = (): Quest[] => {
-  return questData.filter((quest) => quest.status === 'available');
+  return questData.filter(quest => quest.status === 'available');
 };

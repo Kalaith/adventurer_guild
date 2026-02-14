@@ -101,7 +101,7 @@ describe('Quest Generator', () => {
       // Generate multiple quests to test different types
       const quests = Array.from({ length: 20 }, () => generateProceduralQuest(3));
 
-      quests.forEach((quest) => {
+      quests.forEach(quest => {
         expect(quest.skillRewards).toBeDefined();
         expect(Object.keys(quest.skillRewards!)).toHaveLength(1);
 
@@ -149,7 +149,7 @@ describe('Quest Generator', () => {
     it('should generate unique quests', () => {
       const quests = generateMultipleQuests(3, 10);
 
-      const questIds = quests.map((q) => q.id);
+      const questIds = quests.map(q => q.id);
       const uniqueIds = new Set(questIds);
 
       expect(uniqueIds.size).toBe(questIds.length);
@@ -158,7 +158,7 @@ describe('Quest Generator', () => {
     it('should generate quests with varied difficulties', () => {
       const quests = generateMultipleQuests(5, 20);
 
-      const difficulties = quests.map((q) => q.difficulty);
+      const difficulties = quests.map(q => q.difficulty);
       const uniqueDifficulties = new Set(difficulties);
 
       // Should have at least 2 different difficulty levels in 20 quests
@@ -168,7 +168,7 @@ describe('Quest Generator', () => {
     it('should generate quests with varied quest types', () => {
       const quests = generateMultipleQuests(5, 30);
 
-      const questNames = quests.map((q) => q.name);
+      const questNames = quests.map(q => q.name);
       const uniqueNames = new Set(questNames);
 
       // Should have variety in quest names
@@ -192,16 +192,16 @@ describe('Quest Generator', () => {
       // Generate many quests to find combat quests
       const quests = generateMultipleQuests(5, 50);
       const combatQuests = quests.filter(
-        (q) =>
+        q =>
           q.requirements.preferredClasses.includes('Warrior') ||
           q.requirements.preferredClasses.includes('Archer')
       );
 
       expect(combatQuests.length).toBeGreaterThan(0);
 
-      combatQuests.forEach((quest) => {
+      combatQuests.forEach(quest => {
         // Combat quests should have at least one combat-appropriate class
-        const hasCombatClass = quest.requirements.preferredClasses.some((cls) =>
+        const hasCombatClass = quest.requirements.preferredClasses.some(cls =>
           ['Warrior', 'Archer', 'Rogue'].includes(cls)
         );
         expect(hasCombatClass).toBe(true);
@@ -211,7 +211,7 @@ describe('Quest Generator', () => {
     it('should generate exploration quests with appropriate classes', () => {
       const quests = generateMultipleQuests(5, 50);
       const explorationQuests = quests.filter(
-        (q) =>
+        q =>
           q.requirements.preferredClasses.includes('Rogue') &&
           q.requirements.preferredClasses.includes('Archer')
       );
@@ -222,7 +222,7 @@ describe('Quest Generator', () => {
     it('should generate diplomatic quests with mage preference', () => {
       const quests = generateMultipleQuests(5, 50);
       const diplomaticQuests = quests.filter(
-        (q) =>
+        q =>
           q.requirements.preferredClasses.includes('Mage') &&
           q.requirements.preferredClasses.length === 1
       );
@@ -258,9 +258,9 @@ describe('Quest Generator', () => {
 
     it('should generate equipment with correct rarity distribution', () => {
       const quests = generateMultipleQuests(5, 100);
-      const lootItems = quests.flatMap((q) => q.lootTable ?? []);
+      const lootItems = quests.flatMap(q => q.lootTable ?? []);
 
-      const rarities = lootItems.map((item) => item.rarity);
+      const rarities = lootItems.map(item => item.rarity);
       const rarityCounts = rarities.reduce(
         (counts, rarity) => {
           counts[rarity] = (counts[rarity] || 0) + 1;

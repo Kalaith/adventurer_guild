@@ -13,7 +13,7 @@ import {
 describe('Crafting System', () => {
   describe('data integrity', () => {
     it('should have materials with all required properties', () => {
-      craftingMaterials.forEach((material) => {
+      craftingMaterials.forEach(material => {
         expect(material).toHaveProperty('id');
         expect(material).toHaveProperty('name');
         expect(material).toHaveProperty('rarity');
@@ -28,7 +28,7 @@ describe('Crafting System', () => {
     });
 
     it('should have recipes with all required properties', () => {
-      craftingRecipes.forEach((recipe) => {
+      craftingRecipes.forEach(recipe => {
         expect(recipe).toHaveProperty('id');
         expect(recipe).toHaveProperty('name');
         expect(recipe).toHaveProperty('result');
@@ -53,7 +53,7 @@ describe('Crafting System', () => {
 
         // Validate materials object
         expect(Object.keys(recipe.materials).length).toBeGreaterThan(0);
-        Object.values(recipe.materials).forEach((amount) => {
+        Object.values(recipe.materials).forEach(amount => {
           expect(typeof amount).toBe('number');
           expect(amount).toBeGreaterThan(0);
         });
@@ -61,24 +61,24 @@ describe('Crafting System', () => {
     });
 
     it('should have unique material IDs', () => {
-      const materialIds = craftingMaterials.map((m) => m.id);
+      const materialIds = craftingMaterials.map(m => m.id);
       const uniqueIds = new Set(materialIds);
 
       expect(uniqueIds.size).toBe(materialIds.length);
     });
 
     it('should have unique recipe IDs', () => {
-      const recipeIds = craftingRecipes.map((r) => r.id);
+      const recipeIds = craftingRecipes.map(r => r.id);
       const uniqueIds = new Set(recipeIds);
 
       expect(uniqueIds.size).toBe(recipeIds.length);
     });
 
     it('should reference valid materials in recipes', () => {
-      const materialIds = new Set(craftingMaterials.map((m) => m.id));
+      const materialIds = new Set(craftingMaterials.map(m => m.id));
 
-      craftingRecipes.forEach((recipe) => {
-        Object.keys(recipe.materials).forEach((materialId) => {
+      craftingRecipes.forEach(recipe => {
+        Object.keys(recipe.materials).forEach(materialId => {
           expect(materialIds.has(materialId)).toBe(true);
         });
       });
@@ -125,15 +125,15 @@ describe('Crafting System', () => {
       const legendaryRecipes = getRecipesByRarity('legendary');
 
       // Check that results match the rarity
-      commonRecipes.forEach((recipe) => {
+      commonRecipes.forEach(recipe => {
         expect(recipe.result.rarity).toBe('common');
       });
 
-      rareRecipes.forEach((recipe) => {
+      rareRecipes.forEach(recipe => {
         expect(recipe.result.rarity).toBe('rare');
       });
 
-      legendaryRecipes.forEach((recipe) => {
+      legendaryRecipes.forEach(recipe => {
         expect(recipe.result.rarity).toBe('legendary');
       });
 
@@ -156,17 +156,17 @@ describe('Crafting System', () => {
       const level5Recipes = getRecipesByFacilityLevel(5);
 
       // Level 1 should only have level 1 recipes
-      level1Recipes.forEach((recipe) => {
+      level1Recipes.forEach(recipe => {
         expect(recipe.requiredFacilityLevel).toBeLessThanOrEqual(1);
       });
 
       // Level 3 should include level 1, 2, and 3 recipes
-      level3Recipes.forEach((recipe) => {
+      level3Recipes.forEach(recipe => {
         expect(recipe.requiredFacilityLevel).toBeLessThanOrEqual(3);
       });
 
       // Level 5 should include all recipes
-      level5Recipes.forEach((recipe) => {
+      level5Recipes.forEach(recipe => {
         expect(recipe.requiredFacilityLevel).toBeLessThanOrEqual(5);
       });
 
@@ -188,15 +188,15 @@ describe('Crafting System', () => {
       const rareMaterials = getMaterialsByRarity('rare');
       const legendaryMaterials = getMaterialsByRarity('legendary');
 
-      commonMaterials.forEach((material) => {
+      commonMaterials.forEach(material => {
         expect(material.rarity).toBe('common');
       });
 
-      rareMaterials.forEach((material) => {
+      rareMaterials.forEach(material => {
         expect(material.rarity).toBe('rare');
       });
 
-      legendaryMaterials.forEach((material) => {
+      legendaryMaterials.forEach(material => {
         expect(material.rarity).toBe('legendary');
       });
 
@@ -285,8 +285,8 @@ describe('Crafting System', () => {
 
       expect(result.canCraft).toBe(false);
       expect(result.missingMaterials).toHaveLength(2);
-      expect(result.missingMaterials.some((m) => m.includes('Iron Ore'))).toBe(true);
-      expect(result.missingMaterials.some((m) => m.includes('Hardwood Planks'))).toBe(true);
+      expect(result.missingMaterials.some(m => m.includes('Iron Ore'))).toBe(true);
+      expect(result.missingMaterials.some(m => m.includes('Hardwood Planks'))).toBe(true);
     });
 
     it('should handle missing materials gracefully', () => {
@@ -319,9 +319,9 @@ describe('Crafting System', () => {
 
       expect(result.canCraft).toBe(false);
       expect(result.reasonsBlocked.length).toBeGreaterThan(1);
-      expect(result.reasonsBlocked.some((r) => r.includes('facility level'))).toBe(true);
-      expect(result.reasonsBlocked.some((r) => r.includes('gold'))).toBe(true);
-      expect(result.reasonsBlocked.some((r) => r.includes('Missing materials'))).toBe(true);
+      expect(result.reasonsBlocked.some(r => r.includes('facility level'))).toBe(true);
+      expect(result.reasonsBlocked.some(r => r.includes('gold'))).toBe(true);
+      expect(result.reasonsBlocked.some(r => r.includes('Missing materials'))).toBe(true);
     });
   });
 
@@ -329,14 +329,14 @@ describe('Crafting System', () => {
     it('should have materials across all rarity levels', () => {
       const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
 
-      rarities.forEach((rarity) => {
-        const materialsOfRarity = craftingMaterials.filter((m) => m.rarity === rarity);
+      rarities.forEach(rarity => {
+        const materialsOfRarity = craftingMaterials.filter(m => m.rarity === rarity);
         expect(materialsOfRarity.length).toBeGreaterThan(0);
       });
     });
 
     it('should have recipes across multiple rarity levels', () => {
-      const recipeRarities = new Set(craftingRecipes.map((r) => r.result.rarity));
+      const recipeRarities = new Set(craftingRecipes.map(r => r.result.rarity));
 
       expect(recipeRarities.size).toBeGreaterThan(2);
       expect(recipeRarities.has('uncommon')).toBe(true);
@@ -344,8 +344,8 @@ describe('Crafting System', () => {
     });
 
     it('should have higher cost for higher rarity recipes', () => {
-      const uncommonRecipes = craftingRecipes.filter((r) => r.result.rarity === 'uncommon');
-      const legendaryRecipes = craftingRecipes.filter((r) => r.result.rarity === 'legendary');
+      const uncommonRecipes = craftingRecipes.filter(r => r.result.rarity === 'uncommon');
+      const legendaryRecipes = craftingRecipes.filter(r => r.result.rarity === 'legendary');
 
       const avgUncommonCost =
         uncommonRecipes.reduce((sum, r) => sum + r.goldCost, 0) / uncommonRecipes.length;
@@ -358,7 +358,7 @@ describe('Crafting System', () => {
 
   describe('equipment type coverage', () => {
     it('should have recipes for all equipment types', () => {
-      const equipmentTypes = new Set(craftingRecipes.map((r) => r.result.type));
+      const equipmentTypes = new Set(craftingRecipes.map(r => r.result.type));
 
       expect(equipmentTypes.has('weapon')).toBe(true);
       expect(equipmentTypes.has('armor')).toBe(true);
@@ -366,9 +366,9 @@ describe('Crafting System', () => {
     });
 
     it('should have balanced stat distribution in crafted items', () => {
-      const craftedItems = craftingRecipes.map((r) => r.result);
+      const craftedItems = craftingRecipes.map(r => r.result);
 
-      craftedItems.forEach((item) => {
+      craftedItems.forEach(item => {
         const totalStats = Object.values(item.stats).reduce((sum, stat) => sum + (stat || 0), 0);
         expect(totalStats).toBeGreaterThan(0);
       });

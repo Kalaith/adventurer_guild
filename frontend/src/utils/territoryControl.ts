@@ -259,11 +259,11 @@ export class TerritoryControlSystem {
   }
 
   public getAvailableTerritories(): Territory[] {
-    return availableTerritories.filter((territory) => !territory.controlled);
+    return availableTerritories.filter(territory => !territory.controlled);
   }
 
   public getControlledTerritories(): Territory[] {
-    return availableTerritories.filter((territory) => territory.controlled);
+    return availableTerritories.filter(territory => territory.controlled);
   }
 
   public calculateExpansionCost(territory: Territory, guildLevel: number): number {
@@ -362,7 +362,7 @@ export class TerritoryControlSystem {
     actualSuccessChance = Math.min(95, actualSuccessChance + levelBonus);
 
     // Check skill bonuses
-    expansion.requirements.specificSkills?.forEach((skillReq) => {
+    expansion.requirements.specificSkills?.forEach(skillReq => {
       const skillBonus = assignedAdventurers.reduce((bonus, adv) => {
         const skillValue = this.getSkillValue(adv, skillReq.skill);
         return bonus + Math.max(0, skillValue - skillReq.minValue);
@@ -397,7 +397,7 @@ export class TerritoryControlSystem {
   }
 
   public applyTerritoryControl(territoryId: string, influenceLevel: number): void {
-    const territory = availableTerritories.find((t) => t.id === territoryId);
+    const territory = availableTerritories.find(t => t.id === territoryId);
     if (territory) {
       territory.controlled = influenceLevel >= 100;
       territory.influenceLevel = Math.min(100, influenceLevel);
@@ -512,7 +512,7 @@ export class TerritoryControlSystem {
     resolutionType: 'military' | 'diplomatic' | 'economic',
     assignedAdventurers: Adventurer[]
   ): { success: boolean; description: string; consequences: Record<string, unknown> } {
-    const option = conflict.resolutionOptions.find((opt) => opt.type === resolutionType);
+    const option = conflict.resolutionOptions.find(opt => opt.type === resolutionType);
     if (!option) {
       return {
         success: false,
@@ -525,7 +525,7 @@ export class TerritoryControlSystem {
     let actualSuccessChance = option.successChance;
 
     // Bonus for adventurer skills relevant to resolution type
-    assignedAdventurers.forEach((adventurer) => {
+    assignedAdventurers.forEach(adventurer => {
       switch (resolutionType) {
         case 'military':
           actualSuccessChance += this.getSkillValue(adventurer, 'combat.weaponMastery') / 10;
@@ -567,7 +567,7 @@ export class TerritoryControlSystem {
     const availableQuests: Quest[] = [];
     let specialRecruits = false;
 
-    controlledTerritories.forEach((territory) => {
+    controlledTerritories.forEach(territory => {
       if (territory.benefits.goldBonus) {
         totalGoldBonus += territory.benefits.goldBonus * (territory.influenceLevel / 100);
       }
@@ -586,7 +586,7 @@ export class TerritoryControlSystem {
   }
 
   public getTerritoryById(territoryId: string): Territory | undefined {
-    return availableTerritories.find((t) => t.id === territoryId);
+    return availableTerritories.find(t => t.id === territoryId);
   }
 
   public getExpansionRequirements(
@@ -602,7 +602,7 @@ export class TerritoryControlSystem {
     requirements.push(`Min Reputation: ${expansion.requirements.minReputation}`);
     requirements.push(`Required Adventurers: ${expansion.requirements.requiredAdventurers}`);
 
-    expansion.requirements.specificSkills?.forEach((skill) => {
+    expansion.requirements.specificSkills?.forEach(skill => {
       requirements.push(`Required Skill: ${skill.skill} (${skill.minValue}+)`);
     });
 

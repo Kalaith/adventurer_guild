@@ -121,7 +121,7 @@ export class GuildPoliticsSystem {
 
   private generateVoteProposal(adventurers: Adventurer[], guildLevel: number): PoliticalEvent {
     const proposer = adventurers.find(
-      (adv) => adv.personality.ambition > 60 && adv.personality.loyalty > 50
+      adv => adv.personality.ambition > 60 && adv.personality.loyalty > 50
     );
     const fallbackProposer = adventurers[Math.floor(Math.random() * adventurers.length)];
     const actualProposer = proposer || fallbackProposer;
@@ -171,7 +171,7 @@ export class GuildPoliticsSystem {
   private generateLeadershipChallenge(adventurers: Adventurer[]): PoliticalEvent {
     // Find ambitious adventurers who might challenge leadership
     const challenger = adventurers.find(
-      (adv) => adv.personality.ambition > 80 && adv.level >= 5 && adv.questsCompleted >= 15
+      adv => adv.personality.ambition > 80 && adv.level >= 5 && adv.questsCompleted >= 15
     );
 
     if (!challenger) {
@@ -180,9 +180,9 @@ export class GuildPoliticsSystem {
 
     const supporterCount = Math.floor(Math.random() * Math.floor(adventurers.length / 3));
     const supporters = adventurers
-      .filter((adv) => adv.id !== challenger.id)
+      .filter(adv => adv.id !== challenger.id)
       .slice(0, supporterCount)
-      .map((adv) => adv.id);
+      .map(adv => adv.id);
 
     return {
       id: `leadership_${Date.now()}`,
@@ -227,7 +227,7 @@ export class GuildPoliticsSystem {
       .slice()
       .sort(() => 0.5 - Math.random())
       .slice(0, participantCount)
-      .map((adv) => adv.id);
+      .map(adv => adv.id);
 
     return {
       id: `dispute_${Date.now()}`,
@@ -237,7 +237,7 @@ export class GuildPoliticsSystem {
       participants,
       impact: {
         moraleChange: -5,
-        adventurerLoyaltyChanges: participants.map((id) => ({
+        adventurerLoyaltyChanges: participants.map(id => ({
           adventurerId: id,
           loyaltyChange: Math.floor(Math.random() * 10) - 5, // -5 to +5
         })),
@@ -249,7 +249,7 @@ export class GuildPoliticsSystem {
   private generateFactionFormation(adventurers: Adventurer[]): PoliticalEvent {
     // Find potential faction leaders
     const leaders = adventurers.filter(
-      (adv) => adv.personality.ambition > 65 && adv.personality.teamwork > 50 && adv.level >= 4
+      adv => adv.personality.ambition > 65 && adv.personality.teamwork > 50 && adv.level >= 4
     );
 
     if (leaders.length === 0) {
@@ -261,7 +261,7 @@ export class GuildPoliticsSystem {
 
     // Find compatible members based on personality
     const potentialMembers = adventurers
-      .filter((adv) => adv.id !== leader.id)
+      .filter(adv => adv.id !== leader.id)
       .sort(
         (a, b) =>
           this.calculatePersonalityCompatibility(leader.personality, b.personality) -
@@ -284,12 +284,12 @@ export class GuildPoliticsSystem {
       type: 'faction_formation',
       title: 'New Faction Formed',
       description: `${leader.name} has formed "${factionName}" with like-minded adventurers to promote their vision for the guild.`,
-      participants: [leader.id, ...potentialMembers.map((adv) => adv.id)],
+      participants: [leader.id, ...potentialMembers.map(adv => adv.id)],
       impact: {
         moraleChange: 0, // Neutral initially
         adventurerLoyaltyChanges: [
           { adventurerId: leader.id, loyaltyChange: 15 },
-          ...potentialMembers.map((adv) => ({ adventurerId: adv.id, loyaltyChange: 5 })),
+          ...potentialMembers.map(adv => ({ adventurerId: adv.id, loyaltyChange: 5 })),
         ],
       },
       duration: 7,
@@ -322,7 +322,7 @@ export class GuildPoliticsSystem {
   }
 
   public createVote(proposal: VoteProposal): GuildVote {
-    const voteOptions: string[] = proposal.options.map((option) => option.text);
+    const voteOptions: string[] = proposal.options.map(option => option.text);
 
     return {
       id: proposal.id,
@@ -341,7 +341,7 @@ export class GuildPoliticsSystem {
     optionIndex: number,
     adventurers: Adventurer[]
   ): boolean {
-    const adventurer = adventurers.find((adv) => adv.id === adventurerId);
+    const adventurer = adventurers.find(adv => adv.id === adventurerId);
     if (!adventurer) return false;
 
     if (Date.now() > vote.deadline) return false; // Vote has ended
@@ -362,10 +362,10 @@ export class GuildPoliticsSystem {
     participation: number;
   } {
     const results: { [option: string]: number } = {};
-    vote.options.forEach((option) => (results[option] = 0));
+    vote.options.forEach(option => (results[option] = 0));
 
     // Count votes
-    Object.values(vote.votes).forEach((optionIndex) => {
+    Object.values(vote.votes).forEach(optionIndex => {
       const option = vote.options[optionIndex];
       if (option) {
         results[option]++;
@@ -493,7 +493,7 @@ export class GuildPoliticsSystem {
       id: `faction_${leader.id}_${Date.now()}`,
       name,
       leader: leader.id,
-      members: members.map((member) => member.id),
+      members: members.map(member => member.id),
       ideology,
       influence: Math.min(100, (members.length / 10) * 100 + leader.level * 5),
       agenda: agendas[ideology],

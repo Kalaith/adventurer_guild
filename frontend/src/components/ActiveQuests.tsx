@@ -11,9 +11,9 @@ const ActiveQuests: React.FC<ActiveQuestsProps> = ({ activeQuests, onCompleteQue
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
+      setTimeRemaining(prev => {
         const updated = { ...prev };
-        activeQuests.forEach((quest) => {
+        activeQuests.forEach(quest => {
           const currentTime = updated[quest.id] || quest.duration;
           const newTime = Math.max(currentTime - 1000, 0);
           updated[quest.id] = newTime;
@@ -49,7 +49,7 @@ const ActiveQuests: React.FC<ActiveQuestsProps> = ({ activeQuests, onCompleteQue
     <div className="active-quests">
       <h2>🕒 Active Quests</h2>
       <div className="quest-list">
-        {activeQuests.map((quest) => (
+        {activeQuests.map(quest => (
           <div key={quest.id} className="active-quest-item">
             <h3>{quest.name}</h3>
             <p>Reward: {quest.reward} gold</p>

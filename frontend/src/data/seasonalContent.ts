@@ -486,7 +486,7 @@ export function getAvailableSeasonalEvents(
 ): SeasonalEvent[] {
   const currentSeason = getCurrentSeason();
 
-  return seasonalEvents.filter((event) => {
+  return seasonalEvents.filter(event => {
     // Check if it's the right season or a special festival
     const seasonMatch = event.season === currentSeason || event.season === 'festival';
     if (!seasonMatch) return false;
@@ -500,7 +500,7 @@ export function getAvailableSeasonalEvents(
         return false;
       }
       if (event.unlockConditions.completedQuests) {
-        const hasRequiredQuests = event.unlockConditions.completedQuests.every((questId) =>
+        const hasRequiredQuests = event.unlockConditions.completedQuests.every(questId =>
           completedQuests.includes(questId)
         );
         if (!hasRequiredQuests) return false;
@@ -512,7 +512,7 @@ export function getAvailableSeasonalEvents(
 }
 
 export function getSeasonalEventById(eventId: string): SeasonalEvent | undefined {
-  return seasonalEvents.find((event) => event.id === eventId);
+  return seasonalEvents.find(event => event.id === eventId);
 }
 
 export function getSeasonalQuests(eventId: string): Quest[] {
@@ -544,7 +544,7 @@ export function checkForNewSeasonalEvents(
   const availableEvents = getAvailableSeasonalEvents(guildLevel, reputation, completedQuests);
   const newEvents: SeasonalEvent[] = [];
 
-  availableEvents.forEach((event) => {
+  availableEvents.forEach(event => {
     // Random chance for seasonal events to trigger
     const triggerChance = event.season === 'festival' ? 0.05 : 0.15; // 5% for festivals, 15% for seasons
 

@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   const [guildStats, setGuildStats] = useState({ gold: 0, reputation: 0, guildLevel: 0 });
 
   useEffect(() => {
-    fetchGuildStats().then((data) => setGuildStats(data));
+    fetchGuildStats().then(data => setGuildStats(data));
   }, []);
 
   return (

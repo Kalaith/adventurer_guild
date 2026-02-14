@@ -44,7 +44,7 @@ export class RelationshipSystem {
     const events: RelationshipEvent[] = [];
 
     // Check for new relationship events
-    const availableAdventurers = adventurers.filter((adv) => adv.status === 'available');
+    const availableAdventurers = adventurers.filter(adv => adv.status === 'available');
 
     // Generate random relationship events
     if (availableAdventurers.length >= 2 && Math.random() < 0.3) {
@@ -55,8 +55,8 @@ export class RelationshipSystem {
     }
 
     // Check for existing relationships that might evolve
-    availableAdventurers.forEach((adventurer) => {
-      adventurer.relationships.forEach((relationship) => {
+    availableAdventurers.forEach(adventurer => {
+      adventurer.relationships.forEach(relationship => {
         if (Math.random() < 0.15) {
           // 15% chance for existing relationship to evolve
           const evolutionEvent = this.evolveRelationship(adventurer, relationship, adventurers);
@@ -84,7 +84,7 @@ export class RelationshipSystem {
 
     // Check if they already have a relationship
     const existingRelationship = adventurer1.relationships.find(
-      (rel) => rel.targetId === adventurer2.id
+      rel => rel.targetId === adventurer2.id
     );
     if (existingRelationship && existingRelationship.strength > 70) {
       return null; // Skip if they already have a strong relationship
@@ -267,7 +267,7 @@ export class RelationshipSystem {
     relationship: AdventurerRelationship,
     allAdventurers: Adventurer[]
   ): RelationshipEvent | null {
-    const target = allAdventurers.find((adv) => adv.id === relationship.targetId);
+    const target = allAdventurers.find(adv => adv.id === relationship.targetId);
     if (!target) return null;
 
     const eventId = `evolve_${Date.now()}_${Math.random()}`;
@@ -336,11 +336,11 @@ export class RelationshipSystem {
   }
 
   public applyRelationshipEvent(event: RelationshipEvent, adventurers: Adventurer[]): void {
-    event.impact.relationshipChanges.forEach((change) => {
-      const adventurer = adventurers.find((adv) => adv.id === change.adventurerId);
+    event.impact.relationshipChanges.forEach(change => {
+      const adventurer = adventurers.find(adv => adv.id === change.adventurerId);
       if (!adventurer) return;
 
-      let relationship = adventurer.relationships.find((rel) => rel.targetId === change.targetId);
+      let relationship = adventurer.relationships.find(rel => rel.targetId === change.targetId);
 
       if (!relationship) {
         // Create new relationship
@@ -376,14 +376,12 @@ export class RelationshipSystem {
 
     for (let i = 0; i < adventurerIds.length - 1; i++) {
       for (let j = i + 1; j < adventurerIds.length; j++) {
-        const adventurer1 = allAdventurers.find((adv) => adv.id === adventurerIds[i]);
-        const adventurer2 = allAdventurers.find((adv) => adv.id === adventurerIds[j]);
+        const adventurer1 = allAdventurers.find(adv => adv.id === adventurerIds[i]);
+        const adventurer2 = allAdventurers.find(adv => adv.id === adventurerIds[j]);
 
         if (!adventurer1 || !adventurer2) continue;
 
-        const relationship = adventurer1.relationships.find(
-          (rel) => rel.targetId === adventurer2.id
-        );
+        const relationship = adventurer1.relationships.find(rel => rel.targetId === adventurer2.id);
 
         if (relationship) {
           switch (relationship.type) {
@@ -410,8 +408,8 @@ export class RelationshipSystem {
   public getRelationshipSummary(adventurer: Adventurer, allAdventurers: Adventurer[]): string[] {
     const summaries: string[] = [];
 
-    adventurer.relationships.forEach((relationship) => {
-      const target = allAdventurers.find((adv) => adv.id === relationship.targetId);
+    adventurer.relationships.forEach(relationship => {
+      const target = allAdventurers.find(adv => adv.id === relationship.targetId);
       if (!target) return;
 
       let relationshipLevel = 'acquaintance';
@@ -443,10 +441,10 @@ export class RelationshipSystem {
       relationship: AdventurerRelationship;
     }> = [];
 
-    adventurers.forEach((adventurer) => {
-      adventurer.relationships.forEach((relationship) => {
+    adventurers.forEach(adventurer => {
+      adventurer.relationships.forEach(relationship => {
         if (relationship.type === 'rivalry' && relationship.strength > 70) {
-          const target = adventurers.find((adv) => adv.id === relationship.targetId);
+          const target = adventurers.find(adv => adv.id === relationship.targetId);
           if (target) {
             problematicPairs.push({ adv1: adventurer, adv2: target, relationship });
           }

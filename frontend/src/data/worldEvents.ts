@@ -320,11 +320,11 @@ export const worldEventQuests: { [eventId: string]: Quest[] } = {
 };
 
 export function getActiveWorldEvents(): WorldEvent[] {
-  return worldEvents.filter((event) => event.active);
+  return worldEvents.filter(event => event.active);
 }
 
 export function getWorldEventById(eventId: string): WorldEvent | undefined {
-  return worldEvents.find((event) => event.id === eventId);
+  return worldEvents.find(event => event.id === eventId);
 }
 
 export function getWorldEventQuests(eventId: string): Quest[] {
@@ -335,7 +335,7 @@ export function getAllActiveWorldEventQuests(): Quest[] {
   const activeEvents = getActiveWorldEvents();
   const quests: Quest[] = [];
 
-  activeEvents.forEach((event) => {
+  activeEvents.forEach(event => {
     const eventQuests = getWorldEventQuests(event.id);
     quests.push(...eventQuests);
   });
@@ -344,7 +344,7 @@ export function getAllActiveWorldEventQuests(): Quest[] {
 }
 
 export function activateRandomWorldEvent(): WorldEvent | null {
-  const inactiveEvents = worldEvents.filter((event) => !event.active);
+  const inactiveEvents = worldEvents.filter(event => !event.active);
   if (inactiveEvents.length === 0) return null;
 
   const randomEvent = inactiveEvents[Math.floor(Math.random() * inactiveEvents.length)];

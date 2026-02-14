@@ -13,7 +13,7 @@ const focusableSelector =
 
 const getFocusableElements = (root: HTMLElement): HTMLElement[] => {
   return Array.from(root.querySelectorAll<HTMLElement>(focusableSelector)).filter(
-    (el) => !el.hasAttribute('disabled') && el.tabIndex !== -1
+    el => !el.hasAttribute('disabled') && el.tabIndex !== -1
   );
 };
 
@@ -91,7 +91,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, className, childr
         className={['w-full max-w-lg rounded-lg bg-white shadow-xl', className]
           .filter(Boolean)
           .join(' ')}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
           {title ? (

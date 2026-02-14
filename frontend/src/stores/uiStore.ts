@@ -11,9 +11,9 @@ interface UIState {
   setActiveTab: (tab: TabId) => void;
 }
 
-export const useUIStore = create<UIState>((set) => ({
+export const useUIStore = create<UIState>(set => ({
   isModalOpen: false,
-  toggleModal: () => set((state) => ({ isModalOpen: !state.isModalOpen })),
+  toggleModal: () => set(state => ({ isModalOpen: !state.isModalOpen })),
   setModalOpen: (isOpen: boolean) => set({ isModalOpen: isOpen }),
 
   activeTab: 'guild-hall',

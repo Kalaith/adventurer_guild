@@ -62,7 +62,7 @@ describe('NavigationTabs Component', () => {
     const tabs = screen.getAllByRole('tab');
     expect(tabs).toHaveLength(5);
 
-    tabs.forEach((tab) => {
+    tabs.forEach(tab => {
       expect(tab).toHaveAttribute('aria-selected');
     });
 
@@ -87,7 +87,7 @@ describe('NavigationTabs Component', () => {
   it('should handle all tab types correctly', () => {
     const tabIds: TabId[] = ['guild-hall', 'adventurers', 'quest-board', 'hiring-hall', 'treasury'];
 
-    tabIds.forEach((tabId) => {
+    tabIds.forEach(tabId => {
       act(() => {
         useUIStore.setState({ activeTab: tabId });
       });

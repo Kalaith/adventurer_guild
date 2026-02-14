@@ -15,7 +15,7 @@ import { useUIStore } from '../stores/uiStore';
 
 export function GamePage() {
   const [modalQuest, setModalQuest] = useState<Quest | null>(null);
-  const activeTab = useUIStore((s) => s.activeTab);
+  const activeTab = useUIStore(s => s.activeTab);
 
   const {
     gold,

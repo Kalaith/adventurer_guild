@@ -178,9 +178,9 @@ export class LegacySystem {
   public checkForLegacyBonuses(legacy: GuildLegacy): LegacyBonus[] {
     const newBonuses: LegacyBonus[] = [];
 
-    legacyBonuses.forEach((bonus) => {
+    legacyBonuses.forEach(bonus => {
       // Skip if already active
-      if (legacy.activeBonuses.some((active) => active.id === bonus.id)) {
+      if (legacy.activeBonuses.some(active => active.id === bonus.id)) {
         return;
       }
 
@@ -212,7 +212,7 @@ export class LegacySystem {
       return false;
     if (
       condition.legendaryItemsObtained &&
-      legacy.heirloomItems.filter((item) => item.rarity === 'legendary').length <
+      legacy.heirloomItems.filter(item => item.rarity === 'legendary').length <
         condition.legendaryItemsObtained
     )
       return false;
@@ -276,7 +276,7 @@ export class LegacySystem {
 
     // Enhance the original item's stats
     const enhancedStats = { ...originalItem.stats };
-    Object.keys(enhancedStats).forEach((stat) => {
+    Object.keys(enhancedStats).forEach(stat => {
       enhancedStats[stat as keyof typeof enhancedStats] = Math.floor(
         (enhancedStats[stat as keyof typeof enhancedStats] || 0) * 1.2
       );
@@ -314,7 +314,7 @@ export class LegacySystem {
   ): GenerationTransition {
     // Create heirloom items from legendary equipment
     const heirloomItems: EquipmentItem[] = [];
-    currentState.adventurers.forEach((adventurer) => {
+    currentState.adventurers.forEach(adventurer => {
       if (
         adventurer.equipment.weapon?.rarity === 'legendary' ||
         adventurer.equipment.weapon?.rarity === 'epic'
@@ -354,7 +354,7 @@ export class LegacySystem {
     const inheritedGold = Math.floor(currentState.gold * 0.2); // 20% of gold carries over
 
     const startingBonuses: { [key: string]: number } = {};
-    legacy.activeBonuses.forEach((bonus) => {
+    legacy.activeBonuses.forEach(bonus => {
       if (bonus.persistent) {
         startingBonuses[bonus.type] = bonus.value;
       }
@@ -395,7 +395,7 @@ export class LegacySystem {
     const knowledge: string[] = [];
 
     // Knowledge from completed campaigns
-    currentState.campaigns.forEach((campaign) => {
+    currentState.campaigns.forEach(campaign => {
       if (campaign.completed) {
         knowledge.push(
           `Campaign Mastery: ${campaign.name} - Provides insight into similar future challenges.`
@@ -404,7 +404,7 @@ export class LegacySystem {
     });
 
     // Knowledge from world events
-    currentState.worldEvents.forEach((event) => {
+    currentState.worldEvents.forEach(event => {
       if (event.active) {
         knowledge.push(
           `Event Experience: ${event.name} - Understanding of how to handle similar crises.`
@@ -413,7 +413,7 @@ export class LegacySystem {
     });
 
     // Knowledge from legendary adventurers
-    legacy.legendaryAdventurers.forEach((hero) => {
+    legacy.legendaryAdventurers.forEach(hero => {
       knowledge.push(
         `${hero.name}'s Wisdom - Specialized knowledge in ${hero.class} tactics and ${hero.achievements.join(', ')}.`
       );
@@ -427,7 +427,7 @@ export class LegacySystem {
   } {
     const inherited: { [territoryId: string]: number } = {};
 
-    territories.forEach((territory) => {
+    territories.forEach(territory => {
       if (territory.controlled && territory.influenceLevel > 50) {
         // Influence decreases but doesn't disappear completely
         inherited[territory.id] = Math.floor(territory.influenceLevel * 0.4);
@@ -446,8 +446,8 @@ export class LegacySystem {
 
     // Create descendants from legendary adventurers
     const legendaryAdventurers = currentAdventurers
-      .filter((adv) => adv.level >= 8 && adv.questsCompleted >= 25)
-      .concat(retiredAdventurers.map((ret) => ret.originalAdventurer));
+      .filter(adv => adv.level >= 8 && adv.questsCompleted >= 25)
+      .concat(retiredAdventurers.map(ret => ret.originalAdventurer));
 
     legendaryAdventurers.slice(0, 3).forEach((ancestor, index) => {
       const descendantName = this.generateDescendantName(ancestor.name, newGeneration);
@@ -627,21 +627,21 @@ export class LegacySystem {
     const events: string[] = [];
 
     // Completed campaigns are major events
-    currentState.campaigns.forEach((campaign) => {
+    currentState.campaigns.forEach(campaign => {
       if (campaign.completed) {
         events.push(`Completed the legendary ${campaign.name} campaign`);
       }
     });
 
     // High-level adventurers are notable
-    currentState.adventurers.forEach((adventurer) => {
+    currentState.adventurers.forEach(adventurer => {
       if (adventurer.level >= 8) {
         events.push(`${adventurer.name} reached legendary status as a ${adventurer.class}`);
       }
     });
 
     // Controlled territories
-    currentState.territories.forEach((territory) => {
+    currentState.territories.forEach(territory => {
       if (territory.controlled) {
         events.push(`Established control over ${territory.name}`);
       }
@@ -675,7 +675,7 @@ export class LegacySystem {
     let skillMultiplier = 1;
     let recruitmentMultiplier = 1;
 
-    legacy.activeBonuses.forEach((bonus) => {
+    legacy.activeBonuses.forEach(bonus => {
       switch (bonus.type) {
         case 'experience':
           experienceMultiplier *= bonus.value;

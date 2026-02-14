@@ -313,26 +313,26 @@ export const craftingRecipes: CraftingRecipe[] = [
 ];
 
 export function getCraftingMaterialById(id: string): CraftingMaterial | undefined {
-  return craftingMaterials.find((material) => material.id === id);
+  return craftingMaterials.find(material => material.id === id);
 }
 
 export function getCraftingRecipeById(id: string): CraftingRecipe | undefined {
-  return craftingRecipes.find((recipe) => recipe.id === id);
+  return craftingRecipes.find(recipe => recipe.id === id);
 }
 
 export function getRecipesByRarity(
   rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
 ): CraftingRecipe[] {
-  return craftingRecipes.filter((recipe) => recipe.result.rarity === rarity);
+  return craftingRecipes.filter(recipe => recipe.result.rarity === rarity);
 }
 
 export function getRecipesByFacilityLevel(facilityLevel: number): CraftingRecipe[] {
-  return craftingRecipes.filter((recipe) => recipe.requiredFacilityLevel <= facilityLevel);
+  return craftingRecipes.filter(recipe => recipe.requiredFacilityLevel <= facilityLevel);
 }
 
 export function getMaterialsByRarity(rarity: CraftingMaterial['rarity']): CraftingMaterial[] {
-  return craftingMaterials.find((material) => material.rarity === rarity)
-    ? craftingMaterials.filter((material) => material.rarity === rarity)
+  return craftingMaterials.find(material => material.rarity === rarity)
+    ? craftingMaterials.filter(material => material.rarity === rarity)
     : [];
 }
 

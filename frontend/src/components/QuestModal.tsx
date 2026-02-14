@@ -14,8 +14,8 @@ const QuestModal: React.FC<QuestModalProps> = ({ quest, adventurers, onClose, on
   if (!quest) return null;
 
   const toggleAdventurerSelection = (id: string) => {
-    setSelectedAdventurers((prev) =>
-      prev.includes(id) ? prev.filter((advId) => advId !== id) : [...prev, id]
+    setSelectedAdventurers(prev =>
+      prev.includes(id) ? prev.filter(advId => advId !== id) : [...prev, id]
     );
   };
 
@@ -56,8 +56,8 @@ const QuestModal: React.FC<QuestModalProps> = ({ quest, adventurers, onClose, on
 
           <div className="available-adventurers">
             {adventurers
-              .filter((adv) => adv.status === 'available')
-              .map((adv) => (
+              .filter(adv => adv.status === 'available')
+              .map(adv => (
                 <div
                   key={adv.id}
                   className={`adventurer-select-card ${selectedAdventurers.includes(adv.id) ? 'selected' : ''}`}

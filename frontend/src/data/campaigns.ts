@@ -430,12 +430,12 @@ export const CAMPAIGNS: Campaign[] = [
 ];
 
 export function getCampaignById(campaignId: string): Campaign | undefined {
-  return CAMPAIGNS.find((campaign) => campaign.id === campaignId);
+  return CAMPAIGNS.find(campaign => campaign.id === campaignId);
 }
 
 export function getCampaignQuestById(questId: string): Quest | undefined {
   for (const campaignId in campaignQuests) {
-    const quest = campaignQuests[campaignId].find((q) => q.id === questId);
+    const quest = campaignQuests[campaignId].find(q => q.id === questId);
     if (quest) return quest;
   }
   return undefined;
@@ -444,7 +444,7 @@ export function getCampaignQuestById(questId: string): Quest | undefined {
 export function getAvailableCampaignQuests(): Quest[] {
   const availableQuests: Quest[] = [];
 
-  CAMPAIGNS.forEach((campaign) => {
+  CAMPAIGNS.forEach(campaign => {
     if (!campaign.completed && campaign.currentQuestIndex < campaign.questIds.length) {
       const currentQuestId = campaign.questIds[campaign.currentQuestIndex];
       const quest = getCampaignQuestById(currentQuestId);

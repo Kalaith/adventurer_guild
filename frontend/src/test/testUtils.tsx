@@ -136,7 +136,7 @@ export { customRender as render };
 
 // Utility functions for testing
 export const waitForLoadingToFinish = () => {
-  return new Promise((resolve) => setTimeout(resolve, 0));
+  return new Promise(resolve => setTimeout(resolve, 0));
 };
 
 export const simulateTimePassage = (milliseconds: number) => {

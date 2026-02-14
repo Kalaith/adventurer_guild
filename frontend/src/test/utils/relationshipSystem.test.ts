@@ -77,7 +77,7 @@ describe('RelationshipSystem', () => {
 
   beforeEach(() => {
     relationshipSystem = RelationshipSystem.getInstance();
-    adventurers = [mockAdventurer1, mockAdventurer2, mockAdventurer3].map((adv) => ({
+    adventurers = [mockAdventurer1, mockAdventurer2, mockAdventurer3].map(adv => ({
       ...adv,
       relationships: [],
     }));
@@ -320,9 +320,7 @@ describe('RelationshipSystem', () => {
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(
-        (r) => r.targetId === adventurers[1].id
-      );
+      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
       expect(relationship).toBeDefined();
       expect(relationship?.type).toBe('friendship');
       expect(relationship?.strength).toBe(20);
@@ -357,9 +355,7 @@ describe('RelationshipSystem', () => {
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(
-        (r) => r.targetId === adventurers[1].id
-      );
+      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
       expect(relationship?.strength).toBe(65);
       expect(relationship?.history).toContain('Their friendship deepened');
     });
@@ -391,9 +387,7 @@ describe('RelationshipSystem', () => {
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(
-        (r) => r.targetId === adventurers[1].id
-      );
+      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
       expect(relationship?.strength).toBe(100);
     });
 
@@ -424,9 +418,7 @@ describe('RelationshipSystem', () => {
 
       relationshipSystem.applyRelationshipEvent(event, adventurers);
 
-      const relationship = adventurers[0].relationships.find(
-        (r) => r.targetId === adventurers[1].id
-      );
+      const relationship = adventurers[0].relationships.find(r => r.targetId === adventurers[1].id);
       expect(relationship?.history).toHaveLength(5);
       expect(relationship?.history[0]).toBe('Event 2'); // First event should be removed
       expect(relationship?.history[4]).toBe('Event 6'); // New event should be last

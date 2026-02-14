@@ -45,7 +45,7 @@ const HiringHall: React.FC<HiringHallProps> = ({
         {recruits.length === 0 ? (
           <p>No recruits available. Refresh to get new recruits!</p>
         ) : (
-          recruits.map((recruit) => (
+          recruits.map(recruit => (
             <div key={recruit.id} className="recruit-item">
               <h3>{recruit.name}</h3>
               <p>Level: {recruit.level}</p>
