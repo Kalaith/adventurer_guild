@@ -1,7 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import NavigationTabs from '../../components/NavigationTabs';
-import { useUIStore, type TabId } from '../../stores/uiStore';
+// @vitest-environment jsdom
+
+import '@testing-library/jest-dom/vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
+import NavigationTabs from '../../src/components/NavigationTabs';
+import { useUIStore, type TabId } from '../../src/stores/uiStore';
+
+afterEach(() => {
+  cleanup();
+});
 
 describe('NavigationTabs Component', () => {
   const mockSetActiveTab = vi.fn<(tab: TabId) => void>();
@@ -99,3 +106,4 @@ describe('NavigationTabs Component', () => {
     });
   });
 });
+

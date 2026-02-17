@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatNumber } from '../../utils/formatters';
+import { formatNumber } from '../../src/utils/formatters';
 
 describe('formatters', () => {
   describe('formatNumber', () => {
@@ -48,3 +48,4 @@ describe('formatters', () => {
     });
   });
 });
+

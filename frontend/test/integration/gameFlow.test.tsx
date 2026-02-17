@@ -1,12 +1,15 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render } from '@testing-library/react';
-import { useGuildStore } from '../../stores/gameStore';
-import { useUIStore } from '../../stores/uiStore';
-import { GamePage } from '../../pages/GamePage';
+// @vitest-environment jsdom
+
+import '@testing-library/jest-dom/vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
+import { useGuildStore } from '../../src/stores/gameStore';
+import { useUIStore } from '../../src/stores/uiStore';
+import { GamePage } from '../../src/pages/GamePage';
 
 // Mock all external dependencies
-vi.mock('../../stores/gameStore');
-vi.mock('../../stores/uiStore');
+vi.mock('../../src/stores/gameStore');
+vi.mock('../../src/stores/uiStore');
 
 const mockUseGuildStore = vi.mocked(useGuildStore);
 const mockUseUIStore = vi.mocked(useUIStore);
@@ -110,6 +113,7 @@ interface MockGameState {
   gold: number;
   adventurers: typeof mockInitialAdventurers;
   activeQuests: unknown[];
+  completedQuests: string[];
   recruits: typeof mockRecruits;
   hireAdventurer: () => void;
   startQuest: () => void;
@@ -117,6 +121,10 @@ interface MockGameState {
   refreshRecruits: () => void;
   spendGold: () => void;
 }
+
+afterEach(() => {
+  cleanup();
+});
 
 describe('Game Flow Integration Tests', () => {
   const mockActions = {
@@ -136,6 +144,7 @@ describe('Game Flow Integration Tests', () => {
       gold: 1500,
       adventurers: mockInitialAdventurers.slice(0, 1), // Reduce data size
       activeQuests: [],
+      completedQuests: [],
       recruits: mockRecruits.slice(0, 1), // Reduce data size
 
       // Actions
@@ -166,6 +175,7 @@ describe('Game Flow Integration Tests', () => {
         gold: 0,
         adventurers: [],
         activeQuests: [],
+        completedQuests: [],
         recruits: [],
         ...mockActions,
       } as MockGameState);
@@ -174,3 +184,6 @@ describe('Game Flow Integration Tests', () => {
     });
   });
 });
+
+
+

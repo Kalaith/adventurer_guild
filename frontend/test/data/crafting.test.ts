@@ -8,7 +8,7 @@ import {
   canCraftRecipe,
   craftingMaterials,
   craftingRecipes,
-} from '../../data/crafting';
+} from '../../src/data/crafting';
 
 describe('Crafting System', () => {
   describe('data integrity', () => {
@@ -375,3 +375,4 @@ describe('Crafting System', () => {
     });
   });
 });
+

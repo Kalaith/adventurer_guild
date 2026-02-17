@@ -206,3 +206,4 @@ export const checkAccessibilityAttributes = (element: HTMLElement) => {
 
   return checks;
 };
+

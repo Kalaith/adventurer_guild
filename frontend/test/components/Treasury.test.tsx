@@ -1,10 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import Treasury from '../../components/Treasury';
-import { useGuildStore } from '../../stores/gameStore';
+// @vitest-environment jsdom
+
+import '@testing-library/jest-dom/vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/react';
+import Treasury from '../../src/components/Treasury';
+import { useGuildStore } from '../../src/stores/gameStore';
 
 // Mock the store
-vi.mock('../../stores/gameStore');
+vi.mock('../../src/stores/gameStore');
 
 const mockUseGuildStore = vi.mocked(useGuildStore);
 
@@ -14,6 +17,10 @@ interface MockGuildState {
   level: number;
   formatNumber: (num: number) => string;
 }
+
+afterEach(() => {
+  cleanup();
+});
 
 describe('Treasury Component', () => {
   beforeEach(() => {
@@ -90,3 +97,6 @@ describe('Treasury Component', () => {
     expect(treasurySection).toBeInTheDocument();
   });
 });
+
+
+

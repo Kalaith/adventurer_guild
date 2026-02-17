@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useGuildStore } from '../../stores/gameStore';
-import { initialAdventurers } from '../../data/adventurers';
-import { guildConstants } from '../../constants/gameConstants';
-import { questData } from '../../data/quests';
+import { useGuildStore } from '../../src/stores/gameStore';
+import { initialAdventurers } from '../../src/data/adventurers';
+import { guildConstants } from '../../src/constants/gameConstants';
+import { questData } from '../../src/data/quests';
 
 // Mock data
 const mockAdventurer = {
@@ -352,3 +352,4 @@ describe('gameStore', () => {
     });
   });
 });
+
