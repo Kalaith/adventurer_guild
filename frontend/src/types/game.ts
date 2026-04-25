@@ -1,9 +1,9 @@
 export interface PersonalityTraits {
-  courage: number; // 0-100, affects quest preference for dangerous missions
-  loyalty: number; // 0-100, affects likelihood to leave guild
-  ambition: number; // 0-100, affects experience gain and leadership desires
-  teamwork: number; // 0-100, affects team synergy bonuses
-  greed: number; // 0-100, affects gold quest preferences
+  courage: number;
+  loyalty: number;
+  ambition: number;
+  teamwork: number;
+  greed: number;
 }
 
 export interface SkillTree {
@@ -48,12 +48,15 @@ export interface EquipmentItem {
   };
   crafted?: boolean;
   materials?: string[];
+  sourceType?: string;
+  sourceRef?: string | null;
+  equippedBy?: string | null;
 }
 
 export interface AdventurerRelationship {
   targetId: string;
   type: 'friendship' | 'rivalry' | 'romance';
-  strength: number; // 0-100
+  strength: number;
   history: string[];
 }
 
@@ -78,7 +81,7 @@ export interface Adventurer {
   questsCompleted: number;
   yearsInGuild: number;
   retirementEligible: boolean;
-  descendantOf?: string; // ID of ancestor adventurer
+  descendantOf?: string;
 }
 
 export interface QuestRequirements {
@@ -98,6 +101,7 @@ export interface Quest {
   description: string;
   reward: number;
   duration: number;
+  durationMs?: number;
   requirements: QuestRequirements;
   difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic';
   assignedAdventurers?: string[];
@@ -112,13 +116,17 @@ export interface Quest {
   skillRewards?: {
     [skillType: string]: number;
   };
+  startedAt?: number | null;
+  expectedCompletionAt?: number | null;
+  remainingMs?: number | null;
+  canResolve?: boolean;
 }
 
 export interface CraftingMaterial {
   id: string;
   name: string;
   rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-  sources: string[]; // quest types where this material can be found
+  sources: string[];
 }
 
 export interface CraftingRecipe {
@@ -138,9 +146,9 @@ export interface Recruit {
   cost: number;
   personality: PersonalityTraits;
   potentialSkills: {
-    [skillType: string]: number; // starting skill values
+    [skillType: string]: number;
   };
-  descendantOf?: string; // if recruit is descendant of retired adventurer
+  descendantOf?: string;
 }
 
 export interface Faction {
@@ -148,6 +156,7 @@ export interface Faction {
   name: string;
   reputation: number;
   description: string;
+  standingLabel?: string;
   questModifiers: {
     rewardMultiplier: number;
     availableQuestTypes: string[];
@@ -178,6 +187,8 @@ export interface Campaign {
     reputation: number;
     items?: EquipmentItem[];
   };
+  currentQuestId?: string | null;
+  currentQuestName?: string | null;
 }
 
 export interface WorldEvent {
@@ -185,7 +196,9 @@ export interface WorldEvent {
   name: string;
   description: string;
   active: boolean;
-  duration: number; // in days
+  duration: number;
+  startedAt?: number | null;
+  endsAt?: number | null;
   effects: {
     questRewardMultiplier?: number;
     adventurerMoraleBonus?: number;
@@ -199,14 +212,14 @@ export interface RivalGuild {
   level: number;
   reputation: number;
   adventurerCount: number;
-  competitionLevel: number; // affects how often they compete for quests
+  competitionLevel: number;
 }
 
 export interface Territory {
   id: string;
   name: string;
   controlled: boolean;
-  influenceLevel: number; // 0-100
+  influenceLevel: number;
   benefits: {
     goldBonus?: number;
     questAccess?: string[];
@@ -246,8 +259,6 @@ export interface GuildState {
   completedQuests: string[];
   recruits: Recruit[];
   lastSave: number;
-
-  // New features
   factions: Faction[];
   facilities: GuildFacility[];
   campaigns: Campaign[];
@@ -256,16 +267,13 @@ export interface GuildState {
   territories: Territory[];
   activeVotes: GuildVote[];
   retiredAdventurers: RetiredAdventurer[];
-
-  // Crafting system
   materials: { [materialId: string]: number };
   availableRecipes: string[];
-
-  // Seasonal events
+  materialCatalog: CraftingMaterial[];
+  recipeCatalog: Array<CraftingRecipe & { unlocked?: boolean }>;
+  equipmentInventory: EquipmentItem[];
   currentSeason: string;
   seasonalQuests: Quest[];
-
-  // Legacy system
   generation: number;
   legacyBonuses: {
     experienceMultiplier: number;

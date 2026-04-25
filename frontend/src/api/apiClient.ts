@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getActiveToken } from '../auth/session';
 
 // Determine the base URL from the environment or use a relative path
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
@@ -17,17 +18,10 @@ export const apiClient = axios.create({
 // Request Interceptor: Attach Auth Token
 apiClient.interceptors.request.use(
     (config) => {
-        // We intentionally interact directly with localStorage here to avoid
-        // reactivity issues or circular dependencies when initializing Axios outside of React.
         try {
-            const authStorageStr = localStorage.getItem('auth-storage');
-            if (authStorageStr) {
-                const authData = JSON.parse(authStorageStr);
-                // Zustand persist wraps state in a `state` object
-                const token = authData?.state?.token;
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
-                }
+            const token = getActiveToken();
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
             }
         } catch (error) {
             console.warn('Failed to parse auth token from local storage', error);

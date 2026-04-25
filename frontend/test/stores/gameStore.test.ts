@@ -1,355 +1,268 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useGuildStore } from '../../src/stores/gameStore';
-import { initialAdventurers } from '../../src/data/adventurers';
-import { guildConstants } from '../../src/constants/gameConstants';
-import { questData } from '../../src/data/quests';
+import { guildApi } from '../../src/api/guild';
+import type { Adventurer, Quest } from '../../src/types/game';
 
-// Mock data
-const mockAdventurer = {
-  id: 'test-adventurer-1',
+vi.mock('../../src/api/guild', () => ({
+  guildApi: {
+    getSummary: vi.fn(),
+    getRoster: vi.fn(),
+    getActivity: vi.fn(),
+    getWorldState: vi.fn(),
+    upgradeFacility: vi.fn(),
+    craftRecipe: vi.fn(),
+    equipInventoryItem: vi.fn(),
+    unequipInventoryItem: vi.fn(),
+    retireAdventurer: vi.fn(),
+    getQuestBoard: vi.fn(),
+    assignQuest: vi.fn(),
+    resolveQuest: vi.fn(),
+    saveSlot: vi.fn(),
+    loadSlot: vi.fn(),
+    listSaveSlots: vi.fn(),
+  },
+}));
+
+const mockAdventurer: Adventurer = {
+  id: 'adv_1',
   name: 'Test Hero',
-  class: 'Warrior' as const,
+  class: 'Warrior',
   rank: 'Novice',
-  level: 1,
-  experience: 0,
-  status: 'available' as const,
+  level: 2,
+  experience: 25,
+  status: 'available',
   stats: {
-    strength: 15,
-    intelligence: 10,
-    dexterity: 12,
-    vitality: 18,
+    strength: 12,
+    intelligence: 8,
+    dexterity: 10,
+    vitality: 11,
   },
   personality: {
-    courage: 70,
+    courage: 60,
     loyalty: 60,
     ambition: 50,
-    teamwork: 65,
-    greed: 30,
+    teamwork: 55,
+    greed: 25,
   },
   skills: {
-    combat: { weaponMastery: 5, tacticalKnowledge: 3, battleRage: 2 },
+    combat: { weaponMastery: 4, tacticalKnowledge: 3, battleRage: 1 },
     magic: { spellPower: 0, manaEfficiency: 0, elementalMastery: 0 },
-    stealth: { lockpicking: 0, sneaking: 1, assassination: 0 },
-    survival: { tracking: 2, herbalism: 1, animalHandling: 3 },
+    stealth: { lockpicking: 0, sneaking: 0, assassination: 0 },
+    survival: { tracking: 2, herbalism: 0, animalHandling: 1 },
   },
   equipment: {},
   relationships: [],
-  questsCompleted: 0,
+  questsCompleted: 1,
   yearsInGuild: 0,
   retirementEligible: false,
 };
 
-const mockRecruit = {
-  id: 'test-recruit-1',
-  name: 'Test Recruit',
-  level: 2,
-  class: 'Mage' as const,
-  cost: 240,
-  personality: {
-    courage: 50,
-    loyalty: 55,
-    ambition: 65,
-    teamwork: 60,
-    greed: 40,
+const mockQuest: Quest = {
+  id: 'quest_1',
+  name: 'Test Quest',
+  description: 'Quest description',
+  reward: 150,
+  duration: 1800000,
+  requirements: {
+    minLevel: 1,
+    preferredClasses: ['Warrior'],
   },
-  potentialSkills: {
-    'magic.spellPower': 10,
-    'magic.elementalMastery': 8,
-    'combat.tacticalKnowledge': 5,
-  },
+  difficulty: 'Easy',
+  status: 'available',
+  questType: 'standard',
+  experienceReward: 50,
 };
 
-const mockQuest = questData[0];
+const mockSummary = {
+  gold: 1000,
+  reputation: 20,
+  level: 3,
+  currentSeason: 'spring',
+  generation: 1,
+  legacyBonuses: {
+    experienceMultiplier: 1,
+    goldMultiplier: 1,
+    reputationMultiplier: 1,
+  },
+  lastSave: 123456789,
+  activeQuestCount: 0,
+  completedQuestCount: 0,
+};
+
+const mockRoster = {
+  adventurers: [mockAdventurer],
+  recruits: [],
+};
+
+const mockQuestBoard = {
+  availableQuests: [mockQuest],
+  activeQuests: [],
+  completedQuests: [],
+  campaignProgress: [],
+};
+
+const mockActivity = [
+  {
+    id: 1,
+    eventType: 'guild_created',
+    title: 'Guild established',
+    description: 'A new guild was created.',
+    metadata: {},
+    createdAt: 123456789,
+  },
+];
+
+const mockWorldState = {
+  factions: [
+    {
+      id: 'merchants_guild',
+      name: "Merchants' Guild",
+      reputation: 100,
+      standingLabel: 'Friendly',
+      description: 'Trade bloc',
+      questModifiers: {
+        rewardMultiplier: 1.2,
+        availableQuestTypes: ['merchant_escort'],
+      },
+    },
+  ],
+  facilities: [
+    {
+      id: 'forge',
+      name: 'Guild Forge',
+      level: 1,
+      maxLevel: 5,
+      cost: 500,
+      benefits: { craftingLevel: 1 },
+      description: 'Produces equipment.',
+    },
+  ],
+  worldEvents: [],
+  territories: [],
+  activeVotes: [],
+  retiredAdventurers: [],
+  materials: { iron_ore: 0 },
+  materialCatalog: [
+    {
+      id: 'iron_ore',
+      name: 'Iron Ore',
+      rarity: 'common' as const,
+      sources: ['mine_security'],
+    },
+  ],
+  availableRecipes: [],
+  recipeCatalog: [],
+  equipmentInventory: [],
+};
 
 describe('gameStore', () => {
   beforeEach(() => {
-    // Reset store state before each test
-    useGuildStore.setState({
-      gold: 1000,
-      reputation: 0,
-      level: 1,
-      adventurers: [...initialAdventurers],
-      activeQuests: [],
-      completedQuests: [],
-      recruits: [],
-      lastSave: Date.now(),
+    vi.clearAllMocks();
+    useGuildStore.getState().resetState();
 
-      factions: [],
-      facilities: [],
-      campaigns: [],
-      worldEvents: [],
-      rivalGuilds: [],
-      territories: [],
-      activeVotes: [],
-      retiredAdventurers: [],
-      materials: {},
-      availableRecipes: [],
-      currentSeason: 'spring',
-      seasonalQuests: [],
-      generation: 1,
-      legacyBonuses: {
-        experienceMultiplier: 1,
-        goldMultiplier: 1,
-        reputationMultiplier: 1,
+    vi.mocked(guildApi.getSummary).mockResolvedValue(mockSummary);
+    vi.mocked(guildApi.getRoster).mockResolvedValue(mockRoster);
+    vi.mocked(guildApi.getActivity).mockResolvedValue(mockActivity);
+    vi.mocked(guildApi.getWorldState).mockResolvedValue(mockWorldState);
+    vi.mocked(guildApi.upgradeFacility).mockResolvedValue({ summary: mockSummary, worldState: mockWorldState });
+    vi.mocked(guildApi.craftRecipe).mockResolvedValue({ summary: mockSummary, worldState: mockWorldState });
+    vi.mocked(guildApi.equipInventoryItem).mockResolvedValue({ roster: mockRoster, worldState: mockWorldState });
+    vi.mocked(guildApi.unequipInventoryItem).mockResolvedValue({ roster: mockRoster, worldState: mockWorldState });
+    vi.mocked(guildApi.retireAdventurer).mockResolvedValue({ summary: mockSummary, roster: mockRoster, worldState: mockWorldState });
+    vi.mocked(guildApi.getQuestBoard).mockResolvedValue(mockQuestBoard);
+    vi.mocked(guildApi.assignQuest).mockResolvedValue({
+      ...mockQuestBoard,
+      activeQuests: [{ ...mockQuest, status: 'active', assignedAdventurers: [mockAdventurer.id] }],
+      availableQuests: [],
+    });
+    vi.mocked(guildApi.resolveQuest).mockResolvedValue({
+      summary: {
+        ...mockSummary,
+        gold: 1150,
+        reputation: 35,
+        activeQuestCount: 0,
+        completedQuestCount: 1,
+      },
+      roster: {
+        adventurers: [{ ...mockAdventurer, status: 'available', experience: 75, questsCompleted: 2 }],
+        recruits: [],
+      },
+      quests: {
+        availableQuests: [],
+        activeQuests: [],
+        completedQuests: [mockQuest.id],
+        campaignProgress: [],
       },
     });
+    vi.mocked(guildApi.saveSlot).mockResolvedValue(undefined);
+    vi.mocked(guildApi.loadSlot).mockResolvedValue(undefined);
+    vi.mocked(guildApi.listSaveSlots).mockResolvedValue([]);
   });
 
-  describe('initial state', () => {
-    it('should have correct initial values', () => {
-      const state = useGuildStore.getState();
+  it('hydrates guild state from the backend', async () => {
+    await useGuildStore.getState().hydrate();
 
-      expect(state.gold).toBe(1000);
-      expect(state.reputation).toBe(0);
-      expect(state.level).toBe(1);
-      expect(state.adventurers).toHaveLength(initialAdventurers.length);
-      expect(state.activeQuests).toHaveLength(0);
-      expect(state.completedQuests).toHaveLength(0);
-      expect(state.recruits).toHaveLength(0);
-    });
-
-    it('should have initial adventurers from data', () => {
-      const state = useGuildStore.getState();
-
-      expect(state.adventurers[0].name).toBe('Thrain Ironfist');
-      expect(state.adventurers[0].class).toBe('Warrior');
-      expect(state.adventurers[1].name).toBe('Elara Stormweaver');
-      expect(state.adventurers[1].class).toBe('Mage');
-    });
+    const state = useGuildStore.getState();
+    expect(state.gold).toBe(1000);
+    expect(state.reputation).toBe(20);
+    expect(state.level).toBe(3);
+    expect(state.adventurers).toHaveLength(1);
+    expect(state.availableQuests).toHaveLength(1);
+    expect(state.activityEntries).toHaveLength(1);
+    expect(state.factions).toHaveLength(1);
+    expect(state.facilities).toHaveLength(1);
+    expect(state.materialCatalog).toHaveLength(1);
+    expect(state.hasHydrated).toBe(true);
   });
 
-  describe('gold management', () => {
-    it('should add gold correctly', () => {
-      const { addGold } = useGuildStore.getState();
+  it('starts a quest through the backend and refreshes the store', async () => {
+    await useGuildStore.getState().hydrate();
+    await useGuildStore.getState().startQuest(mockQuest.id, [mockAdventurer.id]);
 
-      addGold(500);
-
-      expect(useGuildStore.getState().gold).toBe(1500);
-    });
-
-    it('should spend gold when sufficient funds available', () => {
-      const { spendGold } = useGuildStore.getState();
-
-      const success = spendGold(300);
-
-      expect(success).toBe(true);
-      expect(useGuildStore.getState().gold).toBe(700);
-    });
-
-    it('should not spend gold when insufficient funds', () => {
-      const { spendGold } = useGuildStore.getState();
-
-      const success = spendGold(1500);
-
-      expect(success).toBe(false);
-      expect(useGuildStore.getState().gold).toBe(1000);
-    });
+    expect(guildApi.assignQuest).toHaveBeenCalledWith(mockQuest.id, [mockAdventurer.id]);
+    expect(guildApi.getSummary).toHaveBeenCalledTimes(2);
+    expect(guildApi.getQuestBoard).toHaveBeenCalledTimes(2);
+    expect(guildApi.getWorldState).toHaveBeenCalledTimes(2);
   });
 
-  describe('adventurer hiring', () => {
-    beforeEach(() => {
-      // Add a recruit to hire
-      useGuildStore.setState({
-        recruits: [mockRecruit],
-      });
-    });
+  it('resolves a quest through the backend payload', async () => {
+    await useGuildStore.getState().completeQuest(mockQuest.id);
 
-    it('should hire adventurer when conditions are met', () => {
-      const { hireAdventurer } = useGuildStore.getState();
-
-      hireAdventurer(mockRecruit.id);
-
-      const state = useGuildStore.getState();
-      expect(state.adventurers).toHaveLength(initialAdventurers.length + 1);
-      expect(state.gold).toBe(1000 - mockRecruit.cost);
-      expect(state.recruits).toHaveLength(0);
-
-      const hiredAdventurer = state.adventurers.find(adv => adv.id === mockRecruit.id);
-      expect(hiredAdventurer).toBeDefined();
-      expect(hiredAdventurer?.name).toBe(mockRecruit.name);
-      expect(hiredAdventurer?.class).toBe(mockRecruit.class);
-      expect(hiredAdventurer?.status).toBe('available');
-    });
-
-    it('should not hire adventurer when at maximum capacity', () => {
-      // Fill up to max capacity
-      const maxAdventurers = Array.from(
-        { length: guildConstants.MAX_ADVENTURERS - initialAdventurers.length + 1 },
-        (_, i) => ({
-          ...mockAdventurer,
-          id: `extra-${i}`,
-          name: `Extra ${i}`,
-        })
-      );
-
-      useGuildStore.setState({
-        adventurers: [...initialAdventurers, ...maxAdventurers],
-      });
-
-      const { hireAdventurer } = useGuildStore.getState();
-      const initialCount = useGuildStore.getState().adventurers.length;
-
-      hireAdventurer(mockRecruit.id);
-
-      expect(useGuildStore.getState().adventurers).toHaveLength(initialCount);
-      expect(useGuildStore.getState().gold).toBe(1000); // No gold spent
-    });
-
-    it('should not hire adventurer when insufficient gold', () => {
-      useGuildStore.setState({ gold: 100 }); // Less than recruit cost
-
-      const { hireAdventurer } = useGuildStore.getState();
-
-      hireAdventurer(mockRecruit.id);
-
-      expect(useGuildStore.getState().adventurers).toHaveLength(initialAdventurers.length);
-      expect(useGuildStore.getState().gold).toBe(100);
-    });
+    const state = useGuildStore.getState();
+    expect(guildApi.resolveQuest).toHaveBeenCalledWith(mockQuest.id);
+    expect(guildApi.getActivity).toHaveBeenCalled();
+    expect(state.gold).toBe(1150);
+    expect(state.completedQuests).toContain(mockQuest.id);
+    expect(state.activeQuests).toHaveLength(0);
   });
 
-  describe('quest management', () => {
-    it('should start quest with available adventurers', () => {
-      const { startQuest } = useGuildStore.getState();
-      const adventurerId = initialAdventurers[0].id;
+  it('formats numbers through the shared formatter', () => {
+    const { formatNumber } = useGuildStore.getState();
 
-      startQuest(mockQuest.id, [adventurerId]);
-
-      const state = useGuildStore.getState();
-      expect(state.activeQuests).toHaveLength(1);
-
-      const activeQuest = state.activeQuests[0];
-      expect(activeQuest.id).toBe(mockQuest.id);
-      expect(activeQuest.assignedAdventurers).toContain(adventurerId);
-      expect(activeQuest.status).toBe('active');
-
-      const adventurer = state.adventurers.find(adv => adv.id === adventurerId);
-      expect(adventurer?.status).toBe('on quest');
-    });
-
-    it('should complete quest and reward adventurers', () => {
-      // First start a quest
-      const { startQuest, completeQuest } = useGuildStore.getState();
-      const adventurerId = initialAdventurers[0].id;
-
-      startQuest(mockQuest.id, [adventurerId]);
-
-      const initialGold = useGuildStore.getState().gold;
-      const initialReputation = useGuildStore.getState().reputation;
-
-      completeQuest(mockQuest.id);
-
-      const state = useGuildStore.getState();
-      expect(state.activeQuests).toHaveLength(0);
-      expect(state.completedQuests).toContain(mockQuest.id);
-      expect(state.gold).toBeGreaterThan(initialGold);
-      expect(state.reputation).toBeGreaterThan(initialReputation);
-
-      const adventurer = state.adventurers.find(adv => adv.id === adventurerId);
-      expect(adventurer?.status).toBe('available');
-      expect(adventurer?.experience).toBeGreaterThan(0);
-    });
+    expect(formatNumber(500)).toBe('500');
+    expect(formatNumber(1500)).toBe('1.5K');
   });
 
-  describe('recruit refresh', () => {
-    it('should refresh recruits when sufficient gold', () => {
-      const { refreshRecruits } = useGuildStore.getState();
-      const initialGold = useGuildStore.getState().gold;
+  it('resets state when requested', () => {
+    useGuildStore.setState({ gold: 999 });
 
-      refreshRecruits();
+    useGuildStore.getState().resetState();
 
-      const state = useGuildStore.getState();
-      expect(state.recruits).toHaveLength(3);
-      expect(state.gold).toBe(initialGold - guildConstants.RECRUIT_REFRESH_COST);
-
-      state.recruits.forEach(recruit => {
-        expect(recruit.id).toMatch(/^recruit_\d+_\d+$/);
-        expect(['Warrior', 'Mage', 'Rogue', 'Archer']).toContain(recruit.class);
-        expect(recruit.level).toBeGreaterThanOrEqual(1);
-        expect(recruit.level).toBeLessThanOrEqual(5);
-        expect(recruit.cost).toBeGreaterThan(0);
-      });
-    });
-
-    it('should not refresh recruits when insufficient gold', () => {
-      useGuildStore.setState({ gold: 25 }); // Less than refresh cost
-
-      const { refreshRecruits } = useGuildStore.getState();
-
-      refreshRecruits();
-
-      const state = useGuildStore.getState();
-      expect(state.recruits).toHaveLength(0);
-      expect(state.gold).toBe(25);
-    });
+    expect(useGuildStore.getState().gold).toBe(0);
+    expect(useGuildStore.getState().availableQuests).toHaveLength(0);
+    expect(useGuildStore.getState().activityEntries).toHaveLength(0);
   });
 
-  describe('calculations', () => {
-    it('should calculate recruit cost correctly', () => {
-      const { calculateRecruitCost } = useGuildStore.getState();
+  it('equips and unequips items through the backend payload', async () => {
+    await useGuildStore.getState().equipInventoryItem(mockAdventurer.id, 'item_1');
+    expect(guildApi.equipInventoryItem).toHaveBeenCalledWith(mockAdventurer.id, 'item_1');
 
-      expect(calculateRecruitCost(1)).toBe(guildConstants.RECRUIT_BASE_COST);
-      expect(calculateRecruitCost(2)).toBe(
-        Math.floor(guildConstants.RECRUIT_BASE_COST * guildConstants.RECRUIT_COST_MULTIPLIER)
-      );
-      expect(calculateRecruitCost(3)).toBe(
-        Math.floor(
-          guildConstants.RECRUIT_BASE_COST * Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, 2)
-        )
-      );
-    });
-
-    it('should calculate quest reward correctly', () => {
-      const { calculateQuestReward } = useGuildStore.getState();
-
-      const easyReward = calculateQuestReward({ ...mockQuest, difficulty: 'Easy' });
-      const mediumReward = calculateQuestReward({ ...mockQuest, difficulty: 'Medium' });
-      const hardReward = calculateQuestReward({ ...mockQuest, difficulty: 'Hard' });
-
-      expect(mediumReward).toBeGreaterThan(easyReward);
-      expect(hardReward).toBeGreaterThan(mediumReward);
-    });
-
-    it('should get available adventurers correctly', () => {
-      const { getAvailableAdventurers } = useGuildStore.getState();
-
-      const available = getAvailableAdventurers();
-      expect(available).toHaveLength(initialAdventurers.length);
-
-      // Start a quest to make one unavailable
-      const { startQuest } = useGuildStore.getState();
-      startQuest(mockQuest.id, [available[0].id]);
-
-      const availableAfterQuest = getAvailableAdventurers();
-      expect(availableAfterQuest).toHaveLength(initialAdventurers.length - 1);
-    });
+    await useGuildStore.getState().unequipInventoryItem(mockAdventurer.id, 'weapon');
+    expect(guildApi.unequipInventoryItem).toHaveBeenCalledWith(mockAdventurer.id, 'weapon');
   });
 
-  describe('save functionality', () => {
-    it('should update last save timestamp', () => {
-      const { saveGame } = useGuildStore.getState();
-      const initialSaveTime = useGuildStore.getState().lastSave;
-
-      // Wait a small amount to ensure timestamp difference
-      vi.useFakeTimers();
-      vi.advanceTimersByTime(1000);
-
-      saveGame();
-
-      const newSaveTime = useGuildStore.getState().lastSave;
-      expect(newSaveTime).toBeGreaterThan(initialSaveTime);
-
-      vi.useRealTimers();
-    });
-  });
-
-  describe('formatNumber utility', () => {
-    it('should format numbers correctly', () => {
-      const { formatNumber } = useGuildStore.getState();
-
-      expect(formatNumber(500)).toBe('500');
-      expect(formatNumber(1500)).toBe('1.5K');
-      expect(formatNumber(1500000)).toBe('1.5M');
-    });
+  it('retires adventurers through the backend payload', async () => {
+    await useGuildStore.getState().retireAdventurer(mockAdventurer.id);
+    expect(guildApi.retireAdventurer).toHaveBeenCalledWith(mockAdventurer.id, undefined);
   });
 });
-

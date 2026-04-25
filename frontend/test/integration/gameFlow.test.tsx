@@ -1,21 +1,22 @@
 // @vitest-environment jsdom
 
 import '@testing-library/jest-dom/vitest';
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { render, cleanup } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render } from '@testing-library/react';
 import { useGuildStore } from '../../src/stores/gameStore';
 import { useUIStore } from '../../src/stores/uiStore';
+import { useAuth } from '../../src/contexts/AuthContext';
 import { GamePage } from '../../src/pages/GamePage';
 
-// Mock all external dependencies
 vi.mock('../../src/stores/gameStore');
 vi.mock('../../src/stores/uiStore');
+vi.mock('../../src/contexts/AuthContext');
 
 const mockUseGuildStore = vi.mocked(useGuildStore);
 const mockUseUIStore = vi.mocked(useUIStore);
+const mockUseAuth = vi.mocked(useAuth);
 
-// Mock data
-const mockInitialAdventurers = [
+const mockAdventurers = [
   {
     id: 'adv1',
     name: 'Sir Gareth',
@@ -38,152 +39,142 @@ const mockInitialAdventurers = [
     yearsInGuild: 1,
     retirementEligible: false,
   },
+];
+
+const mockQuests = [
   {
-    id: 'adv2',
-    name: 'Aria Moonwhisper',
-    class: 'Mage',
-    rank: 'Expert',
-    level: 4,
-    experience: 380,
-    status: 'available',
-    stats: { strength: 10, intelligence: 22, dexterity: 16, vitality: 18 },
-    personality: { courage: 65, loyalty: 85, ambition: 70, teamwork: 80, greed: 25 },
-    skills: {
-      combat: { weaponMastery: 4, tacticalKnowledge: 10, battleRage: 2 },
-      magic: { spellPower: 18, manaEfficiency: 15, elementalMastery: 12 },
-      stealth: { lockpicking: 1, sneaking: 6, assassination: 0 },
-      survival: { tracking: 4, herbalism: 8, animalHandling: 3 },
+    id: 'quest1',
+    name: 'Goblin Raid',
+    description: 'Clear out a goblin camp threatening local merchants',
+    reward: 200,
+    duration: 1800000,
+    requirements: {
+      minLevel: 2,
+      preferredClasses: ['Warrior', 'Archer'],
     },
-    equipment: {},
-    relationships: [],
-    questsCompleted: 16,
-    yearsInGuild: 2,
-    retirementEligible: false,
+    difficulty: 'Medium' as const,
+    status: 'available' as const,
+    questType: 'standard' as const,
+    experienceReward: 60,
   },
 ];
 
-// const mockAvailableQuests = [
-//   {
-//     id: 'quest1',
-//     name: 'Goblin Raid',
-//     description: 'Clear out a goblin camp threatening local merchants',
-//     reward: 200,
-//     duration: 3,
-//     requirements: {
-//       minLevel: 2,
-//       preferredClasses: ['Warrior', 'Archer']
-//     },
-//     difficulty: 'Medium',
-//     status: 'available',
-//     questType: 'standard',
-//     experienceReward: 60,
-//     skillRewards: { 'combat.weaponMastery': 5 }
-//   },
-//   {
-//     id: 'quest2',
-//     name: 'Ancient Relic Recovery',
-//     description: 'Retrieve a magical artifact from ancient ruins',
-//     reward: 350,
-//     duration: 5,
-//     requirements: {
-//       minLevel: 3,
-//       preferredClasses: ['Mage', 'Rogue']
-//     },
-//     difficulty: 'Hard',
-//     status: 'available',
-//     questType: 'standard',
-//     experienceReward: 100,
-//     skillRewards: { 'magic.spellPower': 8 }
-//   }
-// ];
-
-const mockRecruits = [
-  {
-    id: 'recruit1',
-    name: 'Warrior Recruit',
-    level: 2,
-    class: 'Warrior',
-    cost: 240,
-    personality: { courage: 70, loyalty: 60, ambition: 50, teamwork: 65, greed: 35 },
-    potentialSkills: { 'combat.weaponMastery': 8, 'combat.tacticalKnowledge': 5 },
+const baseGuildState = {
+  gold: 1500,
+  reputation: 20,
+  level: 2,
+  adventurers: mockAdventurers,
+  activeQuests: [],
+  completedQuests: [],
+  recruits: [],
+  lastSave: Date.now(),
+  factions: [],
+  facilities: [],
+  campaigns: [],
+  worldEvents: [],
+  rivalGuilds: [],
+  territories: [],
+  activeVotes: [],
+  retiredAdventurers: [],
+  materials: {},
+  availableRecipes: [],
+  materialCatalog: [],
+  recipeCatalog: [],
+  equipmentInventory: [],
+  currentSeason: 'spring',
+  seasonalQuests: [],
+  generation: 1,
+  legacyBonuses: {
+    experienceMultiplier: 1,
+    goldMultiplier: 1,
+    reputationMultiplier: 1,
   },
-];
-
-interface MockGameState {
-  gold: number;
-  adventurers: typeof mockInitialAdventurers;
-  activeQuests: unknown[];
-  completedQuests: string[];
-  recruits: typeof mockRecruits;
-  hireAdventurer: () => void;
-  startQuest: () => void;
-  completeQuest: () => void;
-  refreshRecruits: () => void;
-  spendGold: () => void;
-}
+  availableQuests: mockQuests,
+  saveSlots: [],
+  activityEntries: [
+    {
+      id: 1,
+      eventType: 'guild_created',
+      title: 'Guild established',
+      description: 'A new guild was created.',
+      metadata: {},
+      createdAt: Date.now(),
+    },
+  ],
+  isHydrating: false,
+  isSaving: false,
+  hasHydrated: true,
+  error: null,
+  hydrate: vi.fn().mockResolvedValue(undefined),
+  startQuest: vi.fn().mockResolvedValue(undefined),
+  completeQuest: vi.fn().mockResolvedValue(undefined),
+  upgradeFacility: vi.fn().mockResolvedValue(undefined),
+  craftRecipe: vi.fn().mockResolvedValue(undefined),
+  equipInventoryItem: vi.fn().mockResolvedValue(undefined),
+  unequipInventoryItem: vi.fn().mockResolvedValue(undefined),
+  retireAdventurer: vi.fn().mockResolvedValue(undefined),
+  saveSlot: vi.fn().mockResolvedValue(undefined),
+  loadSlot: vi.fn().mockResolvedValue(undefined),
+  clearError: vi.fn(),
+  formatNumber: vi.fn((value: number) => String(value)),
+  getAvailableAdventurers: vi.fn(() => mockAdventurers),
+  getActiveQuests: vi.fn(() => []),
+  resetState: vi.fn(),
+};
 
 afterEach(() => {
   cleanup();
 });
 
 describe('Game Flow Integration Tests', () => {
-  const mockActions = {
-    hireAdventurer: vi.fn(),
-    startQuest: vi.fn(),
-    completeQuest: vi.fn(),
-    refreshRecruits: vi.fn(),
-    spendGold: vi.fn(),
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock initial game state with simplified data
+    mockUseGuildStore.mockReturnValue(baseGuildState as ReturnType<typeof useGuildStore>);
+    mockUseUIStore.mockReturnValue({ activeTab: 'guild-hall' } as ReturnType<typeof useUIStore>);
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: true,
+      isLoading: false,
+      error: null,
+      authMode: 'guest',
+      user: {
+        id: 'guest_test',
+        username: 'guest',
+        display_name: 'Guest Adventurer',
+        email: '',
+        role: 'guest',
+        is_guest: true,
+        auth_type: 'guest',
+      },
+      continueAsGuest: vi.fn(),
+      loginWithRedirect: vi.fn(),
+      getLinkAccountUrl: vi.fn(() => '/signup?guest_user_id=guest_test'),
+      logout: vi.fn(),
+    });
+  });
+
+  it('renders without crashing', () => {
+    expect(() => render(<GamePage />)).not.toThrow();
+  });
+
+  it('contains the main game layout', () => {
+    render(<GamePage />);
+
+    expect(document.querySelector('.main-content')).toBeInTheDocument();
+  });
+
+  it('handles empty guild data gracefully', () => {
     mockUseGuildStore.mockReturnValue({
-      // State
-      gold: 1500,
-      adventurers: mockInitialAdventurers.slice(0, 1), // Reduce data size
+      ...baseGuildState,
+      gold: 0,
+      adventurers: [],
       activeQuests: [],
       completedQuests: [],
-      recruits: mockRecruits.slice(0, 1), // Reduce data size
+      recruits: [],
+      availableQuests: [],
+      activityEntries: [],
+    } as ReturnType<typeof useGuildStore>);
 
-      // Actions
-      ...mockActions,
-    } as MockGameState);
-
-    // Mock UI store as empty since GamePage doesn't seem to use it directly
-    mockUseUIStore.mockReturnValue({} as Record<string, unknown>);
-  });
-
-  describe('Game Page Rendering', () => {
-    it('should render without crashing', () => {
-      expect(() => render(<GamePage />)).not.toThrow();
-    });
-
-    it('should contain main game elements', () => {
-      render(<GamePage />);
-
-      // Check for basic structure elements
-      const mainContent = document.querySelector('.main-content');
-      expect(mainContent).toBeInTheDocument();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle missing data gracefully', () => {
-      mockUseGuildStore.mockReturnValue({
-        gold: 0,
-        adventurers: [],
-        activeQuests: [],
-        completedQuests: [],
-        recruits: [],
-        ...mockActions,
-      } as MockGameState);
-
-      expect(() => render(<GamePage />)).not.toThrow();
-    });
+    expect(() => render(<GamePage />)).not.toThrow();
   });
 });
-
-
-

@@ -1,356 +1,419 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { GuildState, Adventurer, Quest, Recruit } from '../types/game';
-import { guildConstants, personalityDefaults, skillDefaults } from '../constants/gameConstants';
-import { getQuestById } from '../data/quests';
-import { initialAdventurers } from '../data/adventurers';
 import { formatNumber } from '../utils/formatters';
+import type { Adventurer, GuildState, Quest } from '../types/game';
+import { guildApi, type ActivityEntry, type SaveSlotMetadata } from '../api/guild';
 
 interface GuildStore extends GuildState {
-  // Actions
-  hireAdventurer: (recruitId: string) => void;
-  startQuest: (questId: string, adventurerIds: string[]) => void;
-  completeQuest: (questId: string) => void;
-  refreshRecruits: () => void;
-  addGold: (amount: number) => void;
-  spendGold: (amount: number) => boolean;
+  availableQuests: Quest[];
+  saveSlots: SaveSlotMetadata[];
+  activityEntries: ActivityEntry[];
+  isHydrating: boolean;
+  isSaving: boolean;
+  hasHydrated: boolean;
+  error: string | null;
 
-  // Calculations
-  calculateRecruitCost: (level: number) => number;
-  calculateQuestReward: (quest: Quest) => number;
+  hydrate: () => Promise<void>;
+  hireAdventurer: (recruitId: string) => Promise<void>;
+  refreshRecruits: () => Promise<void>;
+  upgradeFacility: (facilityId: string) => Promise<void>;
+  craftRecipe: (recipeId: string) => Promise<void>;
+  equipInventoryItem: (adventurerId: string, itemId: string) => Promise<void>;
+  unequipInventoryItem: (adventurerId: string, slotType: string) => Promise<void>;
+  retireAdventurer: (adventurerId: string, role?: string) => Promise<void>;
+  startQuest: (questId: string, adventurerIds: string[]) => Promise<void>;
+  completeQuest: (questId: string) => Promise<void>;
+  saveSlot: (slotNumber: number, slotName?: string) => Promise<void>;
+  loadSlot: (slotNumber: number) => Promise<void>;
+  clearError: () => void;
+  formatNumber: (num: number) => string;
   getAvailableAdventurers: () => Adventurer[];
   getActiveQuests: () => Quest[];
-
-  // Utilities
-  formatNumber: (num: number) => string;
-  saveGame: () => void;
+  resetState: () => void;
 }
 
-const clamp = (value: number, min: number, max: number): number =>
-  Math.min(max, Math.max(min, value));
-
-const randomInt = (minInclusive: number, maxInclusive: number): number => {
-  return Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) + minInclusive;
-};
-
-const createDefaultSkills = () => ({
-  combat: { ...skillDefaults.combat },
-  magic: { ...skillDefaults.magic },
-  stealth: { ...skillDefaults.stealth },
-  survival: { ...skillDefaults.survival },
+const createInitialState = (): GuildState & {
+  availableQuests: Quest[];
+  saveSlots: SaveSlotMetadata[];
+  activityEntries: ActivityEntry[];
+  isHydrating: boolean;
+  isSaving: boolean;
+  hasHydrated: boolean;
+  error: string | null;
+} => ({
+  gold: 0,
+  reputation: 0,
+  level: 1,
+  adventurers: [],
+  activeQuests: [],
+  completedQuests: [],
+  recruits: [],
+  lastSave: Date.now(),
+  factions: [],
+  facilities: [],
+  campaigns: [],
+  worldEvents: [],
+  rivalGuilds: [],
+  territories: [],
+  activeVotes: [],
+  retiredAdventurers: [],
+  materials: {},
+  availableRecipes: [],
+  materialCatalog: [],
+  recipeCatalog: [],
+  equipmentInventory: [],
+  currentSeason: 'spring',
+  seasonalQuests: [],
+  generation: 1,
+  legacyBonuses: {
+    experienceMultiplier: 1,
+    goldMultiplier: 1,
+    reputationMultiplier: 1,
+  },
+  availableQuests: [],
+  saveSlots: [],
+  activityEntries: [],
+  isHydrating: false,
+  isSaving: false,
+  hasHydrated: false,
+  error: null,
 });
 
-const createDefaultPersonality = () => ({ ...personalityDefaults });
+const applyGuildSnapshot = (
+  state: ReturnType<typeof createInitialState>,
+  payload: {
+    summary: Awaited<ReturnType<typeof guildApi.getSummary>>;
+    roster: Awaited<ReturnType<typeof guildApi.getRoster>>;
+    quests: Awaited<ReturnType<typeof guildApi.getQuestBoard>>;
+    saveSlots?: SaveSlotMetadata[];
+    activityEntries?: ActivityEntry[];
+    worldState?: Awaited<ReturnType<typeof guildApi.getWorldState>>;
+  }
+): ReturnType<typeof createInitialState> => ({
+  ...state,
+  gold: payload.summary.gold,
+  reputation: payload.summary.reputation,
+  level: payload.summary.level,
+  adventurers: payload.roster.adventurers,
+  recruits: payload.roster.recruits,
+  activeQuests: payload.quests.activeQuests,
+  completedQuests: payload.quests.completedQuests,
+  availableQuests: payload.quests.availableQuests,
+  saveSlots: payload.saveSlots ?? state.saveSlots,
+  activityEntries: payload.activityEntries ?? state.activityEntries,
+  campaigns: payload.quests.campaignProgress,
+  factions: payload.worldState?.factions ?? state.factions,
+  facilities: payload.worldState?.facilities ?? state.facilities,
+  worldEvents: payload.worldState?.worldEvents ?? state.worldEvents,
+  territories: payload.worldState?.territories ?? state.territories,
+  activeVotes: payload.worldState?.activeVotes ?? state.activeVotes,
+  retiredAdventurers: payload.worldState?.retiredAdventurers ?? state.retiredAdventurers,
+  materials: payload.worldState?.materials ?? state.materials,
+  availableRecipes: payload.worldState?.availableRecipes ?? state.availableRecipes,
+  materialCatalog: payload.worldState?.materialCatalog ?? state.materialCatalog,
+  recipeCatalog: payload.worldState?.recipeCatalog ?? state.recipeCatalog,
+  equipmentInventory: payload.worldState?.equipmentInventory ?? state.equipmentInventory,
+  seasonalQuests: payload.quests.availableQuests.filter(quest => quest.questType === 'seasonal'),
+  currentSeason: payload.summary.currentSeason,
+  generation: payload.summary.generation,
+  legacyBonuses: payload.summary.legacyBonuses,
+  lastSave: payload.summary.lastSave ?? Date.now(),
+});
 
-const hasOwn = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
-  return Object.prototype.hasOwnProperty.call(obj, key);
-};
+export const useGuildStore = create<GuildStore>()((set, get) => ({
+  ...createInitialState(),
 
-const applyPotentialSkills = (
-  base: Adventurer['skills'],
-  potential: Recruit['potentialSkills']
-): Adventurer['skills'] => {
-  const next = {
-    combat: { ...base.combat },
-    magic: { ...base.magic },
-    stealth: { ...base.stealth },
-    survival: { ...base.survival },
-  };
+  hydrate: async () => {
+    set({ isHydrating: true, error: null });
 
-  Object.entries(potential).forEach(([key, value]) => {
-    const [category, skill] = key.split('.');
-    if (!category || !skill) return;
+    try {
+      const [summary, roster, quests, saveSlots, activityEntries, worldState] = await Promise.all([
+        guildApi.getSummary(),
+        guildApi.getRoster(),
+        guildApi.getQuestBoard(),
+        guildApi.listSaveSlots(),
+        guildApi.getActivity(),
+        guildApi.getWorldState(),
+      ]);
 
-    if (!hasOwn(next, category)) return;
-    const categoryObj = next[category] as Record<string, number>;
-    if (!Object.prototype.hasOwnProperty.call(categoryObj, skill)) return;
-    categoryObj[skill] = value;
-  });
-
-  return next;
-};
-
-export const useGuildStore = create<GuildStore>()(
-  persist(
-    (set, get) => ({
-      // Initial state
-      gold: 1000,
-      reputation: 0,
-      level: 1,
-      adventurers: [...initialAdventurers],
-      activeQuests: [],
-      completedQuests: [],
-      recruits: [],
-      lastSave: Date.now(),
-
-      // New features (defaulted; systems can layer on later)
-      factions: [],
-      facilities: [],
-      campaigns: [],
-      worldEvents: [],
-      rivalGuilds: [],
-      territories: [],
-      activeVotes: [],
-      retiredAdventurers: [],
-      materials: {},
-      availableRecipes: [],
-      currentSeason: 'spring',
-      seasonalQuests: [],
-      generation: 1,
-      legacyBonuses: {
-        experienceMultiplier: 1,
-        goldMultiplier: 1,
-        reputationMultiplier: 1,
-      },
-
-      hireAdventurer: (recruitId: string) => {
-        const state = get();
-        const recruit = state.recruits.find(r => r.id === recruitId);
-
-        if (!recruit) return;
-
-        if (state.adventurers.length >= guildConstants.MAX_ADVENTURERS) {
-          console.warn('Maximum adventurers reached');
-          return;
-        }
-
-        if (!state.spendGold(recruit.cost)) {
-          console.warn('Not enough gold');
-          return;
-        }
-
-        const baseSkills = createDefaultSkills();
-        const skills = applyPotentialSkills(baseSkills, recruit.potentialSkills);
-
-        const newAdventurer: Adventurer = {
-          id: recruit.id,
-          name: recruit.name,
-          class: recruit.class,
-          rank: 'Novice',
-          level: recruit.level,
-          experience: 0,
-          status: 'available',
-          stats: {
-            strength: recruit.level * 10,
-            intelligence: recruit.level * 10,
-            dexterity: recruit.level * 10,
-            vitality: recruit.level * 10,
-          },
-          personality: recruit.personality,
-          skills,
-          equipment: {},
-          relationships: [],
-          questsCompleted: 0,
-          yearsInGuild: 0,
-          retirementEligible: false,
-        };
-
-        set(prevState => ({
-          adventurers: [...prevState.adventurers, newAdventurer],
-          recruits: prevState.recruits.filter(r => r.id !== recruitId),
-        }));
-      },
-
-      startQuest: (questId: string, adventurerIds: string[]) => {
-        const state = get();
-        const quest = getQuestById(questId);
-
-        if (!quest) {
-          console.warn('Quest not found');
-          return;
-        }
-
-        const availableAdventurers = state.getAvailableAdventurers();
-        const selectedAdventurers = availableAdventurers.filter(a => adventurerIds.includes(a.id));
-
-        if (selectedAdventurers.length === 0) {
-          console.warn('No available adventurers selected');
-          return;
-        }
-
-        const assignedAdventurerIds = selectedAdventurers.map(a => a.id);
-
-        const questWithAdventurers: Quest = {
-          ...quest,
-          assignedAdventurers: assignedAdventurerIds,
-          status: 'active',
-        };
-
-        set(prevState => ({
-          activeQuests: [...prevState.activeQuests, questWithAdventurers],
-          adventurers: prevState.adventurers.map(adv =>
-            assignedAdventurerIds.includes(adv.id) ? { ...adv, status: 'on quest' } : adv
-          ),
-        }));
-      },
-
-      completeQuest: (questId: string) => {
-        const state = get();
-        const quest = state.activeQuests.find(q => q.id === questId);
-
-        if (!quest) return;
-
-        const reward = state.calculateQuestReward(quest);
-        const xpReward =
-          quest.experienceReward ??
-          quest.requirements.minLevel * guildConstants.EXPERIENCE_PER_QUEST_LEVEL;
-
-        set(prevState => ({
-          gold: prevState.gold + reward,
-          reputation: prevState.reputation + Math.floor(reward / 10),
-          activeQuests: prevState.activeQuests.filter(q => q.id !== questId),
-          completedQuests: [...prevState.completedQuests, questId],
-          adventurers: prevState.adventurers.map(adv =>
-            quest.assignedAdventurers?.includes(adv.id)
-              ? {
-                  ...adv,
-                  status: 'available',
-                  questsCompleted: adv.questsCompleted + 1,
-                  experience: adv.experience + xpReward,
-                  level: adv.experience + xpReward >= adv.level * 100 ? adv.level + 1 : adv.level,
-                }
-              : adv
-          ),
-        }));
-      },
-
-      refreshRecruits: () => {
-        if (!get().spendGold(guildConstants.RECRUIT_REFRESH_COST)) {
-          console.warn('Not enough gold to refresh recruits');
-          return;
-        }
-
-        const newRecruits: Recruit[] = [];
-        for (let i = 0; i < 3; i++) {
-          const level = Math.floor(Math.random() * 5) + 1;
-          const classType =
-            guildConstants.RECRUIT_CLASSES[
-              Math.floor(Math.random() * guildConstants.RECRUIT_CLASSES.length)
-            ];
-          const cost = get().calculateRecruitCost(level);
-
-          const personality = createDefaultPersonality();
-          (Object.keys(personality) as Array<keyof typeof personality>).forEach(trait => {
-            personality[trait] = clamp(personality[trait] + randomInt(-15, 15), 0, 100);
-          });
-
-          // Sparse potential skill bumps; keys align with Recruit.potentialSkills shape.
-          const potentialSkills: Recruit['potentialSkills'] = {};
-          const potentialKeys: Array<
-            | keyof typeof skillDefaults.combat
-            | keyof typeof skillDefaults.magic
-            | keyof typeof skillDefaults.stealth
-            | keyof typeof skillDefaults.survival
-          > = [
-            'weaponMastery',
-            'tacticalKnowledge',
-            'spellPower',
-            'elementalMastery',
-            'sneaking',
-            'lockpicking',
-            'tracking',
-            'herbalism',
-          ];
-
-          for (let j = 0; j < 3; j++) {
-            const key = potentialKeys[randomInt(0, potentialKeys.length - 1)];
-            const category =
-              key in skillDefaults.combat
-                ? 'combat'
-                : key in skillDefaults.magic
-                  ? 'magic'
-                  : key in skillDefaults.stealth
-                    ? 'stealth'
-                    : 'survival';
-
-            potentialSkills[`${category}.${String(key)}`] = randomInt(1, 10);
-          }
-
-          newRecruits.push({
-            id: `recruit_${Date.now()}_${i}`,
-            name: `${classType} ${level}`,
-            level,
-            class: classType,
-            cost,
-            personality,
-            potentialSkills,
-            descendantOf: undefined,
-          });
-        }
-
-        set({ recruits: newRecruits });
-      },
-
-      addGold: (amount: number) => {
-        set(state => ({ gold: state.gold + amount }));
-      },
-
-      spendGold: (amount: number) => {
-        const state = get();
-        if (state.gold >= amount) {
-          set({ gold: state.gold - amount });
-          return true;
-        }
-        return false;
-      },
-
-      calculateRecruitCost: (level: number) => {
-        return Math.floor(
-          guildConstants.RECRUIT_BASE_COST *
-            Math.pow(guildConstants.RECRUIT_COST_MULTIPLIER, level - 1)
-        );
-      },
-
-      calculateQuestReward: (quest: Quest) => {
-        const baseReward = quest.requirements.minLevel * guildConstants.GOLD_PER_QUEST_LEVEL;
-        const difficultyMultiplier =
-          quest.difficulty === 'Easy' ? 1 : quest.difficulty === 'Medium' ? 1.5 : 2;
-        return Math.floor(baseReward * difficultyMultiplier);
-      },
-
-      getAvailableAdventurers: () => {
-        return get().adventurers.filter(adv => adv.status === 'available');
-      },
-
-      getActiveQuests: () => {
-        return get().activeQuests;
-      },
-
-      formatNumber: (num: number) => {
-        return formatNumber(num);
-      },
-
-      saveGame: () => {
-        set({ lastSave: Date.now() });
-      },
-    }),
-    {
-      name: 'adventurer-guild',
-      partialize: state => ({
-        gold: state.gold,
-        reputation: state.reputation,
-        level: state.level,
-        adventurers: state.adventurers,
-        activeQuests: state.activeQuests,
-        completedQuests: state.completedQuests,
-        lastSave: state.lastSave,
-
-        // Persisted "extended" state (kept minimal; adjust as these systems land in UI)
-        factions: state.factions,
-        facilities: state.facilities,
-        campaigns: state.campaigns,
-        worldEvents: state.worldEvents,
-        rivalGuilds: state.rivalGuilds,
-        territories: state.territories,
-        activeVotes: state.activeVotes,
-        retiredAdventurers: state.retiredAdventurers,
-        materials: state.materials,
-        availableRecipes: state.availableRecipes,
-        currentSeason: state.currentSeason,
-        seasonalQuests: state.seasonalQuests,
-        generation: state.generation,
-        legacyBonuses: state.legacyBonuses,
-      }),
+      set(state => ({
+        ...applyGuildSnapshot(state, { summary, roster, quests, saveSlots, activityEntries, worldState }),
+        isHydrating: false,
+        hasHydrated: true,
+        error: null,
+      }));
+    } catch (error) {
+      set({
+        isHydrating: false,
+        hasHydrated: true,
+        error: error instanceof Error ? error.message : 'Failed to load guild data',
+      });
     }
-  )
-);
+  },
+
+  startQuest: async (questId: string, adventurerIds: string[]) => {
+    set({ error: null });
+
+    try {
+      await guildApi.assignQuest(questId, adventurerIds);
+      await get().hydrate();
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to start quest',
+      });
+      throw error;
+    }
+  },
+
+  hireAdventurer: async (recruitId: string) => {
+    set({ error: null });
+
+    try {
+      const payload = await guildApi.hireRecruit(recruitId);
+      const activityEntries = await guildApi.getActivity();
+      set(state => ({
+        ...state,
+        gold: payload.summary.gold,
+        reputation: payload.summary.reputation,
+        level: payload.summary.level,
+        adventurers: payload.roster.adventurers,
+        recruits: payload.roster.recruits,
+        activityEntries,
+        currentSeason: payload.summary.currentSeason,
+        generation: payload.summary.generation,
+        legacyBonuses: payload.summary.legacyBonuses,
+        lastSave: payload.summary.lastSave ?? Date.now(),
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to hire adventurer',
+      });
+      throw error;
+    }
+  },
+
+  refreshRecruits: async () => {
+    set({ error: null });
+
+    try {
+      const payload = await guildApi.refreshRecruits();
+      const activityEntries = await guildApi.getActivity();
+      set(state => ({
+        ...state,
+        gold: payload.summary.gold,
+        reputation: payload.summary.reputation,
+        level: payload.summary.level,
+        recruits: payload.roster.recruits,
+        activityEntries,
+        currentSeason: payload.summary.currentSeason,
+        generation: payload.summary.generation,
+        legacyBonuses: payload.summary.legacyBonuses,
+        lastSave: payload.summary.lastSave ?? Date.now(),
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to refresh recruits',
+      });
+      throw error;
+    }
+  },
+
+  upgradeFacility: async (facilityId: string) => {
+    set({ error: null });
+
+    try {
+      await guildApi.upgradeFacility(facilityId);
+      await get().hydrate();
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to upgrade facility',
+      });
+      throw error;
+    }
+  },
+
+  craftRecipe: async (recipeId: string) => {
+    set({ error: null });
+
+    try {
+      await guildApi.craftRecipe(recipeId);
+      await get().hydrate();
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to craft recipe',
+      });
+      throw error;
+    }
+  },
+
+  equipInventoryItem: async (adventurerId: string, itemId: string) => {
+    set({ error: null });
+
+    try {
+      const [payload, activityEntries] = await Promise.all([
+        guildApi.equipInventoryItem(adventurerId, itemId),
+        guildApi.getActivity(),
+      ]);
+
+      set(state => ({
+        ...state,
+        adventurers: payload.roster.adventurers,
+        recruits: payload.roster.recruits,
+        factions: payload.worldState.factions,
+        facilities: payload.worldState.facilities,
+        worldEvents: payload.worldState.worldEvents,
+        territories: payload.worldState.territories,
+        activeVotes: payload.worldState.activeVotes,
+        retiredAdventurers: payload.worldState.retiredAdventurers,
+        materials: payload.worldState.materials,
+        availableRecipes: payload.worldState.availableRecipes,
+        materialCatalog: payload.worldState.materialCatalog,
+        recipeCatalog: payload.worldState.recipeCatalog,
+        equipmentInventory: payload.worldState.equipmentInventory,
+        activityEntries,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to equip inventory item',
+      });
+      throw error;
+    }
+  },
+
+  unequipInventoryItem: async (adventurerId: string, slotType: string) => {
+    set({ error: null });
+
+    try {
+      const [payload, activityEntries] = await Promise.all([
+        guildApi.unequipInventoryItem(adventurerId, slotType),
+        guildApi.getActivity(),
+      ]);
+
+      set(state => ({
+        ...state,
+        adventurers: payload.roster.adventurers,
+        recruits: payload.roster.recruits,
+        factions: payload.worldState.factions,
+        facilities: payload.worldState.facilities,
+        worldEvents: payload.worldState.worldEvents,
+        territories: payload.worldState.territories,
+        activeVotes: payload.worldState.activeVotes,
+        retiredAdventurers: payload.worldState.retiredAdventurers,
+        materials: payload.worldState.materials,
+        availableRecipes: payload.worldState.availableRecipes,
+        materialCatalog: payload.worldState.materialCatalog,
+        recipeCatalog: payload.worldState.recipeCatalog,
+        equipmentInventory: payload.worldState.equipmentInventory,
+        activityEntries,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to unequip inventory item',
+      });
+      throw error;
+    }
+  },
+
+  retireAdventurer: async (adventurerId: string, role?: string) => {
+    set({ error: null });
+
+    try {
+      const [payload, activityEntries] = await Promise.all([
+        guildApi.retireAdventurer(adventurerId, role),
+        guildApi.getActivity(),
+      ]);
+
+      set(state => ({
+        ...state,
+        gold: payload.summary.gold,
+        reputation: payload.summary.reputation,
+        level: payload.summary.level,
+        adventurers: payload.roster.adventurers,
+        recruits: payload.roster.recruits,
+        factions: payload.worldState.factions,
+        facilities: payload.worldState.facilities,
+        worldEvents: payload.worldState.worldEvents,
+        territories: payload.worldState.territories,
+        activeVotes: payload.worldState.activeVotes,
+        retiredAdventurers: payload.worldState.retiredAdventurers,
+        materials: payload.worldState.materials,
+        availableRecipes: payload.worldState.availableRecipes,
+        materialCatalog: payload.worldState.materialCatalog,
+        recipeCatalog: payload.worldState.recipeCatalog,
+        equipmentInventory: payload.worldState.equipmentInventory,
+        activityEntries,
+        currentSeason: payload.summary.currentSeason,
+        generation: payload.summary.generation,
+        legacyBonuses: payload.summary.legacyBonuses,
+        lastSave: payload.summary.lastSave ?? Date.now(),
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to retire adventurer',
+      });
+      throw error;
+    }
+  },
+
+  completeQuest: async (questId: string) => {
+    set({ error: null });
+
+    try {
+      const payload = await guildApi.resolveQuest(questId);
+      const activityEntries = await guildApi.getActivity();
+      set(state => ({
+        ...applyGuildSnapshot(state, { ...payload, activityEntries }),
+        error: null,
+      }));
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Failed to resolve quest',
+      });
+      throw error;
+    }
+  },
+
+  saveSlot: async (slotNumber: number, slotName?: string) => {
+    set({ isSaving: true, error: null });
+
+    try {
+      await guildApi.saveSlot(slotNumber, slotName);
+      const [saveSlots, activityEntries] = await Promise.all([guildApi.listSaveSlots(), guildApi.getActivity()]);
+      set({ isSaving: false, saveSlots, activityEntries });
+    } catch (error) {
+      set({
+        isSaving: false,
+        error: error instanceof Error ? error.message : 'Failed to save slot',
+      });
+      throw error;
+    }
+  },
+
+  loadSlot: async (slotNumber: number) => {
+    set({ isHydrating: true, error: null });
+
+    try {
+      await guildApi.loadSlot(slotNumber);
+      await get().hydrate();
+    } catch (error) {
+      set({
+        isHydrating: false,
+        error: error instanceof Error ? error.message : 'Failed to load slot',
+      });
+      throw error;
+    }
+  },
+
+  clearError: () => set({ error: null }),
+
+  formatNumber: (num: number) => formatNumber(num),
+
+  getAvailableAdventurers: () => get().adventurers.filter(adventurer => adventurer.status === 'available'),
+
+  getActiveQuests: () => get().activeQuests,
+
+  resetState: () => set(createInitialState()),
+}));
+
+export const rehydrateGuildStore = async (): Promise<void> => {
+  useGuildStore.getState().resetState();
+};

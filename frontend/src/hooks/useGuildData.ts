@@ -1,16 +1,7 @@
 import { useGuildStore } from '../stores/gameStore';
-import { useEffect } from 'react';
 
 export const useGuildData = () => {
-  const { adventurers, recruits, activeQuests, gold, reputation, level, refreshRecruits } =
-    useGuildStore();
-
-  // Auto-refresh recruits if none are available
-  useEffect(() => {
-    if (recruits.length === 0 && gold >= 50) {
-      refreshRecruits();
-    }
-  }, [recruits.length, gold, refreshRecruits]);
+  const { adventurers, recruits, activeQuests, gold, reputation, level, isHydrating, error } = useGuildStore();
 
   return {
     adventurers,
@@ -19,7 +10,7 @@ export const useGuildData = () => {
     gold,
     reputation,
     level,
-    isLoading: false, // For future API integration
-    error: null, // For future error handling
+    isLoading: isHydrating,
+    error,
   };
 };

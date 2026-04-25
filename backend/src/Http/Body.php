@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace AdventurerGuild\Http;
+
+final class Body
+{
+    private string $contents = '';
+
+    public function write(string $data): void
+    {
+        $this->contents .= $data;
+    }
+
+    public function __toString(): string
+    {
+        return $this->contents;
+    }
+}

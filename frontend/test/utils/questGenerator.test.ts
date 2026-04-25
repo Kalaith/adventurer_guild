@@ -39,8 +39,8 @@ describe('Quest Generator', () => {
     });
 
     it('should scale rewards with guild level', () => {
-      const lowLevelQuest = generateProceduralQuest(1);
-      const highLevelQuest = generateProceduralQuest(10);
+      const lowLevelQuest = generateProceduralQuest(1, 'Medium');
+      const highLevelQuest = generateProceduralQuest(10, 'Medium');
 
       expect(highLevelQuest.reward).toBeGreaterThan(lowLevelQuest.reward);
       expect(highLevelQuest.requirements.minLevel).toBeGreaterThanOrEqual(

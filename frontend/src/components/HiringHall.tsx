@@ -5,45 +5,28 @@ import { guildConstants } from '../constants/gameConstants';
 interface HiringHallProps {
   gold: number;
   recruits: Recruit[];
-  onHireAdventurer: (recruitId: string) => void;
-  onRefreshRecruits: () => void;
-  onGoldDeduction: (amount: number) => void;
+  onHireAdventurer: (recruitId: string) => Promise<void>;
+  onRefreshRecruits: () => Promise<void>;
 }
 
-const HiringHall: React.FC<HiringHallProps> = ({
-  gold,
-  recruits,
-  onHireAdventurer,
-  onRefreshRecruits,
-}) => {
-  const handleHireAdventurer = (recruitId: string) => {
-    onHireAdventurer(recruitId);
-  };
-
-  const handleRefreshRecruits = () => {
-    if (gold >= guildConstants.RECRUIT_REFRESH_COST) {
-      onRefreshRecruits();
-    } else {
-      alert('Not enough gold to refresh recruits!');
-    }
-  };
-
+const HiringHall: React.FC<HiringHallProps> = ({ gold, recruits, onHireAdventurer, onRefreshRecruits }) => {
   return (
     <div>
-      <h2>👥 Hiring Hall</h2>
+      <h2>Hiring Hall</h2>
       <div className="hiring-info">
         <p>Gold: {gold}</p>
         <button
           className="btn btn--secondary"
-          onClick={handleRefreshRecruits}
+          type="button"
+          onClick={() => void onRefreshRecruits()}
           disabled={gold < guildConstants.RECRUIT_REFRESH_COST}
         >
-          🔄 Refresh Recruits ({guildConstants.RECRUIT_REFRESH_COST} gold)
+          Refresh Recruits ({guildConstants.RECRUIT_REFRESH_COST} gold)
         </button>
       </div>
       <div className="recruit-grid">
         {recruits.length === 0 ? (
-          <p>No recruits available. Refresh to get new recruits!</p>
+          <p>No recruits are stored for this guild yet. Refresh the roster to generate a new pool.</p>
         ) : (
           recruits.map(recruit => (
             <div key={recruit.id} className="recruit-item">
@@ -53,7 +36,8 @@ const HiringHall: React.FC<HiringHallProps> = ({
               <p>Cost: {recruit.cost} gold</p>
               <button
                 className="btn btn--primary"
-                onClick={() => handleHireAdventurer(recruit.id)}
+                type="button"
+                onClick={() => void onHireAdventurer(recruit.id)}
                 disabled={gold < recruit.cost}
               >
                 Hire Adventurer

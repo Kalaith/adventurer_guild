@@ -8,6 +8,13 @@ interface QuestModalProps {
   onStartQuest: (questId: string, adventurerIds: string[]) => void;
 }
 
+const formatDuration = (quest: Quest): string => {
+  const durationMs = quest.durationMs ?? quest.duration * 1000;
+  const minutes = Math.floor(durationMs / 60000);
+  const seconds = Math.floor((durationMs % 60000) / 1000);
+  return `${minutes}m ${seconds}s`;
+};
+
 const QuestModal: React.FC<QuestModalProps> = ({ quest, adventurers, onClose, onStartQuest }) => {
   const [selectedAdventurers, setSelectedAdventurers] = useState<string[]>([]);
 
@@ -42,8 +49,7 @@ const QuestModal: React.FC<QuestModalProps> = ({ quest, adventurers, onClose, on
               <strong>Reward:</strong> {quest.reward} gold
             </p>
             <p>
-              <strong>Duration:</strong> {Math.floor(quest.duration / 60000)}m{' '}
-              {Math.floor((quest.duration % 60000) / 1000)}s
+              <strong>Duration:</strong> {formatDuration(quest)}
             </p>
             <p>
               <strong>Min Level:</strong> {quest.requirements.minLevel}
@@ -51,6 +57,11 @@ const QuestModal: React.FC<QuestModalProps> = ({ quest, adventurers, onClose, on
             <p>
               <strong>Preferred Classes:</strong> {quest.requirements.preferredClasses.join(', ')}
             </p>
+            {quest.campaignId ? (
+              <p>
+                <strong>Campaign:</strong> {quest.campaignId}
+              </p>
+            ) : null}
           </div>
           <p>{quest.description}</p>
 

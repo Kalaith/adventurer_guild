@@ -1,18 +1,29 @@
-﻿import React from 'react';
+import React from 'react';
 import { Quest } from '../types/game';
+import type { ActivityEntry } from '../api/guild';
 
 interface GuildHallProps {
   adventurerCount: number;
   activeQuestCount: number;
   completedQuestCount: number;
   activeQuests: Quest[];
+  activityEntries: ActivityEntry[];
 }
+
+const formatTimestamp = (timestamp: number | null): string => {
+  if (!timestamp) {
+    return 'Unknown time';
+  }
+
+  return new Date(timestamp).toLocaleString();
+};
 
 const GuildHall: React.FC<GuildHallProps> = ({
   adventurerCount,
   activeQuestCount,
   completedQuestCount,
   activeQuests,
+  activityEntries,
 }) => {
   return (
     <div className="guild-overview">
@@ -65,7 +76,17 @@ const GuildHall: React.FC<GuildHallProps> = ({
         <div className="activity-log">
           <h3>Recent Activity</h3>
           <div id="activity-log" className="log-container">
-            <p>Welcome to your new guild! Start by hiring adventurers and taking on quests.</p>
+            {activityEntries.length === 0 ? (
+              <p>No guild activity recorded yet.</p>
+            ) : (
+              activityEntries.slice(0, 3).map(entry => (
+                <div key={entry.id} className="mb-3 rounded-md border border-slate-200 bg-white/70 p-3">
+                  <div className="font-semibold text-slate-900">{entry.title}</div>
+                  <div className="text-sm text-slate-700">{entry.description}</div>
+                  <div className="text-xs text-slate-500">{formatTimestamp(entry.createdAt)}</div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
