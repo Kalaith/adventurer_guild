@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdventurerGuild\Middleware;
 
+use AdventurerGuild\Core\Environment;
 use AdventurerGuild\Http\Request;
 use AdventurerGuild\Http\Response;
 use AdventurerGuild\Support\Jwt;
@@ -11,27 +12,21 @@ use Throwable;
 
 final class WebHatcheryJwtMiddleware
 {
-    public function __invoke(Request $request, Response $response): Request|Response
+    public function __invoke(Request $request, Response $response, array $routeParams = []): Request|Response
     {
         $authHeader = $request->getHeaderLine('Authorization');
         $token = '';
 
         if ($authHeader !== '' && preg_match('/Bearer\s+(.+)$/i', $authHeader, $matches)) {
             $token = trim((string) $matches[1]);
-        } else {
-            $queryParams = $request->getQueryParams();
-            if (isset($queryParams['token']) && is_string($queryParams['token'])) {
-                $token = trim($queryParams['token']);
-            }
         }
 
-        $secret = (string) ($_ENV['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '');
-        if ($token === '' || $secret === '') {
+        if ($token === '') {
             return $this->unauthorized($response, 'Authentication required');
         }
 
         try {
-            $decoded = Jwt::decode($token, $secret);
+            $decoded = Jwt::decode($token, Environment::required('JWT_SECRET'));
             $userId = (string) ($decoded['sub'] ?? $decoded['user_id'] ?? '');
             if ($userId === '') {
                 return $this->unauthorized($response, 'Token missing user identifier');
@@ -64,7 +59,7 @@ final class WebHatcheryJwtMiddleware
             'success' => false,
             'error' => 'Authentication required',
             'message' => $message,
-            'login_url' => $_ENV['LOGIN_URL'] ?? '',
+            'login_url' => Environment::required('WEB_HATCHERY_LOGIN_URL'),
         ]));
 
         return $response->withStatus(401)->withHeader('Content-Type', 'application/json');

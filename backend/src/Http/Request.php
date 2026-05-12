@@ -25,6 +25,14 @@ final class Request
             return (string) $this->headers[$key];
         }
 
+        if (function_exists('getallheaders')) {
+            foreach (getallheaders() as $headerName => $headerValue) {
+                if (strtolower((string) $headerName) === $key) {
+                    return (string) $headerValue;
+                }
+            }
+        }
+
         if ($key === 'authorization') {
             return (string) ($this->serverParams['HTTP_AUTHORIZATION'] ?? $this->serverParams['REDIRECT_HTTP_AUTHORIZATION'] ?? '');
         }

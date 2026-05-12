@@ -244,7 +244,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             'Content-Type': 'application/json',
             Authorization: `Bearer ${frontpageSession.token}`,
           },
-          body: JSON.stringify({ guest_user_id: guestUserId }),
+          body: JSON.stringify({ guest_token: guestSession.token }),
         });
 
         const result = await parseJson<SessionResponse>(response);

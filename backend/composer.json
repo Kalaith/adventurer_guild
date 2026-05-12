@@ -1,0 +1,25 @@
+{
+  "name": "webhatchery/adventurer-guild-backend",
+  "description": "PHP backend for Adventurer Guild",
+  "license": "proprietary",
+  "type": "project",
+  "require": {
+    "php": "^8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "AdventurerGuild\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "start": "php -S 127.0.0.1:5002 -t public",
+    "test": "@php ../../../vendor/bin/phpunit --configuration phpunit.xml",
+    "cs-check": "@php scripts/csCheck.php",
+    "cs-fix": "@php scripts/csCheck.php"
+  }
+}

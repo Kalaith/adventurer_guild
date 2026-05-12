@@ -83,7 +83,7 @@ final class Router
                     'error' => 'Internal server error',
                 ];
 
-                if (($_ENV['APP_DEBUG'] ?? 'false') === 'true') {
+                if (Environment::optional('APP_DEBUG') === 'true') {
                     $payload['message'] = $exception->getMessage();
                     $payload['file'] = $exception->getFile();
                     $payload['line'] = $exception->getLine();

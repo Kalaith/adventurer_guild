@@ -2,38 +2,47 @@
 
 declare(strict_types=1);
 
-spl_autoload_register(static function (string $class): void {
+$autoloadCandidates = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../../vendor/autoload.php',
+];
+
+$loader = null;
+foreach ($autoloadCandidates as $candidate) {
+    if (file_exists($candidate)) {
+        $loader = require_once $candidate;
+        break;
+    }
+}
+
+$appSrcPath = realpath(__DIR__ . '/../src');
+if ($loader instanceof \Composer\Autoload\ClassLoader && $appSrcPath !== false) {
+    $loader->addPsr4('AdventurerGuild\\', $appSrcPath . DIRECTORY_SEPARATOR, true);
+}
+
+spl_autoload_register(static function (string $class) use ($appSrcPath): void {
     $prefix = 'AdventurerGuild\\';
-    if (strpos($class, $prefix) !== 0) {
+    if ($appSrcPath === false || strpos($class, $prefix) !== 0) {
         return;
     }
 
     $relative = substr($class, strlen($prefix));
-    $path = __DIR__ . '/../src/' . str_replace('\\', '/', $relative) . '.php';
+    $path = $appSrcPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $relative) . '.php';
     if (file_exists($path)) {
         require $path;
     }
 });
 
-$envFile = dirname(__DIR__) . '/.env';
-if (file_exists($envFile)) {
-    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        if ($line === '' || strpos($line, '#') === 0 || strpos($line, '=') === false) {
-            continue;
-        }
-
-        [$key, $value] = explode('=', $line, 2);
-        $_ENV[trim($key)] = trim($value);
-    }
-}
-
+use AdventurerGuild\Core\Environment;
 use AdventurerGuild\Core\Router;
+
+Environment::load(dirname(__DIR__));
 
 $router = new Router();
 
-if (isset($_ENV['APP_BASE_PATH']) && $_ENV['APP_BASE_PATH'] !== '') {
-    $router->setBasePath(rtrim($_ENV['APP_BASE_PATH'], '/'));
+$configuredBasePath = Environment::optional('APP_BASE_PATH');
+if ($configuredBasePath !== null && $configuredBasePath !== '') {
+    $router->setBasePath(rtrim($configuredBasePath, '/'));
 } else {
     $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '';
     $apiPos = strpos($requestPath, '/api');

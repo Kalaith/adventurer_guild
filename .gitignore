@@ -1,3 +1,5 @@
 # Logs
 mcp
 .env
+.phpunit.cache/
+.phpunit.result.cache
