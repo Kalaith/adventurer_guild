@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { getActiveToken } from '../auth/session';
+import { getActiveToken, getApiBaseUrl } from '../auth/session';
 
-// Determine the base URL from the environment or use a relative path
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+// Determine the base URL from the environment or the deployed Vite base path.
+const BASE_URL = getApiBaseUrl();
 
 /**
  * Standardized Web Hatchery Axios Instance

@@ -16,6 +16,21 @@ interface FrontpageStoredUser {
   role?: string;
 }
 
+interface FrontpageTokenPayload {
+  sub?: string | number;
+  user_id?: string | number;
+  email?: string;
+  username?: string;
+  display_name?: string;
+  role?: string;
+  roles?: string[];
+}
+
+interface FrontpageStoredAuth {
+  token?: string;
+  user?: FrontpageStoredUser | null;
+}
+
 interface GuestStoredSession {
   token: string;
   user: AuthUser;
@@ -46,18 +61,27 @@ const normalizeString = (value: unknown): string => {
   return typeof value === 'string' ? value.trim() : '';
 };
 
-const buildFallbackDisplayName = (user: FrontpageStoredUser, id: string): string => {
-  const displayName = normalizeString(user.display_name);
-  if (displayName) {
-    return displayName;
+const normalizeId = (value: unknown): string => {
+  if (value === undefined || value === null) {
+    return '';
   }
 
-  const username = normalizeString(user.username);
-  if (username) {
-    return username;
+  return String(value).trim();
+};
+
+const decodeJwtPayload = (token: string): FrontpageTokenPayload | null => {
+  const [, payload] = token.split('.');
+  if (!payload) {
+    return null;
   }
 
-  return `Guild Member ${id.slice(0, 6)}`;
+  try {
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
+    return JSON.parse(atob(padded)) as FrontpageTokenPayload;
+  } catch {
+    return null;
+  }
 };
 
 const createGuestId = (): string => {
@@ -74,27 +98,30 @@ export const readFrontpageSession = (): { token: string; user: AuthUser } | null
     return null;
   }
 
-  const parsed = parseJson<{ state?: { token?: string; user?: FrontpageStoredUser | null } }>(
-    storage.getItem(FRONTPAGE_AUTH_STORAGE_KEY)
-  );
+  const parsed = parseJson<{ state?: FrontpageStoredAuth }>(storage.getItem(FRONTPAGE_AUTH_STORAGE_KEY));
 
   const token = normalizeString(parsed?.state?.token);
-  const user = parsed?.state?.user;
-  const rawId = user?.id;
-  const id = rawId === undefined || rawId === null ? '' : String(rawId).trim();
-
-  if (!token || !id) {
+  if (!token) {
     return null;
   }
+
+  const tokenPayload = decodeJwtPayload(token);
+  const user = parsed?.state?.user ?? {};
+  const id = normalizeId(user.id) || normalizeId(tokenPayload?.sub) || normalizeId(tokenPayload?.user_id);
+  const email = normalizeString(user.email) || normalizeString(tokenPayload?.email);
+  const username = normalizeString(user.username) || normalizeString(tokenPayload?.username);
+  const displayName =
+    normalizeString(user.display_name) || normalizeString(tokenPayload?.display_name) || username || `Guild Member ${id.slice(0, 6)}`;
+  const role = normalizeString(user.role) || normalizeString(tokenPayload?.role) || normalizeString(tokenPayload?.roles?.[0]);
 
   return {
     token,
     user: {
       id,
-      username: normalizeString(user?.username) || buildFallbackDisplayName(user ?? {}, id),
-      display_name: buildFallbackDisplayName(user ?? {}, id),
-      email: normalizeString(user?.email),
-      role: normalizeString(user?.role) || 'user',
+      username: username || displayName,
+      display_name: displayName,
+      email,
+      role: role || 'user',
       is_guest: false,
       auth_type: 'frontpage',
     },
@@ -246,8 +273,18 @@ export const getSignupUrl = (): string => {
   return withRedirectParam(configured);
 };
 
-const getApiBaseUrl = (): string => {
-  return import.meta.env.VITE_API_BASE_URL || '';
+export const getApiBaseUrl = (): string => {
+  const configured = normalizeString(import.meta.env.VITE_API_BASE_URL);
+  if (configured) {
+    return configured.replace(/\/$/, '');
+  }
+
+  const baseUrl = normalizeString(import.meta.env.BASE_URL);
+  if (!baseUrl || baseUrl === '/') {
+    return '';
+  }
+
+  return baseUrl.replace(/\/$/, '');
 };
 
 export const getSessionUrl = (): string => `${getApiBaseUrl()}/api/auth/session`;

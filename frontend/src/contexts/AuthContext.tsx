@@ -36,10 +36,11 @@ interface AuthContextValue {
 }
 
 interface SessionResponse {
-  success: boolean;
+  success?: boolean;
   error?: string;
   message?: string;
   login_url?: string;
+  user?: AuthUser;
   data?: {
     token?: string;
     user?: AuthUser;
@@ -78,6 +79,45 @@ const parseJson = async <T,>(response: Response): Promise<T | null> => {
   }
 };
 
+const getSessionUser = (result: SessionResponse | null): AuthUser | null => {
+  return result?.data?.user ?? result?.user ?? null;
+};
+
+const normalizeString = (value: unknown): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+
+  return String(value).trim();
+};
+
+const normalizeAuthUser = (sessionUser: AuthUser, fallbackUser?: AuthUser): AuthUser => {
+  const sessionRecord = sessionUser as unknown as Record<string, unknown>;
+  const fallbackRecord = fallbackUser as unknown as Record<string, unknown> | undefined;
+
+  const id = normalizeString(sessionRecord.id) || normalizeString(fallbackRecord?.id);
+  const email = normalizeString(sessionRecord.email) || normalizeString(fallbackRecord?.email);
+  const username = normalizeString(sessionRecord.username) || normalizeString(fallbackRecord?.username);
+  const displayName =
+    normalizeString(sessionRecord.display_name) ||
+    normalizeString(fallbackRecord?.display_name) ||
+    username ||
+    email ||
+    `Guild Member ${id.slice(0, 6)}`;
+  const role = normalizeString(sessionRecord.role) || normalizeString(fallbackRecord?.role) || 'user';
+  const authType = sessionRecord.auth_type === 'guest' || fallbackRecord?.auth_type === 'guest' ? 'guest' : 'frontpage';
+
+  return {
+    id,
+    email,
+    username: username || displayName,
+    display_name: displayName,
+    role,
+    is_guest: sessionRecord.is_guest === true || fallbackRecord?.is_guest === true,
+    auth_type: authType,
+  };
+};
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authMode, setAuthMode] = useState<AuthMode>(null);
@@ -111,7 +151,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     const result = await parseJson<SessionResponse>(response);
-    if (!response.ok || !result?.success || !result.data?.user) {
+    const sessionUser = getSessionUser(result);
+    if (!response.ok || result?.success === false || !sessionUser) {
       if (activeSession.user.is_guest) {
         clearGuestSession();
       }
@@ -120,8 +161,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       throw new Error(result?.message || result?.error || `Session validation failed (${response.status})`);
     }
 
-    setUser(result.data.user);
-    setAuthMode(result.data.user.auth_type);
+    const normalizedUser = normalizeAuthUser(sessionUser, activeSession.user);
+    setUser(normalizedUser);
+    setAuthMode(normalizedUser.auth_type);
     await rehydrateForCurrentSession();
   }, [rehydrateForCurrentSession]);
 

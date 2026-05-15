@@ -4,7 +4,8 @@ import { useGuildStore } from '../stores/gameStore';
 
 const Header: React.FC = () => {
   const { gold, reputation, level } = useGuildStore();
-  const { user, loginWithRedirect, getLinkAccountUrl, logout } = useAuth();
+  const { user, isAuthenticated, loginWithRedirect, getLinkAccountUrl, logout } = useAuth();
+  const accountName = user?.display_name || user?.username || user?.email || 'Unknown';
 
   return (
     <header className="game-header">
@@ -12,12 +13,12 @@ const Header: React.FC = () => {
         <div>
           <h1>Adventurer Guild Manager</h1>
           <p className="text-sm text-amber-900/80">
-            {user?.is_guest ? 'Guest run' : 'Guild account'}: {user?.display_name ?? 'Unknown'}
+            {user?.is_guest ? 'Guest run' : 'Guild account'}: {accountName}
           </p>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {user?.is_guest ? (
+          {isAuthenticated && user?.is_guest ? (
             <a
               href={getLinkAccountUrl()}
               className="rounded-md border border-amber-800 px-3 py-2 text-sm font-semibold text-amber-950 transition hover:bg-amber-200"
@@ -25,13 +26,27 @@ const Header: React.FC = () => {
               Link Account
             </a>
           ) : null}
-          <button
-            type="button"
-            onClick={user?.is_guest ? logout : loginWithRedirect}
-            className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-amber-50 transition hover:bg-slate-700"
-          >
-            {user?.is_guest ? 'Exit Guest' : 'Sign In'}
-          </button>
+          {!isAuthenticated ? (
+            <button
+              type="button"
+              onClick={loginWithRedirect}
+              className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-amber-50 transition hover:bg-slate-700"
+            >
+              Sign In
+            </button>
+          ) : user?.is_guest ? (
+            <button
+              type="button"
+              onClick={logout}
+              className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-amber-50 transition hover:bg-slate-700"
+            >
+              Exit Guest
+            </button>
+          ) : (
+            <span className="rounded-md border border-emerald-700 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
+              Authenticated
+            </span>
+          )}
         </div>
       </div>
 
